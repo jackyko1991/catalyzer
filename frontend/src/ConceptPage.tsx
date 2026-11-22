@@ -93,7 +93,7 @@ function Body({ s }: { s: ConceptSection }) {
           {s.problems.map((name) => {
             const p = findProblem(name)!;
             return (
-              <button key={name} onClick={() => go("problems", name)} className="rounded-full bg-emerald-50 px-3 py-0.5 text-emerald-800 ring-1 ring-emerald-200 hover:bg-emerald-100">
+              <button key={name} onClick={() => go("problems", name)} className="rounded-full bg-orange-50 px-3 py-0.5 text-orange-800 ring-1 ring-orange-200 hover:bg-orange-100">
                 {pick(p.title)}
               </button>
             );

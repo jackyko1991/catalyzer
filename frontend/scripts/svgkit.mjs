@@ -20,7 +20,7 @@ export const arrow = (x1, y1, x2, y2, c = "#6b7280") => {
 };
 export const svg = (title, body) =>
   `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 300' width='480' height='300' role='img'><title>${esc(title)}</title>${rect(0, 0, 480, 300, "#f8fafc", "none", { rx: 14 })}${body}</svg>`;
-export const EM = "#047857", EMBG = "#d1fae5";
+export const EM = "#c2410c", EMBG = "#ffedd5";
 export const atom = (x, y, el) => {
   const col = { C: ["#e5e7eb", "#374151"], O: ["#fee2e2", "#b91c1c"], N: ["#dbeafe", "#1d4ed8"], H: ["#fff", "#6b7280"] }[el];
   return circle(x, y, 15, col[0], col[1], 2) + t(x, y + 5, el, { anchor: "middle", fill: col[1], bold: true, size: 14 });

@@ -93,7 +93,7 @@ function ProblemLinks({ problems }: { problems: Problem[] }) {
     <ul className="mt-2 flex flex-wrap gap-2">
       {problems.map((p) => (
         <li key={p.id}>
-          <button onClick={() => go("problems", problemName(p))} className="rounded-full bg-emerald-50 px-3 py-1 text-sm text-emerald-800 ring-1 ring-emerald-200 hover:bg-emerald-100">
+          <button onClick={() => go("problems", problemName(p))} className="rounded-full bg-orange-50 px-3 py-1 text-sm text-orange-800 ring-1 ring-orange-200 hover:bg-orange-100">
             {pick(p.title)}
           </button>
         </li>
@@ -375,7 +375,7 @@ function LibraryMap() {
           </thead>
           <tbody>
             {shown.map((l) => (
-              <tr key={l.id} className="cursor-pointer border-t border-gray-100 hover:bg-emerald-50/40" onClick={() => setSel(LIBS.indexOf(l))} data-testid={`library-row-${l.id}`}>
+              <tr key={l.id} className="cursor-pointer border-t border-gray-100 hover:bg-orange-50/40" onClick={() => setSel(LIBS.indexOf(l))} data-testid={`library-row-${l.id}`}>
                 <td className="px-3 py-2 font-medium whitespace-nowrap">
                   <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full" style={{ background: KINDS[l.kind].colour }} />
                   <a href={l.url} target="_blank" rel="noreferrer" className="hover:text-(--lk-accent) hover:underline" onClick={(e) => e.stopPropagation()}>

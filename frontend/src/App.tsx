@@ -60,7 +60,7 @@ export default function App() {
       brand={{
         name: (
           <>
-            Cataly<span className="text-emerald-200">zer</span>
+            Cataly<span className="text-orange-200">zer</span>
           </>
         ),
         tagline: t("tagline"),
@@ -147,7 +147,7 @@ function Coming({ title, body }: { title: string; body: string }) {
   const { t } = useLang();
   return (
     <div className="mx-auto max-w-2xl px-5 py-16 text-center" data-testid="coming">
-      <p className="text-sm font-medium tracking-wide text-emerald-700 uppercase">{t("coming.title")}</p>
+      <p className="text-sm font-medium tracking-wide text-(--lk-accent) uppercase">{t("coming.title")}</p>
       <h1 className="mt-2 text-2xl font-semibold text-gray-900">{title}</h1>
       <p className="mt-4 text-left text-gray-600">
         <RichText text={body} />

@@ -135,7 +135,7 @@ function ProblemView({ problem }: { problem: Problem }) {
           {problem.mirror.map((step, i) => (
             <li key={i} className={`grid gap-3 rounded-lg border border-gray-200 bg-white p-3 ${showCode ? "md:grid-cols-2" : ""}`}>
               <div className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-xs font-semibold text-emerald-800">{i + 1}</span>
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-semibold text-orange-800">{i + 1}</span>
                 <p className="text-gray-700">
                   <RichText text={pick(step.text)} />
                 </p>
