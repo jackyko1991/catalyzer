@@ -9,13 +9,14 @@ import json
 import shutil
 from pathlib import Path
 
-from . import runner, structures
+from . import library, runner, structures
 from .problems import all_problems
 
 FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
 OUT = FRONTEND / "src" / "generated" / "problems.json"
 PICTURES = FRONTEND / "public" / "problems"
 RESULTS = FRONTEND / "public" / "results"
+LIBRARY = FRONTEND / "src" / "generated" / "library.json"
 
 
 def problems_data() -> list[dict]:
@@ -76,6 +77,9 @@ def main() -> None:
         text = json.dumps(r.results, ensure_ascii=False) + "\n"
         (RESULTS / f"{p.id.split('/')[1]}.json").write_text(text, encoding="utf-8", newline="\n")
     print(f"wrote {len(all_problems())} default results to frontend/public/results")
+    lib = library.entries()
+    LIBRARY.write_text(json.dumps(lib, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
+    print(f"wrote {LIBRARY.relative_to(FRONTEND.parent)} ({len(lib)} entries)")
     rmsd = structures.main()
     print(f"wrote frontend/public/structures (crambin model on crystal: CA RMSD {rmsd:.3f} Å)")
 

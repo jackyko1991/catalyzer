@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from catalyzer import export
@@ -87,3 +89,30 @@ def test_runner_refuses_other_websites():
     assert form.status_code == 422
     # a page that rebinds its own domain name to 127.0.0.1 is refused by name
     assert client.get("/api/health", headers={"host": "evil.example"}).status_code == 400
+
+
+def test_library_catalogue_and_its_code():
+    """Every Library entry links to its source and carries code; molecule code runs offline and draws 2D and 3D,
+    the others (which download their structure) at least compile."""
+    import json
+    import sys
+
+    from catalyzer import library
+
+    entries = library.entries()
+    expected = json.dumps(entries, ensure_ascii=False, indent=1) + "\n"
+    assert export.LIBRARY.read_text(encoding="utf-8") == expected, "library changed; run: pixi run export"
+    assert {e["kind"] for e in entries} == {"molecules", "structures", "predictions"}
+    here = str(Path(library.__file__).parent)  # render.py and data.py, as the runner puts them beside the code
+    sys.path.insert(0, here)
+    try:
+        for e in entries:
+            assert e["url"].startswith("https://") and e["licence"] and len(e["name"]) == 2, e["key"]
+            code = compile(e["code"], e["key"], "exec")
+            if e["kind"] == "molecules":
+                ns: dict = {}
+                exec(code, ns)
+                kinds = {r["kind"] for r in ns["run"]()}
+                assert {"svg", "mol3d", "metric"} <= kinds, e["key"]
+    finally:
+        sys.path.remove(here)

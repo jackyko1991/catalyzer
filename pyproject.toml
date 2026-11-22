@@ -18,4 +18,4 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
 # problem stubs keep imports the reader will need (unused until they write the body)
-per-file-ignores = { "problems/*/*/stub.py" = ["F401", "B905"], "problems/*/*/solution.py" = ["B905"], "problems/*/*/main.py" = ["B905", "E501"], "problems/*/*/test.py" = ["I001", "B905", "E501"] }
+per-file-ignores = { "catalyzer/library.py" = ["E501"], "problems/*/*/stub.py" = ["F401", "B905"], "problems/*/*/solution.py" = ["B905"], "problems/*/*/main.py" = ["B905", "E501"], "problems/*/*/test.py" = ["I001", "B905", "E501"] }

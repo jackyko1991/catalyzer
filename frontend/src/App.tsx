@@ -15,6 +15,7 @@ import { ERAS, HISTORY } from "./history";
 import ConceptPage from "./ConceptPage";
 import { CONCEPTS } from "./concepts";
 import HomePage from "./HomePage";
+import LibraryPage from "./LibraryPage";
 import ProblemsPage from "./ProblemsPage";
 import SkillsPage, { SKILL_TAB_TITLES, SKILL_TABS } from "./SkillsPage";
 import { STRINGS } from "./strings";
@@ -32,6 +33,7 @@ export default function App() {
   const route = useRoute(HOME);
   const pages: ShellPage[] = [
     { id: "problems", label: t("page.problems") },
+    { id: "library", label: pick(["Library", "資料庫"]) },
     {
       id: "concept",
       label: t("page.concept"),
@@ -94,6 +96,8 @@ export default function App() {
         <HistoryPage section={route.section} />
       ) : concept ? (
         <ConceptPage key={conceptTab} page={CONCEPTS.find((c) => c.id === conceptTab)!} focus={route.section} scrollRoot={SCROLL} />
+      ) : route.page === "library" ? (
+        <LibraryPage />
       ) : route.page === "problems" ? (
         <ProblemsPage name={route.tab} />
       ) : route.page === "skills" ? (
