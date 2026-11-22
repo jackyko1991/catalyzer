@@ -16,8 +16,8 @@ export interface ConceptSection {
   id: string;
   title: L;
   paragraphs: L[];
-  /** a picture under the text: an image under public/, or a 3D view of a molecule / crambin */
-  figure?: { src: string; caption: L } | { viewer: "caffeine" | "crambin" | "crambin-plddt"; caption: L };
+  /** pictures under the text: drawings under public/, or 3D views of a molecule / crambin */
+  figures?: ({ src: string; caption: L } | { viewer: "caffeine" | "crambin" | "crambin-plddt"; caption: L })[];
   /** a two-column table: [term, meaning] */
   table?: { head: [L, L]; rows: [L, L][] };
   callout?: { kind: "tip" | "note" | "warn"; title: L; text: L };
@@ -60,6 +60,7 @@ export const CONCEPTS: ConceptPage[] = [
             "只有最外層的電子，也就是**價電子**，參與化學反應。碳有 4 個、氮有 5 個、氧有 6 個。原子傾向於共用電子，直到每個原子的外層都滿 8 個（氫是 2 個）：這就是**八隅律**。",
           ],
         ],
+        figures: [{ src: "concepts/atom.svg", caption: ["Carbon: 6 protons in the nucleus, 2 inner electrons and 4 valence electrons, so it usually makes 4 bonds.", "碳：原子核中有 6 個質子，內層 2 個電子、價電子 4 個，所以通常形成 4 個鍵。"] }],
       },
       {
         id: "bonds",
@@ -74,7 +75,7 @@ export const CONCEPTS: ConceptPage[] = [
             "當原子的鍵數比平常多或少，它就帶有**形式電荷**：像銨離子 $\\mathrm{NH_4^+}$ 中有四個鍵的氮，形式電荷是 $+1$。鍵很短：C–C 約 1.54 Å，C=C 約 1.34 Å（1 埃，Å，是 $10^{-10}$ 公尺）。",
           ],
         ],
-        figure: { src: "problems/molecules/formal_charge.svg", caption: ["Formal charge is bookkeeping of electrons: ammonium's nitrogen is +1.", "形式電荷是電子的記帳：銨離子中的氮是 +1。"] },
+        figures: [{ src: "concepts/bonds.svg", caption: ["One, two or three shared pairs: single, double and triple bonds, each shorter than the last.", "共用一對、兩對或三對電子：單鍵、雙鍵與參鍵，一個比一個短。"] }, { src: "problems/molecules/formal_charge.svg", caption: ["Formal charge is bookkeeping of electrons: ammonium's nitrogen is +1.", "形式電荷是電子的記帳：銨離子中的氮是 +1。"] }],
         problems: ["formal_charge", "atoms_bonds"],
       },
       {
@@ -90,7 +91,7 @@ export const CONCEPTS: ConceptPage[] = [
             "形狀就是藥物能像鑰匙配鎖一樣嵌進蛋白質的原因，也是為什麼兩個原子相同的分子（**異構物**）作用可能完全不同。",
           ],
         ],
-        figure: { viewer: "caffeine", caption: ["Caffeine in 3D: flat rings (each ring atom has three bonds) with methyl groups sticking out.", "3D 的咖啡因：平面的環（每個環原子有三個鍵），甲基向外伸出。"] },
+        figures: [{ src: "concepts/shapes.svg", caption: ["Two, three or four bonds around an atom spread to 180°, 120° or 109.5°.", "原子周圍的兩個、三個或四個鍵，分別張開成 180°、120° 或 109.5°。"] }, { viewer: "caffeine", caption: ["Caffeine in 3D: flat rings (each ring atom has three bonds) with methyl groups sticking out.", "3D 的咖啡因：平面的環（每個環原子有三個鍵），甲基向外伸出。"] }],
       },
       {
         id: "rings",
@@ -101,7 +102,7 @@ export const CONCEPTS: ConceptPage[] = [
             "原子可以首尾相接形成**環**。苯的六個鍵長度都一樣，介於單鍵與雙鍵之間：它的六個 π 電子（位於環平面上下方的電子）在整個環上共用。這種擁有 $4n+2$ 個 π 電子的環（休克耳規則）是**芳香**環，特別穩定。",
           ],
         ],
-        figure: { src: "problems/molecules/rings.svg", caption: ["Naphthalene has two aromatic rings; cyclohexane has one ring that is not aromatic.", "萘有兩個芳香環；環己烷有一個環，但不是芳香環。"] },
+        figures: [{ src: "problems/molecules/rings.svg", caption: ["Naphthalene has two aromatic rings; cyclohexane has one ring that is not aromatic.", "萘有兩個芳香環；環己烷有一個環，但不是芳香環。"] }],
         problems: ["rings"],
       },
     ],
@@ -136,7 +137,7 @@ export const CONCEPTS: ConceptPage[] = [
             "一個分子有很多種寫法，所以函式庫會算出**標準化**的 SMILES：不論從哪種寫法出發，都得到同一個字串。數以百萬計的分子就是這樣被搜尋與比較的。",
           ],
         ],
-        figure: { src: "history/smiles.svg", caption: ["CCO is ethanol; c1ccccc1 is benzene.", "CCO 是乙醇；c1ccccc1 是苯。"] },
+        figures: [{ src: "history/smiles.svg", caption: ["CCO is ethanol; c1ccccc1 is benzene.", "CCO 是乙醇；c1ccccc1 是苯。"] }],
         problems: ["read_smiles"],
       },
       {
@@ -152,7 +153,7 @@ export const CONCEPTS: ConceptPage[] = [
             "**分子指紋**把圖濃縮成一組數字，每種小範圍的原子鄰近環境對應一個，於是兩個分子可以用共有的數字多寡來比較（**Tanimoto 相似度**）。",
           ],
         ],
-        figure: { src: "problems/molecules/atoms_bonds.svg", caption: ["Acetaldehyde as a graph, with each atom's degree.", "把乙醛看成一張圖，標出每個原子的度。"] },
+        figures: [{ src: "concepts/adjacency.svg", caption: ["The graph of acetaldehyde and its adjacency matrix: a 1 wherever two atoms are bonded.", "乙醛的圖與它的鄰接矩陣：兩個原子相連的地方就是 1。"] }],
         problems: ["atoms_bonds", "similarity"],
       },
       {
@@ -164,7 +165,7 @@ export const CONCEPTS: ConceptPage[] = [
             "第三種方式列出每個原子與它的位置 $(x, y, z)$，單位是埃。小分子用 mol（SDF）格式；蛋白質用 **PDB** 檔（每個原子一行），或較新的 **mmCIF**。位置來自實驗（X 光晶體學、冷凍電子顯微鏡、核磁共振）、物理計算，或現在的 AI 模型。",
           ],
         ],
-        figure: { src: "history/pdb.svg", caption: ["A PDB file: one ATOM line per atom, with x, y, z.", "PDB 檔：每個原子一行 ATOM，附 x、y、z。"] },
+        figures: [{ src: "history/pdb.svg", caption: ["A PDB file: one ATOM line per atom, with x, y, z.", "PDB 檔：每個原子一行 ATOM，附 x、y、z。"] }],
         table: {
           head: [["Form", "形式"], ["Good for", "適合做什麼"]],
           rows: [
@@ -205,7 +206,7 @@ export const CONCEPTS: ConceptPage[] = [
             "DNA 是由四個字母（A、C、G、T）組成的字串。基因每次讀三個字母；每個三聯體叫做**密碼子**，代表 20 種**胺基酸**之一，而 64 個密碼子中有 3 個表示終止。得到的鏈就是蛋白質，寫成一串單字母代碼，例如 `MALWMRLLPLL…`（人類胰島素的開頭）。",
           ],
         ],
-        figure: { src: "problems/biomolecules/translate.svg", caption: ["ATG GCC TAA: methionine, alanine, stop.", "ATG GCC TAA：甲硫胺酸、丙胺酸、終止。"] },
+        figures: [{ src: "problems/biomolecules/translate.svg", caption: ["ATG GCC TAA: methionine, alanine, stop.", "ATG GCC TAA：甲硫胺酸、丙胺酸、終止。"] }],
         problems: ["translate", "sequence_identity"],
       },
       {
@@ -221,7 +222,7 @@ export const CONCEPTS: ConceptPage[] = [
             "形狀靠實驗找出：X 光晶體學、冷凍電子顯微鏡與核磁共振。每個結果都存進蛋白質資料庫，免費提供給所有人；下面的緞帶是 crambin（PDB 1CRN）。",
           ],
         ],
-        figure: { viewer: "crambin", caption: ["Crambin: 46 amino acids folded into two helices and a small sheet, held by three disulphide bridges.", "Crambin：46 個胺基酸摺成兩個螺旋與一個小摺板，由三個雙硫鍵固定。"] },
+        figures: [{ src: "concepts/protein-levels.svg", caption: ["Sequence, then helices and sheets, then one compact fold, and the fold makes a pocket that does the job.", "先是序列，再是螺旋與摺板，接著是緊密的摺疊，而摺疊形成執行工作的口袋。"] }, { viewer: "crambin", caption: ["Crambin: 46 amino acids folded into two helices and a small sheet, held by three disulphide bridges.", "Crambin：46 個胺基酸摺成兩個螺旋與一個小摺板，由三個雙硫鍵固定。"] }],
         problems: ["pdb_neighbours"],
       },
       {
@@ -234,7 +235,7 @@ export const CONCEPTS: ConceptPage[] = [
           ],
         ],
         callout: { kind: "tip", title: ["Residue", "殘基"], text: ["One amino acid inside a chain is called a **residue**: what remains of it after joining the chain.", "鏈中的一個胺基酸稱為**殘基**：它加入鏈之後剩下的部分。"] },
-        figure: { src: "problems/biomolecules/pdb_neighbours.svg", caption: ["The residues within 4 Å of Cys16, including its disulphide partner Cys26.", "距 Cys16 4 Å 以內的殘基，包括它的雙硫鍵夥伴 Cys26。"] },
+        figures: [{ src: "problems/biomolecules/pdb_neighbours.svg", caption: ["The residues within 4 Å of Cys16, including its disulphide partner Cys26.", "距 Cys16 4 Å 以內的殘基，包括它的雙硫鍵夥伴 Cys26。"] }],
       },
     ],
     mirror: [
@@ -265,7 +266,7 @@ export const CONCEPTS: ConceptPage[] = [
             "**AlphaFold 2** 讀入一條序列，加上其他物種中的相關序列（**多序列比對**）：會一起突變的位置，很可能彼此接觸。網路反覆修正一張殘基對的表，再擺放原子。ESMFold 這類語言模型，則只從一條序列學到類似的訊號。",
           ],
         ],
-        figure: { src: "history/alphafold2.svg", caption: ["Sequence → residue pairs → 3D structure with a confidence per residue.", "序列 → 殘基對 → 附每個殘基信心分數的 3D 結構。"] },
+        figures: [{ src: "history/alphafold2.svg", caption: ["Sequence → residue pairs → 3D structure with a confidence per residue.", "序列 → 殘基對 → 附每個殘基信心分數的 3D 結構。"] }],
       },
       {
         id: "generate",
@@ -276,7 +277,7 @@ export const CONCEPTS: ConceptPage[] = [
             "生成模型把預測反過來做。**RFdiffusion** 從隨機雜訊出發，逐步修正成新的骨架；**ProteinMPNN** 為它寫出序列。對小分子，模型會提出具有指定性質的新 SMILES 字串或圖。",
           ],
         ],
-        figure: { src: "history/rfdiffusion.svg", caption: ["Generate a backbone, write a sequence, refold to check.", "生成骨架、寫出序列、重新摺疊來檢查。"] },
+        figures: [{ src: "history/rfdiffusion.svg", caption: ["Generate a backbone, write a sequence, refold to check.", "生成骨架、寫出序列、重新摺疊來檢查。"] }],
       },
       {
         id: "check",
@@ -287,7 +288,7 @@ export const CONCEPTS: ConceptPage[] = [
             "模型總會給出答案，即使它不該給。在相信之前，專業人士會問四個問題，從最便宜的到最有說服力的。",
           ],
         ],
-        figure: { viewer: "crambin-plddt", caption: ["Crambin as AlphaFold predicted it, coloured by pLDDT: almost all dark blue (very high).", "AlphaFold 預測的 crambin，依 pLDDT 上色：幾乎全是深藍（非常高）。"] },
+        figures: [{ src: "concepts/check-ladder.svg", caption: ["Four questions, from the cheapest check to the most convincing one.", "四個問題，從最便宜的檢查到最有說服力的一個。"] }, { viewer: "crambin-plddt", caption: ["Crambin as AlphaFold predicted it, coloured by pLDDT: almost all dark blue (very high).", "AlphaFold 預測的 crambin，依 pLDDT 上色：幾乎全是深藍（非常高）。"] }],
         table: {
           head: [["Question", "問題"], ["How to check", "怎麼檢查"]],
           rows: [

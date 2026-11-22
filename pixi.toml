@@ -22,11 +22,13 @@ ruff = ">=0.6"
 runner = "python -m catalyzer.serve"
 # check one file against a problem from the command line: pixi run check molecules/read_smiles my_answer.py
 check = "python -m catalyzer.cli"
+# Hot-reload development: the runner and Vite together, open http://localhost:5190 (scripts/dev.py)
+dev = "python scripts/dev.py"
 # the site alone (Vite), or a production build
 web = { cmd = "npm run dev", cwd = "frontend" }
 web-build = { cmd = "npm install --no-audit --no-fund && npm run build", cwd = "frontend" }
 # every reference solution passes its tests, every stub fails them, the static check rejects edited signatures
 test = "pytest -q tests"
-lint = "ruff check catalyzer tests problems && ruff format --check catalyzer tests problems"
+lint = "ruff check catalyzer tests problems scripts && ruff format --check catalyzer tests problems scripts"
 # the problem data the static site reads (frontend/src/generated/problems.json)
 export = "python -m catalyzer.export"

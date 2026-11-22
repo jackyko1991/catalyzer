@@ -15,7 +15,7 @@ test("every concept text is in English and Traditional Chinese", () => {
     for (const s of c.sections) {
       assert.ok(filled(s.title), `${c.id}/${s.id}`);
       for (const p of s.paragraphs) assert.ok(filled(p), `${c.id}/${s.id}`);
-      if (s.figure) assert.ok(filled(s.figure.caption), `${c.id}/${s.id} caption`);
+      for (const f of s.figures ?? []) assert.ok(filled(f.caption), `${c.id}/${s.id} caption`);
       if (s.table) for (const r of [s.table.head, ...s.table.rows]) assert.ok(r.every(filled), `${c.id}/${s.id} table`);
       if (s.callout) assert.ok(filled(s.callout.title) && filled(s.callout.text));
     }
@@ -38,7 +38,8 @@ test("pictures exist and linked problems are real", () => {
   const names = new Set(problems.map((p) => p.id.split("/")[1]));
   for (const c of CONCEPTS)
     for (const s of c.sections) {
-      if (s.figure && "src" in s.figure) assert.ok(existsSync(here(`public/${s.figure.src}`)), s.figure.src);
+      for (const f of s.figures ?? []) if ("src" in f) assert.ok(existsSync(here(`public/${f.src}`)), f.src);
+      assert.ok((s.figures ?? []).length > 0, `${c.id}/${s.id}: every concept section has a picture`);
       for (const p of s.problems ?? []) assert.ok(names.has(p), `${c.id}/${s.id}: no problem ${p}`);
     }
 });

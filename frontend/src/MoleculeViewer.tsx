@@ -73,7 +73,7 @@ export default function MoleculeViewer({ models, height = 360, label }: { models
   }, [key]);
 
   return (
-    <div className="relative overflow-hidden rounded-lg border border-gray-200 bg-white" style={{ height }} data-testid="molecule-viewer" data-state={state}>
+    <div className="relative w-full overflow-hidden rounded-lg border border-gray-200 bg-white" style={{ height }} data-testid="molecule-viewer" data-state={state}>
       <div ref={box} className="absolute inset-0" role="img" aria-label={label} />
       {state !== "ready" && (
         <p className="absolute inset-0 flex items-center justify-center text-sm text-gray-500">

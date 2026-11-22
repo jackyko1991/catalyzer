@@ -60,32 +60,33 @@ function Body({ s }: { s: ConceptSection }) {
           </Callout>
         </div>
       )}
-      {s.figure &&
-        ("src" in s.figure ? (
-          <Figure caption={s.figure.caption}>
-            <img src={`${import.meta.env.BASE_URL}${s.figure.src}`} alt={pick(s.figure.caption)} className="mx-auto w-full max-w-lg" loading="lazy" />
+      {s.figures?.map((f, i) =>
+        "src" in f ? (
+          <Figure key={i} caption={f.caption}>
+            <img src={`${import.meta.env.BASE_URL}${f.src}`} alt={pick(f.caption)} className="mx-auto w-full max-w-lg" loading="lazy" />
           </Figure>
         ) : (
-          <Figure caption={s.figure.caption}>
-            {s.figure.viewer === "caffeine" ? (
+          <Figure key={i} caption={f.caption}>
+            {f.viewer === "caffeine" ? (
               caffeine ? (
-                <MoleculeViewer models={[{ data: caffeine.molblock, format: "sdf", style: "stick", colour: "element" }]} label={pick(s.figure.caption)} height={300} />
+                <MoleculeViewer models={[{ data: caffeine.molblock, format: "sdf", style: "stick", colour: "element" }]} label={pick(f.caption)} height={300} />
               ) : (
-                <div className="h-[300px]" />
+                <div className="h-[300px] w-full" />
               )
             ) : (
               <MoleculeViewer
                 models={[
-                  s.figure.viewer === "crambin"
+                  f.viewer === "crambin"
                     ? { url: "structures/1crn.pdb", format: "pdb", style: "cartoon", colour: { colour: "#0f766e" } }
                     : { url: "structures/AF-P01542-F1-model_v6.aligned.pdb", format: "pdb", style: "cartoon", colour: "plddt" },
                 ]}
-                label={pick(s.figure.caption)}
+                label={pick(f.caption)}
                 height={300}
               />
             )}
           </Figure>
-        ))}
+        ),
+      )}
       {s.table && <Table head={s.table.head} rows={s.table.rows} />}
       {s.problems && (
         <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-gray-500">

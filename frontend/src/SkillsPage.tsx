@@ -420,11 +420,12 @@ function PyTorchPage({ scrollRoot, focus }: { scrollRoot: string; focus: string 
       <Section page="pytorch" id="build" n={2} title={sections[1].title}>
         <ul className="grid gap-3 sm:grid-cols-2">
           {TENSORIZER_LINKS.map((l) => (
-            <li key={l.id}>
-              <a href={tensorizerUrl(l.id)} target="_blank" rel="noreferrer" className="block h-full rounded-lg border border-gray-200 bg-white p-3 hover:border-(--lk-accent)">
-                <span className="font-medium text-gray-900">{pick(l.title)} ↗</span>
+            <li key={l.id} className="rounded-lg border border-gray-200 bg-white p-3">
+              <a href={tensorizerUrl(l.id)} target="_blank" rel="noreferrer" className="block">
+                <span className="font-medium text-gray-900 hover:text-(--lk-accent)">{pick(l.title)} ↗</span>
                 <span className="mt-0.5 block text-sm text-gray-600">{pick(l.why)}</span>
               </a>
+              <ProblemLinks problems={l.problems.map((n) => PROBLEMS.find((p) => problemName(p) === n)!)} />
             </li>
           ))}
         </ul>

@@ -20,7 +20,8 @@ You need [pixi](https://pixi.sh) (it installs Python, RDKit, Biopython and the r
 ```sh
 git clone --recurse-submodules https://github.com/jackyko1991/catalyzer
 cd catalyzer
-pixi run runner          # the local runner on http://127.0.0.1:8795: the site's "Check on my computer" uses it
+pixi run dev             # the runner and the site together: open http://localhost:5190
+pixi run runner          # the local runner alone on http://127.0.0.1:8795: the site's "Check on my computer" uses it
 pixi run check           # list the problems
 pixi run check molecules/read_smiles answer.py   # check a file without the site
 pixi run web             # the site on http://localhost:5173 (learnkit must be checked out: vendor/learnkit)
