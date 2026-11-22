@@ -7,7 +7,10 @@ export const LANGS: Language[] = [
 ];
 
 export const STRINGS = {
-  tagline: ["Molecular science in Python, learned by doing", "用 Python 學分子科學：動手做"],
+  tagline: [
+    "Molecular science in Python, learned by doing",
+    "用 Python 學分子科學：動手做",
+  ],
   "page.home": ["Home", "首頁"],
   "page.problems": ["Problems", "題庫"],
   "page.concept": ["Concept", "概念"],
@@ -16,12 +19,20 @@ export const STRINGS = {
   "page.reading": ["Further reading", "延伸閱讀"],
   "reading.books": ["Books & papers", "書籍與論文"],
   "tab.about": ["What Catalyzer does", "Catalyzer 能做什麼"],
+  "tab.path": ["The path", "學習路線"],
   "tab.molecule": ["What a molecule is", "分子是什麼"],
   "tab.data": ["Molecules as data", "把分子變成資料"],
+  "tab.pdb": ["Reading a structure file", "讀懂結構檔"],
   "tab.proteins": ["Proteins: sequence to function", "蛋白質：從序列到功能"],
+  "tab.energy": ["Energy and shape", "能量與形狀"],
+  "tab.quantum": ["Quantum chemistry", "量子化學"],
+  "tab.ml": ["Machine learning", "機器學習"],
   "tab.ai": ["How AI designs molecules", "AI 如何設計分子"],
   "tab.history": ["History", "歷史"],
-  "history.title": ["How molecules became something we can compute", "分子如何變成可以計算的東西"],
+  "history.title": [
+    "How molecules became something we can compute",
+    "分子如何變成可以計算的東西",
+  ],
   "history.intro": [
     "From Dalton's atoms in 1808 to AlphaFold 3 in 2024: two centuries of ideas behind every Catalyzer problem. The first two parts are the science an undergraduate learns; the last two are the data and the AI models a molecular designer uses today, and how they are checked.",
     "從 1808 年道耳頓的原子到 2024 年的 AlphaFold 3：每一道 Catalyzer 題目背後兩百年的想法。前兩部是大學生要學的科學；後兩部是今天做分子設計的人所用的資料與 AI 模型，以及如何檢查它們。",

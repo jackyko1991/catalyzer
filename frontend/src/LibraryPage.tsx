@@ -33,17 +33,42 @@ const LICENCE: Record<LibraryEntry["kind"], [string, string]> = {
   structures: ["PDB: CC0 1.0", "https://www.wwpdb.org/about/usage-policies"],
   predictions: ["AlphaFold DB: CC BY 4.0", "https://alphafold.ebi.ac.uk/faq"],
 };
-const KINDS: { id: LibraryEntry["kind"]; label: [string, string]; source: string; colour: string }[] = [
-  { id: "molecules", label: ["Molecules", "分子"], source: "PubChem", colour: "bg-orange-50 text-orange-800 ring-orange-200" },
-  { id: "structures", label: ["Experimental structures", "實驗結構"], source: "Protein Data Bank", colour: "bg-teal-50 text-teal-800 ring-teal-200" },
-  { id: "predictions", label: ["AI predictions", "AI 預測"], source: "AlphaFold DB", colour: "bg-blue-50 text-blue-800 ring-blue-200" },
+const KINDS: {
+  id: LibraryEntry["kind"];
+  label: [string, string];
+  source: string;
+  colour: string;
+}[] = [
+  {
+    id: "molecules",
+    label: ["Molecules", "分子"],
+    source: "PubChem",
+    colour: "bg-orange-50 text-orange-800 ring-orange-200",
+  },
+  {
+    id: "structures",
+    label: ["Experimental structures", "實驗結構"],
+    source: "Protein Data Bank",
+    colour: "bg-teal-50 text-teal-800 ring-teal-200",
+  },
+  {
+    id: "predictions",
+    label: ["AI predictions", "AI 預測"],
+    source: "AlphaFold DB",
+    colour: "bg-blue-50 text-blue-800 ring-blue-200",
+  },
 ];
 /** case, accents and British / American spelling (haemoglobin = hemoglobin) do not matter */
 const fold = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/haem/g, "hem").replace(/oe/g, "e");
 
-
 type AnyEntry = LibraryEntry | LiveEntry;
-type Live = { state: "idle" } | { state: "loading" } | { state: "done"; byKind: Record<LibraryEntry["kind"], LiveEntry[] | string> };
+type Live =
+  | { state: "idle" }
+  | { state: "loading" }
+  | {
+      state: "done";
+      byKind: Record<LibraryEntry["kind"], LiveEntry[] | string>;
+    };
 
 export default function LibraryPage() {
   const { pick } = useLang();
@@ -89,14 +114,7 @@ export default function LibraryPage() {
           searchLive();
         }}
       >
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={pick(["Name, formula, SMILES, PDB id, UniProt accession…", "名稱、分子式、SMILES、PDB 編號、UniProt 編號…"])}
-          className="w-full max-w-md rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-(--lk-accent) focus:outline-none"
-          data-testid="library-search"
-        />
+        <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={pick(["Name, formula, SMILES, PDB id, UniProt accession…", "名稱、分子式、SMILES、PDB 編號、UniProt 編號…"])} className="w-full max-w-md rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-(--lk-accent) focus:outline-none" data-testid="library-search" />
         <button type="submit" disabled={query.trim().length < 2 || live.state === "loading"} className="rounded-md bg-(--lk-accent) px-3 py-1.5 text-sm font-medium text-white hover:opacity-90 disabled:opacity-40" data-testid="library-live">
           {live.state === "loading" ? pick(["Searching…", "搜尋中…"]) : pick(["Search the databases", "搜尋資料庫"])}
         </button>
@@ -140,13 +158,7 @@ export default function LibraryPage() {
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="mr-2 text-lg font-semibold text-gray-900">{pick(["Curated", "精選"])}</h2>
           {(["all", ...KINDS.map((k) => k.id)] as const).map((k) => (
-            <button
-              key={k}
-              onClick={() => setKind(k)}
-              aria-pressed={kind === k}
-              className={`rounded-full px-3 py-1 text-sm ring-1 ${kind === k ? "bg-gray-900 text-white ring-gray-900" : "bg-white text-gray-700 ring-gray-300 hover:ring-(--lk-accent)"}`}
-              data-testid={`library-kind-${k}`}
-            >
+            <button key={k} onClick={() => setKind(k)} aria-pressed={kind === k} className={`rounded-full px-3 py-1 text-sm ring-1 ${kind === k ? "bg-gray-900 text-white ring-gray-900" : "bg-white text-gray-700 ring-gray-300 hover:ring-(--lk-accent)"}`} data-testid={`library-kind-${k}`}>
               {k === "all" ? pick(["All", "全部"]) : pick(KINDS.find((x) => x.id === k)!.label)} <span className="text-xs opacity-60">{k === "all" ? LIBRARY.length : LIBRARY.filter((e) => e.kind === k).length}</span>
             </button>
           ))}
@@ -157,9 +169,7 @@ export default function LibraryPage() {
           ))}
           {shown.length === 0 && <li className="p-4 text-sm text-gray-500">{pick(["Nothing in the curated list matches; try “Search the databases”.", "精選清單中沒有符合的項目；試試「搜尋資料庫」。"])}</li>}
         </ul>
-        <p className="mt-3 text-xs text-gray-500">
-          {pick(["Curated list fetched on 22 November 2026 from the PubChem, RCSB PDB and AlphaFold DB APIs.", "精選清單於 2026 年 11 月 22 日從 PubChem、RCSB PDB 與 AlphaFold DB 的 API 取得。"])}
-        </p>
+        <p className="mt-3 text-xs text-gray-500">{pick(["Curated list fetched on 22 November 2026 from the PubChem, RCSB PDB and AlphaFold DB APIs.", "精選清單於 2026 年 11 月 22 日從 PubChem、RCSB PDB 與 AlphaFold DB 的 API 取得。"])}</p>
       </section>
     </div>
   );
@@ -221,11 +231,7 @@ function EntryRow({ e }: { e: AnyEntry }) {
             </button>
           )}
           {e.kind === "molecules" && e.smiles ? (
-            <button
-              onClick={() => setDone(addMolecule(e.smiles!, e.name[0]) ? pick(["Added to your molecules", "已加入你的分子"]) : pick(["Already in your molecules", "已經在你的分子中"]))}
-              className="rounded-md bg-(--lk-accent) px-2.5 py-1 text-xs font-medium text-white hover:opacity-90"
-              data-testid={`library-add-${e.key}`}
-            >
+            <button onClick={() => setDone(addMolecule(e.smiles!, e.name[0]) ? pick(["Added to your molecules", "已加入你的分子"]) : pick(["Already in your molecules", "已經在你的分子中"]))} className="rounded-md bg-(--lk-accent) px-2.5 py-1 text-xs font-medium text-white hover:opacity-90" data-testid={`library-add-${e.key}`}>
               ＋ {pick(["My molecules", "我的分子"])}
             </button>
           ) : (
@@ -246,10 +252,13 @@ function EntryRow({ e }: { e: AnyEntry }) {
       </div>
       {done && (
         <p className="mt-1 text-right text-xs text-green-700">
-          ✓ {done} · <a href="#/problems/workspace" className="underline">{pick(["go to the Workspace", "前往工作區"])}</a>
+          ✓ {done} ·{" "}
+          <a href="#/problems/workspace" className="underline">
+            {pick(["go to the Workspace", "前往工作區"])}
+          </a>
         </p>
       )}
-      {view === "2d" && image && <img src={image} alt={pick(e.name)} className="mt-3 h-56 w-56 rounded border border-gray-100 bg-white object-contain" loading="lazy" />}
+      {view === "2d" && image && <img src={image} alt={pick(e.name)} className="mx-auto mt-3 block h-56 w-56 rounded border border-gray-100 bg-white object-contain" loading="lazy" />}
       {view === "3d" && (
         <div className="mt-3">
           {model === null ? (
@@ -258,7 +267,14 @@ function EntryRow({ e }: { e: AnyEntry }) {
             <p className="text-sm text-red-700">{model}</p>
           ) : (
             <MoleculeViewer
-              models={[{ data: model.data, format: model.format, style: model.format === "sdf" ? "stick" : "cartoon", colour: e.kind === "predictions" ? "plddt" : model.format === "sdf" ? "element" : { colour: "#0f766e" } }]}
+              models={[
+                {
+                  data: model.data,
+                  format: model.format,
+                  style: model.format === "sdf" ? "stick" : "cartoon",
+                  colour: e.kind === "predictions" ? "plddt" : model.format === "sdf" ? "element" : { colour: "#0f766e" },
+                },
+              ]}
               label={pick(e.name)}
               height={340}
             />
