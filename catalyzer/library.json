@@ -45,61 +45,6 @@
    "mw": "151.16"
   },
   {
-   "cid": 5904,
-   "name": [
-    "Penicillin G",
-    "青黴素 G"
-   ],
-   "pubchem_title": "Penicillin G",
-   "smiles": "CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C",
-   "formula": "C16H18N2O4S",
-   "mw": "334.4"
-  },
-  {
-   "cid": 5288826,
-   "name": [
-    "Morphine",
-    "嗎啡"
-   ],
-   "pubchem_title": "Morphine",
-   "smiles": "CN1CC[C@]23[C@@H]4[C@H]1CC5=C2C(=C(C=C5)O)O[C@H]3[C@H](C=C4)O",
-   "formula": "C17H19NO3",
-   "mw": "285.34"
-  },
-  {
-   "cid": 89594,
-   "name": [
-    "Nicotine",
-    "尼古丁"
-   ],
-   "pubchem_title": "Nicotine",
-   "smiles": "CN1CCC[C@H]1C2=CN=CC=C2",
-   "formula": "C10H14N2",
-   "mw": "162.23"
-  },
-  {
-   "cid": 681,
-   "name": [
-    "Dopamine",
-    "多巴胺"
-   ],
-   "pubchem_title": "Dopamine",
-   "smiles": "C1=CC(=C(C=C1CCN)O)O",
-   "formula": "C8H11NO2",
-   "mw": "153.18"
-  },
-  {
-   "cid": 5202,
-   "name": [
-    "Serotonin",
-    "血清素"
-   ],
-   "pubchem_title": "Serotonin",
-   "smiles": "C1=CC2=C(C=C1O)C(=CN2)CCN",
-   "formula": "C10H12N2O",
-   "mw": "176.21"
-  },
-  {
    "cid": 5793,
    "name": [
     "Glucose",
@@ -109,6 +54,61 @@
    "smiles": "C([C@@H]1[C@H]([C@@H]([C@H](C(O1)O)O)O)O)O",
    "formula": "C6H12O6",
    "mw": "180.16"
+  },
+  {
+   "cid": 5988,
+   "name": [
+    "Sucrose",
+    "蔗糖"
+   ],
+   "pubchem_title": "Sucrose",
+   "smiles": "C([C@@H]1[C@H]([C@@H]([C@H]([C@H](O1)O[C@]2([C@H]([C@@H]([C@H](O2)CO)O)O)CO)O)O)O)O",
+   "formula": "C12H22O11",
+   "mw": "342.30"
+  },
+  {
+   "cid": 962,
+   "name": [
+    "Water",
+    "水"
+   ],
+   "pubchem_title": "Water",
+   "smiles": "O",
+   "formula": "H2O",
+   "mw": "18.015"
+  },
+  {
+   "cid": 702,
+   "name": [
+    "Ethanol",
+    "乙醇"
+   ],
+   "pubchem_title": "Ethanol",
+   "smiles": "CCO",
+   "formula": "C2H6O",
+   "mw": "46.07"
+  },
+  {
+   "cid": 241,
+   "name": [
+    "Benzene",
+    "苯"
+   ],
+   "pubchem_title": "Benzene",
+   "smiles": "C1=CC=CC=C1",
+   "formula": "C6H6",
+   "mw": "78.11"
+  },
+  {
+   "cid": 6324,
+   "name": [
+    "Ethene (ethylene)",
+    "乙烯"
+   ],
+   "pubchem_title": "Ethane",
+   "smiles": "CC",
+   "formula": "C2H6",
+   "mw": "30.07"
   },
   {
    "cid": 5957,
@@ -133,10 +133,241 @@
    "mw": "386.7"
   },
   {
+   "cid": 681,
+   "name": [
+    "Dopamine",
+    "多巴胺"
+   ],
+   "pubchem_title": "Dopamine",
+   "smiles": "C1=CC(=C(C=C1CCN)O)O",
+   "formula": "C8H11NO2",
+   "mw": "153.18"
+  },
+  {
+   "cid": 5202,
+   "name": [
+    "Serotonin",
+    "血清素"
+   ],
+   "pubchem_title": "Serotonin",
+   "smiles": "C1=CC2=C(C=C1O)C(=CN2)CCN",
+   "formula": "C10H12N2O",
+   "mw": "176.21"
+  },
+  {
+   "cid": 5816,
+   "name": [
+    "Adrenaline (epinephrine)",
+    "腎上腺素"
+   ],
+   "pubchem_title": "Epinephrine",
+   "smiles": "CNC[C@@H](C1=CC(=C(C=C1)O)O)O",
+   "formula": "C9H13NO3",
+   "mw": "183.20"
+  },
+  {
+   "cid": 6305,
+   "name": [
+    "Tryptophan",
+    "色胺酸"
+   ],
+   "pubchem_title": "L-Tryptophan",
+   "smiles": "C1=CC=C2C(=C1)C(=CN2)C[C@@H](C(=O)O)N",
+   "formula": "C11H12N2O2",
+   "mw": "204.22"
+  },
+  {
+   "cid": 5950,
+   "name": [
+    "Alanine",
+    "丙胺酸"
+   ],
+   "pubchem_title": "L-Alanine",
+   "smiles": "C[C@@H](C(=O)O)N",
+   "formula": "C3H7NO2",
+   "mw": "89.09"
+  },
+  {
+   "cid": 5280343,
+   "name": [
+    "Quercetin",
+    "槲皮素"
+   ],
+   "pubchem_title": "Quercetin",
+   "smiles": "C1=CC(=C(C=C1C2=C(C(=O)C3=C(C=C(C=C3O2)O)O)O)O)O",
+   "formula": "C15H10O7",
+   "mw": "302.23"
+  },
+  {
+   "cid": 445639,
+   "name": [
+    "Oleic acid",
+    "油酸"
+   ],
+   "pubchem_title": "Oleic Acid",
+   "smiles": "CCCCCCCC/C=C\\CCCCCCCC(=O)O",
+   "formula": "C18H34O2",
+   "mw": "282.5"
+  },
+  {
+   "cid": 1148,
+   "name": [
+    "Vitamin C (ascorbic acid)",
+    "維生素 C（抗壞血酸）"
+   ],
+   "pubchem_title": "Dl-Tryptophan",
+   "smiles": "C1=CC=C2C(=C1)C(=CN2)CC(C(=O)O)N",
+   "formula": "C11H12N2O2",
+   "mw": "204.22"
+  },
+  {
+   "cid": 5280489,
+   "name": [
+    "Beta-carotene",
+    "β-胡蘿蔔素"
+   ],
+   "pubchem_title": "Beta-Carotene",
+   "smiles": "CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C/C=C/C=C(/C=C/C=C(/C=C/C2=C(CCCC2(C)C)C)\\C)\\C)/C)/C",
+   "formula": "C40H56",
+   "mw": "536.9"
+  },
+  {
+   "cid": 445354,
+   "name": [
+    "Retinal",
+    "視黃醛"
+   ],
+   "pubchem_title": "Retinol",
+   "smiles": "CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C/CO)/C)/C",
+   "formula": "C20H30O",
+   "mw": "286.5"
+  },
+  {
+   "cid": 5291,
+   "name": [
+    "Imatinib (Gleevec)",
+    "伊馬替尼（基利克）"
+   ],
+   "pubchem_title": "Imatinib",
+   "smiles": "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5",
+   "formula": "C29H31N7O",
+   "mw": "493.6"
+  },
+  {
+   "cid": 123631,
+   "name": [
+    "Gefitinib (Iressa)",
+    "吉非替尼（艾瑞莎）"
+   ],
+   "pubchem_title": "Gefitinib",
+   "smiles": "COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4",
+   "formula": "C22H24ClFN4O3",
+   "mw": "446.9"
+  },
+  {
+   "cid": 176870,
+   "name": [
+    "Erlotinib (Tarceva)",
+    "厄洛替尼（得舒緩）"
+   ],
+   "pubchem_title": "Erlotinib",
+   "smiles": "COCCOC1=C(C=C2C(=C1)C(=NC=N2)NC3=CC=CC(=C3)C#C)OCCOC",
+   "formula": "C22H23N3O4",
+   "mw": "393.4"
+  },
+  {
+   "cid": 216239,
+   "name": [
+    "Osimertinib (Tagrisso)",
+    "奧希替尼（泰格莎）"
+   ],
+   "pubchem_title": "Sorafenib",
+   "smiles": "CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F",
+   "formula": "C21H16ClF3N4O3",
+   "mw": "464.8"
+  },
+  {
+   "cid": 36314,
+   "name": [
+    "Paclitaxel (Taxol)",
+    "太平洋紫杉醇（紫杉醇）"
+   ],
+   "pubchem_title": "Paclitaxel",
+   "smiles": "CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C",
+   "formula": "C47H51NO14",
+   "mw": "853.9"
+  },
+  {
+   "cid": 31703,
+   "name": [
+    "Doxorubicin",
+    "多柔比星"
+   ],
+   "pubchem_title": "Doxorubicin",
+   "smiles": "C[C@H]1[C@H]([C@H](C[C@@H](O1)O[C@H]2C[C@@](CC3=C2C(=C4C(=C3O)C(=O)C5=C(C4=O)C(=CC=C5)OC)O)(C(=O)CO)O)N)O",
+   "formula": "C27H29NO11",
+   "mw": "543.5"
+  },
+  {
+   "cid": 5746,
+   "name": [
+    "Methotrexate",
+    "甲氨蝶呤"
+   ],
+   "pubchem_title": "Mitomycin C",
+   "smiles": "CC1=C(C(=O)C2=C(C1=O)N3C[C@H]4[C@@H]([C@@]3([C@@H]2COC(=O)N)OC)N4)N",
+   "formula": "C15H18N4O5",
+   "mw": "334.33"
+  },
+  {
+   "cid": 2907,
+   "name": [
+    "Cisplatin",
+    "順鉑"
+   ],
+   "pubchem_title": "Cyclophosphamide",
+   "smiles": "C1CNP(=O)(OC1)N(CCCl)CCCl",
+   "formula": "C7H15Cl2N2O2P",
+   "mw": "261.08"
+  },
+  {
+   "cid": 5311,
+   "name": [
+    "Tamoxifen",
+    "泰莫西芬"
+   ],
+   "pubchem_title": "Vorinostat",
+   "smiles": "C1=CC=C(C=C1)NC(=O)CCCCCCC(=O)NO",
+   "formula": "C14H20N2O3",
+   "mw": "264.32"
+  },
+  {
+   "cid": 60750,
+   "name": [
+    "Gemcitabine",
+    "吉西他濱"
+   ],
+   "pubchem_title": "Gemcitabine",
+   "smiles": "C1=CN(C(=O)N=C1N)[C@H]2C([C@@H]([C@H](O2)CO)O)(F)F",
+   "formula": "C9H11F2N3O4",
+   "mw": "263.20"
+  },
+  {
+   "cid": 5904,
+   "name": [
+    "Penicillin G",
+    "青黴素 G"
+   ],
+   "pubchem_title": "Penicillin G",
+   "smiles": "CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C",
+   "formula": "C16H18N2O4S",
+   "mw": "334.4"
+  },
+  {
    "cid": 60823,
    "name": [
-    "Atorvastatin",
-    "阿托伐他汀"
+    "Atorvastatin (Lipitor)",
+    "阿托伐他汀（立普妥）"
    ],
    "pubchem_title": "Atorvastatin",
    "smiles": "CC(C)C1=C(C(=C(N1CC[C@H](C[C@H](CC(=O)O)O)O)C2=CC=C(C=C2)F)C3=CC=CC=C3)C(=O)NC4=CC=CC=C4",
@@ -144,15 +375,26 @@
    "mw": "558.6"
   },
   {
-   "cid": 5291,
+   "cid": 4091,
    "name": [
-    "Imatinib",
-    "伊馬替尼"
+    "Metformin",
+    "二甲雙胍"
    ],
-   "pubchem_title": "Imatinib",
-   "smiles": "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5",
-   "formula": "C29H31N7O",
-   "mw": "493.6"
+   "pubchem_title": "Metformin",
+   "smiles": "CN(C)C(=N)N=C(N)N",
+   "formula": "C4H11N5",
+   "mw": "129.16"
+  },
+  {
+   "cid": 135398744,
+   "name": [
+    "Sildenafil (Viagra)",
+    "西地那非（威而鋼）"
+   ],
+   "pubchem_title": "Sildenafil",
+   "smiles": "CCCC1=NN(C2=C1N=C(NC2=O)C3=C(C=CC(=C3)S(=O)(=O)N4CCN(CC4)C)OCC)C",
+   "formula": "C22H30N6O4S",
+   "mw": "474.6"
   },
   {
    "cid": 2662,
@@ -166,6 +408,39 @@
    "mw": "381.4"
   },
   {
+   "cid": 5288826,
+   "name": [
+    "Morphine",
+    "嗎啡"
+   ],
+   "pubchem_title": "Morphine",
+   "smiles": "CN1CC[C@]23[C@@H]4[C@H]1CC5=C2C(=C(C=C5)O)O[C@H]3[C@H](C=C4)O",
+   "formula": "C17H19NO3",
+   "mw": "285.34"
+  },
+  {
+   "cid": 89594,
+   "name": [
+    "Nicotine",
+    "尼古丁"
+   ],
+   "pubchem_title": "Nicotine",
+   "smiles": "CN1CCC[C@H]1C2=CN=CC=C2",
+   "formula": "C10H14N2",
+   "mw": "162.23"
+  },
+  {
+   "cid": 155903259,
+   "name": [
+    "Nirmatrelvir (Paxlovid)",
+    "奈瑪特韋（Paxlovid）"
+   ],
+   "pubchem_title": "Nirmatrelvir",
+   "smiles": "CC1([C@@H]2[C@H]1[C@H](N(C2)C(=O)[C@H](C(C)(C)C)NC(=O)C(F)(F)F)C(=O)N[C@@H](C[C@@H]3CCNC3=O)C#N)C",
+   "formula": "C23H32F3N5O4",
+   "mw": "499.5"
+  },
+  {
    "cid": 5280795,
    "name": [
     "Vitamin D3 (cholecalciferol)",
@@ -175,258 +450,781 @@
    "smiles": "C[C@H](CCCC(C)C)[C@H]1CC[C@@H]\\2[C@@]1(CCC/C2=C\\C=C/3\\C[C@H](CCC3=C)O)C",
    "formula": "C27H44O",
    "mw": "384.6"
+  },
+  {
+   "cid": 5284373,
+   "name": [
+    "Cyclosporine",
+    "環孢素"
+   ],
+   "pubchem_title": "Cyclosporin A",
+   "smiles": "CC[C@H]1C(=O)N(CC(=O)N([C@H](C(=O)N[C@H](C(=O)N([C@H](C(=O)N[C@H](C(=O)N[C@@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N1)[C@@H]([C@H](C)C/C=C/C)O)C)C(C)C)C)CC(C)C)C)CC(C)C)C)C)C)CC(C)C)C)C(C)C)CC(C)C)C)C",
+   "formula": "C62H111N11O12",
+   "mw": "1202.6"
+  },
+  {
+   "cid": 5090,
+   "name": [
+    "Rofecoxib (Vioxx, withdrawn 2004)",
+    "羅非昔布（偉克適，2004 年下市）"
+   ],
+   "pubchem_title": "Rofecoxib",
+   "smiles": "CS(=O)(=O)C1=CC=C(C=C1)C2=C(C(=O)OC2)C3=CC=CC=C3",
+   "formula": "C17H14O4S",
+   "mw": "314.4"
+  },
+  {
+   "cid": 5405,
+   "name": [
+    "Terfenadine (withdrawn)",
+    "特非那定（已下市）"
+   ],
+   "pubchem_title": "Terfenadine",
+   "smiles": "CC(C)(C)C1=CC=C(C=C1)C(CCCN2CCC(CC2)C(C3=CC=CC=C3)(C4=CC=CC=C4)O)O",
+   "formula": "C32H41NO2",
+   "mw": "471.7"
+  },
+  {
+   "cid": 5591,
+   "name": [
+    "Troglitazone (withdrawn)",
+    "曲格列酮（已下市）"
+   ],
+   "pubchem_title": "Troglitazone",
+   "smiles": "CC1=C(C2=C(CCC(O2)(C)COC3=CC=C(C=C3)CC4C(=O)NC(=O)S4)C(=C1O)C)C",
+   "formula": "C24H27NO5S",
+   "mw": "441.5"
+  },
+  {
+   "cid": 5426,
+   "name": [
+    "Thalidomide",
+    "沙利竇邁"
+   ],
+   "pubchem_title": "Thalidomide",
+   "smiles": "C1CC(=O)NC(=O)C1N2C(=O)C3=CC=CC=C3C2=O",
+   "formula": "C13H10N2O4",
+   "mw": "258.23"
+  },
+  {
+   "cid": 16850,
+   "name": [
+    "Fluorescein",
+    "螢光素"
+   ],
+   "pubchem_title": "Fluorescein",
+   "smiles": "C1=CC=C2C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+   "formula": "C20H12O5",
+   "mw": "332.3"
+  },
+  {
+   "cid": 6694,
+   "name": [
+    "Rhodamine B",
+    "羅丹明 B"
+   ],
+   "pubchem_title": "Rhodamine B",
+   "smiles": "CCN(CC)C1=CC2=C(C=C1)C(=C3C=CC(=[N+](CC)CC)C=C3O2)C4=CC=CC=C4C(=O)O.[Cl-]",
+   "formula": "C28H31ClN2O3",
+   "mw": "479.0"
+  },
+  {
+   "cid": 13806,
+   "name": [
+    "Rhodamine 6G",
+    "羅丹明 6G"
+   ],
+   "pubchem_title": "Ethyl 2-(6-(ethylamino)-3-(ethylimino)-2,7-dimethyl-3H-xanthen-9-yl)benzoate hydrochloride (1:1)",
+   "smiles": "CCNC1=CC2=C(C=C1C)C(=C3C=C(C(=[NH+]CC)C=C3O2)C)C4=CC=CC=C4C(=O)OCC.[Cl-]",
+   "formula": "C28H31ClN2O3",
+   "mw": "479.0"
+  },
+  {
+   "cid": 2954,
+   "name": [
+    "DAPI (DNA stain)",
+    "DAPI（DNA 染劑）"
+   ],
+   "pubchem_title": "4',6-Diamidino-2-Phenylindole",
+   "smiles": "C1=CC(=CC=C1C2=CC3=C(N2)C=C(C=C3)C(=N)N)C(=N)N",
+   "formula": "C16H15N5",
+   "mw": "277.32"
+  },
+  {
+   "cid": 1464,
+   "name": [
+    "Hoechst 33342 (DNA stain)",
+    "Hoechst 33342（DNA 染劑）"
+   ],
+   "pubchem_title": "Bisbenzimide",
+   "smiles": "CCOC1=CC=C(C=C1)C2=NC3=C(N2)C=C(C=C3)C4=NC5=C(N4)C=C(C=C5)N6CCN(CC6)C",
+   "formula": "C27H28N6O",
+   "mw": "452.6"
+  },
+  {
+   "cid": 5463350,
+   "name": [
+    "Pinacyanol (a cyanine dye)",
+    "Pinacyanol（菁染料）"
+   ],
+   "pubchem_title": "Carbocyanine",
+   "smiles": "CCN1/C(=C/C=C/C2=[N+](C3=CC=CC=C3C=C2)CC)/C=CC4=CC=CC=C41.[I-]",
+   "formula": "C25H25IN2",
+   "mw": "480.4"
+  },
+  {
+   "cid": 5702697,
+   "name": [
+    "3,3'-diethylthiadicarbocyanine",
+    "3,3′-二乙基噻二碳菁"
+   ],
+   "pubchem_title": "Dithiazanine Iodide",
+   "smiles": "CCN\\1C2=CC=CC=C2S/C1=C\\C=C\\C=C\\C3=[N+](C4=CC=CC=C4S3)CC.[I-]",
+   "formula": "C23H23IN2S2",
+   "mw": "518.5"
+  },
+  {
+   "cid": 7050,
+   "name": [
+    "Coumarin 1",
+    "香豆素 1"
+   ],
+   "pubchem_title": "4-Methyl-7-diethylaminocoumarin",
+   "smiles": "CCN(CC)C1=CC2=C(C=C1)C(=CC(=O)O2)C",
+   "formula": "C14H17NO2",
+   "mw": "231.29"
+  },
+  {
+   "cid": 129849628,
+   "name": [
+    "GFP chromophore (HBDI)",
+    "GFP 發色團（HBDI）"
+   ],
+   "pubchem_title": "4-Hydroxybenzylidene-1,2 dimethylimidazolinone",
+   "smiles": "CC1=NC(=O)C(=CC2=CC=C(C=C2)O)N1C",
+   "formula": "C12H12N2O2",
+   "mw": "216.24"
+  },
+  {
+   "cid": 445858,
+   "name": [
+    "Ferulic acid",
+    "阿魏酸"
+   ],
+   "pubchem_title": "Ferulic Acid",
+   "smiles": "COC1=C(C=CC(=C1)/C=C/C(=O)O)O",
+   "formula": "C10H10O4",
+   "mw": "194.18"
   }
  ],
  "structures": [
   {
    "id": "1CRN",
+   "name": [
+    "Crambin, a small plant protein",
+    "Crambin：植物小蛋白"
+   ],
    "title": "WATER STRUCTURE OF A HYDROPHOBIC PROTEIN AT ATOMIC RESOLUTION. PENTAGON RINGS OF WATER MOLECULES IN CRYSTALS OF CRAMBIN",
    "method": "X-RAY DIFFRACTION",
    "resolution": 1.5,
    "released": "1981",
-   "atoms": 327,
-   "name": [
-    "Crambin, a small plant protein",
-    "Crambin：植物小蛋白"
-   ]
+   "atoms": 327
   },
   {
    "id": "1MBN",
+   "name": [
+    "Myoglobin (sperm whale)",
+    "肌紅蛋白（抹香鯨）"
+   ],
    "title": "The stereochemistry of the protein myoglobin",
    "method": "X-RAY DIFFRACTION",
    "resolution": 2.0,
    "released": "1976",
-   "atoms": 1260,
-   "name": [
-    "Myoglobin (sperm whale)",
-    "肌紅蛋白（抹香鯨）"
-   ]
+   "atoms": 1260
   },
   {
    "id": "4HHB",
+   "name": [
+    "Human deoxyhaemoglobin",
+    "人類去氧血紅蛋白"
+   ],
    "title": "THE CRYSTAL STRUCTURE OF HUMAN DEOXYHAEMOGLOBIN AT 1.74 ANGSTROMS RESOLUTION",
    "method": "X-RAY DIFFRACTION",
    "resolution": 1.74,
    "released": "1984",
-   "atoms": 4779,
-   "name": [
-    "Human deoxyhaemoglobin",
-    "人類去氧血紅蛋白"
-   ]
+   "atoms": 4779
   },
   {
    "id": "1UBQ",
+   "name": [
+    "Ubiquitin",
+    "泛素"
+   ],
    "title": "STRUCTURE OF UBIQUITIN REFINED AT 1.8 ANGSTROMS RESOLUTION",
    "method": "X-RAY DIFFRACTION",
    "resolution": 1.8,
    "released": "1987",
-   "atoms": 660,
-   "name": [
-    "Ubiquitin",
-    "泛素"
-   ]
+   "atoms": 660
   },
   {
    "id": "1BNA",
+   "name": [
+    "B-DNA dodecamer",
+    "B 型 DNA 十二聚體"
+   ],
    "title": "STRUCTURE OF A B-DNA DODECAMER. CONFORMATION AND DYNAMICS",
    "method": "X-RAY DIFFRACTION",
    "resolution": 1.9,
    "released": "1981",
-   "atoms": 566,
-   "name": [
-    "B-DNA dodecamer",
-    "B 型 DNA 十二聚體"
-   ]
-  },
-  {
-   "id": "1HSG",
-   "title": "CRYSTAL STRUCTURE AT 1.9 ANGSTROMS RESOLUTION OF HUMAN IMMUNODEFICIENCY VIRUS (HIV) II PROTEASE COMPLEXED WITH L-735,524, AN ORALLY BIOAVAILABLE INHIBITOR OF THE HIV PROTEASES",
-   "method": "X-RAY DIFFRACTION",
-   "resolution": 2.0,
-   "released": "1996",
-   "atoms": 1686,
-   "name": [
-    "HIV protease with the inhibitor L-735,524",
-    "HIV 蛋白酶與抑制劑 L-735,524"
-   ]
+   "atoms": 566
   },
   {
    "id": "6LYZ",
+   "name": [
+    "Hen egg-white lysozyme",
+    "雞蛋白溶菌酶"
+   ],
    "title": "Real-space refinement of the structure of hen egg-white lysozyme",
    "method": "X-RAY DIFFRACTION",
    "resolution": 2.0,
    "released": "1977",
-   "atoms": 1102,
-   "name": [
-    "Hen egg-white lysozyme",
-    "雞蛋白溶菌酶"
-   ]
-  },
-  {
-   "id": "1GFL",
-   "title": "STRUCTURE OF GREEN FLUORESCENT PROTEIN",
-   "method": "X-RAY DIFFRACTION",
-   "resolution": 1.9,
-   "released": "1997",
-   "atoms": 3950,
-   "name": [
-    "Green fluorescent protein (GFP)",
-    "綠色螢光蛋白（GFP）"
-   ]
+   "atoms": 1102
   },
   {
    "id": "3PTB",
+   "name": [
+    "Trypsin with benzamidine",
+    "胰蛋白酶與苯甲脒"
+   ],
    "title": "THE GEOMETRY OF THE REACTIVE SITE AND OF THE PEPTIDE GROUPS IN TRYPSIN, TRYPSINOGEN AND ITS COMPLEXES WITH INHIBITORS",
    "method": "X-RAY DIFFRACTION",
    "resolution": 1.7,
    "released": "1983",
-   "atoms": 1701,
-   "name": [
-    "Trypsin",
-    "胰蛋白酶"
-   ]
-  },
-  {
-   "id": "2PTC",
-   "title": "THE GEOMETRY OF THE REACTIVE SITE AND OF THE PEPTIDE GROUPS IN TRYPSIN, TRYPSINOGEN AND ITS COMPLEXES WITH INHIBITORS",
-   "method": "X-RAY DIFFRACTION",
-   "resolution": 1.9,
-   "released": "1983",
-   "atoms": 2241,
-   "name": [
-    "Trypsin bound to an inhibitor",
-    "胰蛋白酶與抑制劑結合"
-   ]
+   "atoms": 1701
   },
   {
    "id": "1STP",
+   "name": [
+    "Streptavidin binding biotin",
+    "鏈黴親和素結合生物素"
+   ],
    "title": "STRUCTURAL ORIGINS OF HIGH-AFFINITY BIOTIN BINDING TO STREPTAVIDIN",
    "method": "X-RAY DIFFRACTION",
    "resolution": 2.6,
    "released": "1992",
-   "atoms": 1001,
+   "atoms": 1001
+  },
+  {
+   "id": "1GFL",
    "name": [
-    "Streptavidin binding biotin",
-    "鏈黴親和素結合生物素"
-   ]
+    "Green fluorescent protein (GFP)",
+    "綠色螢光蛋白（GFP）"
+   ],
+   "title": "STRUCTURE OF GREEN FLUORESCENT PROTEIN",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 1.9,
+   "released": "1997",
+   "atoms": 3950
+  },
+  {
+   "id": "1EMA",
+   "name": [
+    "GFP S65T, the bright mutant",
+    "GFP S65T：高亮度突變體"
+   ],
+   "title": "GREEN FLUORESCENT PROTEIN FROM AEQUOREA VICTORIA",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 1.9,
+   "released": "1996",
+   "atoms": 1866
+  },
+  {
+   "id": "2H5Q",
+   "name": [
+    "mCherry, a red fluorescent protein",
+    "mCherry：紅色螢光蛋白"
+   ],
+   "title": "Crystal structure of mCherry",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 1.36,
+   "released": "2006",
+   "atoms": 2121
+  },
+  {
+   "id": "1IEP",
+   "name": [
+    "Imatinib bound to the ABL kinase",
+    "伊馬替尼與 ABL 激酶結合"
+   ],
+   "title": "CRYSTAL STRUCTURE OF THE C-ABL KINASE DOMAIN IN COMPLEX WITH STI-571.",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.1,
+   "released": "2001",
+   "atoms": 4710
+  },
+  {
+   "id": "1HSG",
+   "name": [
+    "HIV protease with indinavir",
+    "HIV 蛋白酶與茚地那韋"
+   ],
+   "title": "CRYSTAL STRUCTURE AT 1.9 ANGSTROMS RESOLUTION OF HUMAN IMMUNODEFICIENCY VIRUS (HIV) II PROTEASE COMPLEXED WITH L-735,524, AN ORALLY BIOAVAILABLE INHIBITOR OF THE HIV PROTEASES",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.0,
+   "released": "1996",
+   "atoms": 1686
+  },
+  {
+   "id": "7SI9",
+   "name": [
+    "SARS-CoV-2 main protease with nirmatrelvir",
+    "SARS-CoV-2 主要蛋白酶與奈瑪特韋"
+   ],
+   "title": "Room temperature X-ray structure of SARS-CoV-2 main protease (Mpro) in complex with PF-07321332",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.0,
+   "released": "2021",
+   "atoms": 2537
+  },
+  {
+   "id": "1M17",
+   "name": [
+    "EGFR kinase with erlotinib",
+    "EGFR 激酶與厄洛替尼"
+   ],
+   "title": "Epidermal Growth Factor Receptor tyrosine kinase domain with 4-anilinoquinazoline inhibitor erlotinib",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.6,
+   "released": "2002",
+   "atoms": 2560
+  },
+  {
+   "id": "4HJO",
+   "name": [
+    "EGFR kinase domain",
+    "EGFR 激酶結構域"
+   ],
+   "title": "Crystal structure of the inactive EGFR tyrosine kinase domain with erlotinib",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.75,
+   "released": "2012",
+   "atoms": 2264
+  },
+  {
+   "id": "3LN1",
+   "name": [
+    "Cyclooxygenase-2 with celecoxib",
+    "環氧合酶-2 與塞來昔布"
+   ],
+   "title": "Structure of celecoxib bound at the COX-2 active site",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.4,
+   "released": "2010",
+   "atoms": 18603
   },
   {
    "id": "6M0J",
+   "name": [
+    "SARS-CoV-2 spike receptor-binding domain with ACE2",
+    "SARS-CoV-2 棘蛋白受體結合區與 ACE2"
+   ],
    "title": "Crystal structure of SARS-CoV-2 spike receptor-binding domain bound with ACE2",
    "method": "X-RAY DIFFRACTION",
    "resolution": 2.45,
    "released": "2020",
-   "atoms": 6571,
+   "atoms": 6571
+  },
+  {
+   "id": "1AO7",
    "name": [
-    "SARS-CoV-2 spike receptor-binding domain with ACE2",
-    "SARS-CoV-2 棘蛋白受體結合區與 ACE2"
-   ]
+    "A6 T-cell receptor on a peptide-MHC (HLA-A2)",
+    "A6 T 細胞受體結合胜肽–MHC（HLA-A2）"
+   ],
+   "title": "COMPLEX BETWEEN HUMAN T-CELL RECEPTOR, VIRAL PEPTIDE (TAX), AND HLA-A 0201",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.6,
+   "released": "1997",
+   "atoms": 5711
+  },
+  {
+   "id": "2BNR",
+   "name": [
+    "1G4 T-cell receptor on NY-ESO-1 peptide-MHC",
+    "1G4 T 細胞受體結合 NY-ESO-1 胜肽–MHC"
+   ],
+   "title": "Structural and kinetic basis for heightened immunogenicity of T cell vaccines",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 1.9,
+   "released": "2005",
+   "atoms": 7145
+  },
+  {
+   "id": "3QDG",
+   "name": [
+    "DMF5 T-cell receptor on a MART-1 peptide-MHC",
+    "DMF5 T 細胞受體結合 MART-1 胜肽–MHC"
+   ],
+   "title": "The complex between TCR DMF5 and human Class I MHC HLA-A2 with the bound MART-1(26-35)(A27L) peptide",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.69,
+   "released": "2011",
+   "atoms": 6633
+  },
+  {
+   "id": "1HHK",
+   "name": [
+    "Class I MHC (HLA-A2) with a peptide",
+    "第一型 MHC（HLA-A2）與胜肽"
+   ],
+   "title": "THE ANTIGENIC IDENTITY OF PEPTIDE(SLASH)MHC COMPLEXES: A COMPARISON OF THE CONFORMATION OF FIVE PEPTIDES PRESENTED BY HLA-A2",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.5,
+   "released": "1993",
+   "atoms": 6322
+  },
+  {
+   "id": "5WT9",
+   "name": [
+    "PD-1 bound by nivolumab",
+    "PD-1 與納武利尤單抗結合"
+   ],
+   "title": "Complex structure of PD-1 and nivolumab-Fab",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.401,
+   "released": "2017",
+   "atoms": 4391
+  },
+  {
+   "id": "7URV",
+   "name": [
+    "CD19 bound by the FMC63 binder used in CAR-T cells",
+    "CD19 與 CAR-T 細胞所用的 FMC63 結合"
+   ],
+   "title": "FMC63 scFv in complex with soluble CD19",
+   "method": "ELECTRON MICROSCOPY",
+   "resolution": 3.05,
+   "released": "2023",
+   "atoms": 3460
+  },
+  {
+   "id": "6AL5",
+   "name": [
+    "CD19 bound by the B43 antibody fragment",
+    "CD19 與 B43 抗體片段結合"
+   ],
+   "title": "COMPLEX BETWEEN CD19 (N138Q MUTANT) AND B43 FAB",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 3.0,
+   "released": "2018",
+   "atoms": 5063
+  },
+  {
+   "id": "1IGT",
+   "name": [
+    "An intact antibody (IgG)",
+    "完整抗體（IgG）"
+   ],
+   "title": "STRUCTURE OF IMMUNOGLOBULIN",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.8,
+   "released": "1997",
+   "atoms": 10434
+  },
+  {
+   "id": "1HZH",
+   "name": [
+    "An intact human IgG antibody (b12)",
+    "完整的人類 IgG 抗體（b12）"
+   ],
+   "title": "CRYSTAL STRUCTURE OF THE INTACT HUMAN IGG B12 WITH BROAD AND POTENT ACTIVITY AGAINST PRIMARY HIV-1 ISOLATES: A TEMPLATE FOR HIV VACCINE DESIGN",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.7,
+   "released": "2001",
+   "atoms": 10647
+  },
+  {
+   "id": "1BL8",
+   "name": [
+    "KcsA potassium channel",
+    "KcsA 鉀離子通道"
+   ],
+   "title": "POTASSIUM CHANNEL (KCSA) FROM STREPTOMYCES LIVIDANS",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 3.2,
+   "released": "1998",
+   "atoms": 2824
+  },
+  {
+   "id": "1ATP",
+   "name": [
+    "Protein kinase A with ATP",
+    "蛋白激酶 A 與 ATP"
+   ],
+   "title": "2.2 angstrom refined crystal structure of the catalytic subunit of cAMP-dependent protein kinase complexed with MNATP and a peptide inhibitor",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.2,
+   "released": "1993",
+   "atoms": 3070
+  },
+  {
+   "id": "6VXX",
+   "name": [
+    "SARS-CoV-2 spike protein, closed",
+    "SARS-CoV-2 棘蛋白（閉合）"
+   ],
+   "title": "Structure of the SARS-CoV-2 spike glycoprotein (closed state)",
+   "method": "ELECTRON MICROSCOPY",
+   "resolution": 2.8,
+   "released": "2020",
+   "atoms": 23694
+  },
+  {
+   "id": "1TUP",
+   "name": [
+    "p53 core domain bound to DNA",
+    "p53 核心結構域與 DNA 結合"
+   ],
+   "title": "TUMOR SUPPRESSOR P53 COMPLEXED WITH DNA",
+   "method": "X-RAY DIFFRACTION",
+   "resolution": 2.2,
+   "released": "1995",
+   "atoms": 5828
   }
  ],
  "predictions": [
   {
    "uniprot": "P69905",
+   "name": [
+    "Hemoglobin subunit alpha",
+    "血紅蛋白 α 次單元"
+   ],
    "description": "Hemoglobin subunit alpha",
    "gene": "HBA1",
    "organism": "Homo sapiens",
    "length": 142,
    "mean_plddt": 98.06,
-   "version": 6,
-   "name": [
-    "Hemoglobin subunit alpha",
-    "血紅蛋白 α 次單元"
-   ]
+   "version": 6
   },
   {
    "uniprot": "P68871",
+   "name": [
+    "Hemoglobin subunit beta",
+    "血紅蛋白 β 次單元"
+   ],
    "description": "Hemoglobin subunit beta",
    "gene": "HBB",
    "organism": "Homo sapiens",
    "length": 147,
    "mean_plddt": 97.19,
-   "version": 6,
-   "name": [
-    "Hemoglobin subunit beta",
-    "血紅蛋白 β 次單元"
-   ]
+   "version": 6
   },
   {
    "uniprot": "P01308",
+   "name": [
+    "Insulin",
+    "胰島素"
+   ],
    "description": "Insulin",
    "gene": "INS",
    "organism": "Homo sapiens",
    "length": 110,
    "mean_plddt": 52.91,
-   "version": 6,
-   "name": [
-    "Insulin",
-    "胰島素"
-   ]
+   "version": 6
   },
   {
    "uniprot": "P04637",
+   "name": [
+    "Cellular tumor antigen p53",
+    "腫瘤抑制蛋白 p53"
+   ],
    "description": "Cellular tumor antigen p53",
    "gene": "TP53",
    "organism": "Homo sapiens",
    "length": 393,
    "mean_plddt": 75.06,
-   "version": 6,
-   "name": [
-    "Cellular tumor antigen p53",
-    "腫瘤抑制蛋白 p53"
-   ]
+   "version": 6
   },
   {
    "uniprot": "P01542",
+   "name": [
+    "Crambin",
+    "Crambin"
+   ],
    "description": "Crambin",
    "gene": "THI2",
    "organism": "Crambe hispanica subsp. abyssinica",
    "length": 46,
    "mean_plddt": 93.5,
-   "version": 6,
-   "name": [
-    "Crambin",
-    "Crambin"
-   ]
+   "version": 6
   },
   {
    "uniprot": "P02144",
+   "name": [
+    "Myoglobin",
+    "肌紅蛋白"
+   ],
    "description": "Myoglobin",
    "gene": "MB",
    "organism": "Homo sapiens",
    "length": 154,
    "mean_plddt": 97.19,
-   "version": 6,
-   "name": [
-    "Myoglobin",
-    "肌紅蛋白"
-   ]
+   "version": 6
   },
   {
    "uniprot": "P00698",
+   "name": [
+    "Lysozyme C",
+    "溶菌酶 C"
+   ],
    "description": "Lysozyme C",
    "gene": "LYZ",
    "organism": "Gallus gallus",
    "length": 147,
    "mean_plddt": 93.88,
-   "version": 6,
-   "name": [
-    "Lysozyme C",
-    "溶菌酶 C"
-   ]
+   "version": 6
   },
   {
    "uniprot": "P0CG48",
+   "name": [
+    "Polyubiquitin-C",
+    "多泛素 C"
+   ],
    "description": "Polyubiquitin-C",
    "gene": "UBC",
    "organism": "Homo sapiens",
    "length": 685,
    "mean_plddt": 88.62,
-   "version": 6,
+   "version": 6
+  },
+  {
+   "uniprot": "P00533",
    "name": [
-    "Polyubiquitin-C",
-    "多泛素 C"
-   ]
+    "Epidermal growth factor receptor",
+    "表皮生長因子受體（EGFR）"
+   ],
+   "description": "Epidermal growth factor receptor",
+   "gene": "EGFR",
+   "organism": "Homo sapiens",
+   "length": 1210,
+   "mean_plddt": 75.94,
+   "version": 6
+  },
+  {
+   "uniprot": "P11362",
+   "name": [
+    "Fibroblast growth factor receptor 1",
+    "纖維母細胞生長因子受體 1（FGFR1）"
+   ],
+   "description": "Fibroblast growth factor receptor 1",
+   "gene": "FGFR1",
+   "organism": "Homo sapiens",
+   "length": 822,
+   "mean_plddt": 73.88,
+   "version": 6
+  },
+  {
+   "uniprot": "P00519",
+   "name": [
+    "Tyrosine-protein kinase ABL1",
+    "ABL1 酪胺酸激酶"
+   ],
+   "description": "Tyrosine-protein kinase ABL1",
+   "gene": "ABL1",
+   "organism": "Homo sapiens",
+   "length": 1130,
+   "mean_plddt": 63.38,
+   "version": 6
+  },
+  {
+   "uniprot": "P42212",
+   "name": [
+    "Green fluorescent protein",
+    "綠色螢光蛋白（GFP）"
+   ],
+   "description": "Green fluorescent protein",
+   "gene": "GFP",
+   "organism": "Aequorea victoria",
+   "length": 238,
+   "mean_plddt": 96.62,
+   "version": 6
+  },
+  {
+   "uniprot": "P15391",
+   "name": [
+    "B-lymphocyte antigen CD19",
+    "CD19"
+   ],
+   "description": "B-lymphocyte antigen CD19",
+   "gene": "CD19",
+   "organism": "Homo sapiens",
+   "length": 556,
+   "mean_plddt": 62.22,
+   "version": 6
+  },
+  {
+   "uniprot": "Q9NZQ7",
+   "name": [
+    "Programmed cell death 1 ligand 1",
+    "PD-L1"
+   ],
+   "description": "Programmed cell death 1 ligand 1",
+   "gene": "CD274",
+   "organism": "Homo sapiens",
+   "length": 290,
+   "mean_plddt": 88.25,
+   "version": 6
+  },
+  {
+   "uniprot": "P01116",
+   "name": [
+    "GTPase KRas",
+    "KRAS"
+   ],
+   "description": "GTPase KRas",
+   "gene": "KRAS",
+   "organism": "Homo sapiens",
+   "length": 189,
+   "mean_plddt": 91.5,
+   "version": 6
+  },
+  {
+   "uniprot": "P38398",
+   "name": [
+    "Breast cancer type 1 susceptibility protein",
+    "BRCA1"
+   ],
+   "description": "Breast cancer type 1 susceptibility protein",
+   "gene": "BRCA1",
+   "organism": "Homo sapiens",
+   "length": 1863,
+   "mean_plddt": 41.59,
+   "version": 6
+  },
+  {
+   "uniprot": "P0DTC2",
+   "name": [
+    "Spike glycoprotein",
+    "SARS-CoV-2 棘蛋白"
+   ],
+   "description": "Spike glycoprotein",
+   "gene": "S",
+   "organism": "Severe acute respiratory syndrome coronavirus 2",
+   "length": 1273,
+   "mean_plddt": 67.14,
+   "version": 1
+  },
+  {
+   "uniprot": "P02751",
+   "name": [
+    "Fibronectin",
+    "纖維連接蛋白"
+   ],
+   "description": "Fibronectin",
+   "gene": "FN1",
+   "organism": "Homo sapiens",
+   "length": 2477,
+   "mean_plddt": 69.62,
+   "version": 6
   }
  ],
  "fetched": "2026-11-22"

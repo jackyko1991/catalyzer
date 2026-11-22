@@ -1,0 +1,58 @@
+title: 'Designing a dye: colour from the length of the chain'
+category: molecules
+level: intermediate
+order: 8
+summary: >
+  A microscope stain is a molecule that absorbs one colour and often gives another back. In a **cyanine** dye
+  (Cy3, Cy5 and their relatives) the colour comes from one thing: the chain of carbons joining its two nitrogens.
+  Treat the electrons in that chain as a particle in a box of length $L$ and the absorption maximum follows,
+  $\lambda = 8mcL^2 / \left(h(N+1)\right)$ with $N = P+3$ electrons for $P$ carbons. Count the chain with RDKit,
+  predict the colour, and compare with eleven measured dyes: each extra `-CH=CH-` moves the absorption about
+  100 nm towards the red, which is exactly how Cy3 becomes Cy5.
+imports: [rdkit.Chem, numpy]
+forbidden: [GetShortestPath, rdmolops]
+uses:
+  - {library: RDKit, api: Mol.GetAtomWithIdx, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Mol.GetAtomWithIdx"}
+  - {library: RDKit, api: Atom.GetNeighbors, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Atom.GetNeighbors"}
+  - {library: "H. Kuhn, J. Chem. Phys. 16, 840 (1948)", api: "the free-electron model of dyes", url: "https://doi.org/10.1063/1.1747011"}
+params:
+  - id: series
+    type: select
+    label: [Dye series, 染料系列]
+    default: thia
+    options:
+      - [thiacyanines (Cy-like), 噻唑菁（類 Cy 染料）, thia]
+      - ["quinoline 4,4′", "喹啉 4,4′", quinoline44]
+      - ["quinoline 2,2′", "喹啉 2,2′", quinoline22]
+      - [Cy3 and Cy5, Cy3 與 Cy5, cy]
+      - [all of them, 全部, all]
+  - id: alpha
+    type: float
+    label: [End correction α (bonds), 端點修正 α（鍵數）]
+    default: 0.0
+    min: 0.0
+    max: 2.0
+    step: 0.05
+mirror:
+  - text: The conjugated chain runs from one nitrogen to the other; walk the molecule and keep the shortest path between them.
+    code: |-
+      queue = [(start, [start])]
+      seen = {start}
+  - text: P is the number of carbons strictly between the two nitrogens.
+    code: |-
+      return sum(mol.GetAtomWithIdx(i).GetSymbol() == "C" for i in best[1:-1])
+  - text: The box holds one electron per chain carbon plus three from the two nitrogens, and is one bond longer at each end.
+    code: |-
+      n_electrons = p + 3
+      length = (p + 3 + alpha) * BOND
+  - text: Kuhn's formula; the answer is in metres, so turn it into nanometres.
+    code: |-
+      lam = 8 * M_E * C * length**2 / (PLANCK * (n_electrons + 1))
+      return lam * 1e9
+notes: >
+  The model is cruder than it looks and that is the lesson. With α = 0 it fits the quinoline 4,4′ series almost
+  exactly, but is 100–200 nm short for the others: the rings at the ends of the chain let the electrons spread
+  further than the chain alone, and α is the fitted size of that end effect. The same box model fails badly for
+  plain polyenes (β-carotene and friends), because their bonds alternate long and short, which the flat-bottomed
+  box ignores. Real dye design also has to care about brightness, photostability and whether the dye stays put in
+  a cell; absorption is only the first of those.

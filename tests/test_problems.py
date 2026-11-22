@@ -117,7 +117,7 @@ def test_runner_reports_a_timeout():
     assert result.status == "error" and "longer than" in result.problems[0]
 
 
-RENDER_KINDS = {"svg", "mol3d", "pdb3d", "table", "bars", "metric", "text", "link"}
+RENDER_KINDS = {"svg", "mol3d", "pdb3d", "table", "bars", "scatter", "metric", "text", "link"}
 
 
 @pytest.mark.parametrize("problem", PROBLEMS, ids=IDS)

@@ -22,6 +22,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { findProblem, LEVEL, type Param, type Problem, PROBLEMS, problemName, TRACKS } from "./problems";
 import ResultsView, { type ResultItem } from "./ResultsView";
 import WorkspacePage from "./WorkspacePage";
+import { GuideWindow, markSolved, TutorialBar } from "./tutorial";
 import { loadDraft, RUNNER, runAnswer, type RunResult, runnerAlive, saveDraft } from "./runner";
 
 const PY = python();
@@ -169,6 +170,7 @@ function ProblemView({ name }: { name: string | null }) {
       </section>
 
       <Workbench key={problem.id} problem={problem} phoneTab={tab} onRun={() => setTab((t) => (t === "code" ? "results" : t))} />
+      <GuideWindow problemId={problem.id} onPhoneTab={setTab} />
     </div>
   );
 }
@@ -290,6 +292,9 @@ function ProblemHeader({ problem }: { problem: Problem }) {
             <span className={`h-1.5 w-1.5 rounded-full ${LEVEL_DOT[problem.level]}`} />
             {pick(LEVEL[problem.level])}
           </span>
+        </div>
+        <div className="mt-2">
+          <TutorialBar problemId={problem.id} />
         </div>
       </div>
       <p className="text-sm leading-relaxed text-gray-600">
@@ -426,6 +431,7 @@ function Workbench({ problem, phoneTab, onRun }: { problem: Problem; phoneTab: P
       } else {
         setTests(r);
         setPane("tests");
+        if (r.status === "passed") markSolved(problem.id);
       }
       onRun();
     } catch {

@@ -815,6 +815,134 @@
   "picture": "problems/molecules/similarity.svg"
  },
  {
+  "id": "molecules/fluorophore",
+  "category": "molecules",
+  "level": "intermediate",
+  "title": [
+   "Designing a dye: colour from the length of the chain",
+   "設計染料：顏色來自鏈的長度"
+  ],
+  "summary": [
+   "A microscope stain is a molecule that absorbs one colour and often gives another back. In a **cyanine** dye (Cy3, Cy5 and their relatives) the colour comes from one thing: the chain of carbons joining its two nitrogens. Treat the electrons in that chain as a particle in a box of length $L$ and the absorption maximum follows, $\\lambda = 8mcL^2 / \\left(h(N+1)\\right)$ with $N = P+3$ electrons for $P$ carbons. Count the chain with RDKit, predict the colour, and compare with eleven measured dyes: each extra `-CH=CH-` moves the absorption about 100 nm towards the red, which is exactly how Cy3 becomes Cy5.",
+   "顯微鏡染劑是一種會吸收某個顏色、常常再放出另一個顏色的分子。在**菁染料**（Cy3、Cy5 及其同類）中，顏色只取決於一件事： 連接兩個氮原子的碳鏈。把鏈上的電子看成長度為 $L$ 的盒中粒子，吸收峰就跟著出來： $\\lambda = 8mcL^2 / \\left(h(N+1)\\right)$，其中 $P$ 個碳對應 $N = P+3$ 個電子。用 RDKit 數出鏈長、預測顏色， 再和十一個實測染料比較：每多一個 `-CH=CH-`，吸收就往紅移約 100 nm——Cy3 正是這樣變成 Cy5 的。"
+  ],
+  "notes": [
+   "The model is cruder than it looks and that is the lesson. With α = 0 it fits the quinoline 4,4′ series almost exactly, but is 100–200 nm short for the others: the rings at the ends of the chain let the electrons spread further than the chain alone, and α is the fitted size of that end effect. The same box model fails badly for plain polyenes (β-carotene and friends), because their bonds alternate long and short, which the flat-bottomed box ignores. Real dye design also has to care about brightness, photostability and whether the dye stays put in a cell; absorption is only the first of those.",
+   "這個模型比看起來更粗糙，而這正是重點。取 α = 0 時，它幾乎完美吻合喹啉 4,4′ 系列，卻比其他系列短了 100–200 nm： 鏈兩端的環讓電子能比鏈本身延伸得更遠，而 α 就是這個端點效應的擬合大小。同一個盒子模型用在單純的多烯 （例如 β-胡蘿蔔素）上會嚴重失準，因為它們的鍵長長短交替，而平底的盒子忽略了這一點。真實的染料設計還要顧及亮度、 光穩定性，以及染料會不會留在細胞該在的位置；吸收只是其中第一件事。"
+  ],
+  "mirror": [
+   {
+    "text": [
+     "The conjugated chain runs from one nitrogen to the other; walk the molecule and keep the shortest path between them.",
+     "共軛鏈從一個氮連到另一個氮；走過整個分子，保留兩者之間最短的路徑。"
+    ],
+    "code": "queue = [(start, [start])]\nseen = {start}"
+   },
+   {
+    "text": [
+     "P is the number of carbons strictly between the two nitrogens.",
+     "P 是兩個氮之間（不含氮本身）的碳原子數。"
+    ],
+    "code": "return sum(mol.GetAtomWithIdx(i).GetSymbol() == \"C\" for i in best[1:-1])"
+   },
+   {
+    "text": [
+     "The box holds one electron per chain carbon plus three from the two nitrogens, and is one bond longer at each end.",
+     "盒子裡每個鏈碳貢獻一個電子，兩個氮再貢獻三個；盒子兩端各比鏈多一個鍵長。"
+    ],
+    "code": "n_electrons = p + 3\nlength = (p + 3 + alpha) * BOND"
+   },
+   {
+    "text": [
+     "Kuhn's formula; the answer is in metres, so turn it into nanometres.",
+     "套用庫恩的公式；算出來的單位是公尺，要換成奈米。"
+    ],
+    "code": "lam = 8 * M_E * C * length**2 / (PLANCK * (n_electrons + 1))\nreturn lam * 1e9"
+   }
+  ],
+  "uses": [
+   {
+    "library": "RDKit",
+    "api": "Mol.GetAtomWithIdx",
+    "url": "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Mol.GetAtomWithIdx"
+   },
+   {
+    "library": "RDKit",
+    "api": "Atom.GetNeighbors",
+    "url": "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Atom.GetNeighbors"
+   },
+   {
+    "library": "H. Kuhn, J. Chem. Phys. 16, 840 (1948)",
+    "api": "the free-electron model of dyes",
+    "url": "https://doi.org/10.1063/1.1747011"
+   }
+  ],
+  "imports": [
+   "rdkit.Chem",
+   "numpy"
+  ],
+  "forbidden": [
+   "GetShortestPath",
+   "rdmolops"
+  ],
+  "stub": "import numpy as np\nfrom rdkit import Chem\n\n# Physical constants (SI) and the average bond length along a conjugated chain, 1.39 Å.\nPLANCK = 6.62607015e-34\nM_E = 9.1093837015e-31\nC = 2.99792458e8\nBOND = 1.39e-10\n\n\ndef chain_length(smiles: str) -> int:\n    \"\"\"P: the number of carbons on the shortest path between the dye's two nitrogens.\n\n    Walk the molecule yourself (RDKit's GetShortestPath is not allowed here).\n    chain_length(\"CCN1/C(=C/C2=[N+](C3=CC=CC=C3C=C2)CC)/C=CC4=CC=CC=C41\") == 3\n    Raise ValueError if the string is not valid SMILES or has fewer than two nitrogens.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef lambda_max(p: int, alpha: float = 0.0) -> float:\n    \"\"\"The absorption maximum in nanometres from the free-electron model (Kuhn):\n\n    N = p + 3 electrons in a box of length L = (p + 3 + alpha) × BOND, and\n    lambda = 8 m c L² / (h (N + 1)).\n    \"\"\"\n    raise NotImplementedError\n\n\ndef fit_alpha(chain_lengths: list[int], measured_nm: list[float]) -> float:\n    \"\"\"The end correction alpha that best fits a series: the value (0 ≤ alpha ≤ 3) that makes the predicted\n    wavelengths closest to the measured ones in the least-squares sense.\n\n    Search alpha on a fine grid; 0.001 is close enough.\n    \"\"\"\n    raise NotImplementedError\n",
+  "solution": "import numpy as np\nfrom rdkit import Chem\n\n# Physical constants (SI) and the average bond length along a conjugated chain, 1.39 Å.\nPLANCK = 6.62607015e-34\nM_E = 9.1093837015e-31\nC = 2.99792458e8\nBOND = 1.39e-10\n\n\ndef chain_length(smiles: str) -> int:\n    \"\"\"P: the number of carbons on the shortest path between the dye's two nitrogens.\n\n    Walk the molecule yourself (RDKit's GetShortestPath is not allowed here).\n    chain_length(\"CCN1/C(=C/C2=[N+](C3=CC=CC=C3C=C2)CC)/C=CC4=CC=CC=C41\") == 3\n    Raise ValueError if the string is not valid SMILES or has fewer than two nitrogens.\n    \"\"\"\n    mol = Chem.MolFromSmiles(smiles)\n    if mol is None:\n        raise ValueError(f\"not a valid SMILES string: {smiles!r}\")\n    nitrogens = [a.GetIdx() for a in mol.GetAtoms() if a.GetSymbol() == \"N\"]\n    if len(nitrogens) < 2:\n        raise ValueError(\"a cyanine dye has two nitrogens\")\n    best: list[int] | None = None\n    for start in nitrogens:\n        # breadth-first search: the first time another nitrogen is reached is by a shortest path\n        queue = [(start, [start])]\n        seen = {start}\n        while queue:\n            here, path = queue.pop(0)\n            if here != start and mol.GetAtomWithIdx(here).GetSymbol() == \"N\":\n                if best is None or len(path) < len(best):\n                    best = path\n                break\n            for neighbour in mol.GetAtomWithIdx(here).GetNeighbors():\n                if neighbour.GetIdx() not in seen:\n                    seen.add(neighbour.GetIdx())\n                    queue.append((neighbour.GetIdx(), [*path, neighbour.GetIdx()]))\n    if best is None:\n        raise ValueError(\"the two nitrogens are not connected\")\n    return sum(mol.GetAtomWithIdx(i).GetSymbol() == \"C\" for i in best[1:-1])\n\n\ndef lambda_max(p: int, alpha: float = 0.0) -> float:\n    \"\"\"The absorption maximum in nanometres from the free-electron model (Kuhn):\n\n    N = p + 3 electrons in a box of length L = (p + 3 + alpha) × BOND, and\n    lambda = 8 m c L² / (h (N + 1)).\n    \"\"\"\n    n_electrons = p + 3\n    length = (p + 3 + alpha) * BOND\n    lam = 8 * M_E * C * length**2 / (PLANCK * (n_electrons + 1))\n    return lam * 1e9\n\n\ndef fit_alpha(chain_lengths: list[int], measured_nm: list[float]) -> float:\n    \"\"\"The end correction alpha that best fits a series: the value (0 ≤ alpha ≤ 3) that makes the predicted\n    wavelengths closest to the measured ones in the least-squares sense.\n\n    Search alpha on a fine grid; 0.001 is close enough.\n    \"\"\"\n    grid = np.arange(0.0, 3.0005, 0.0005)\n    error = [sum((lambda_max(p, a) - m) ** 2 for p, m in zip(chain_lengths, measured_nm)) for a in grid]\n    return float(grid[int(np.argmin(error))])\n",
+  "main": "\"\"\"Run: predict the colour of a series of cyanine dyes from the length of their chain, and compare with experiment.\"\"\"\n\nimport csv\nfrom pathlib import Path\n\nimport render as r\nfrom answer import chain_length, fit_alpha, lambda_max\nfrom rdkit import Chem\n\nDYES = list(csv.DictReader((Path(__file__).parent / \"data\" / \"dyes.csv\").read_text(encoding=\"utf-8\").splitlines()))\nSERIES = {\n    \"thia\": (\"Thiacyanines\", \"噻唑菁\"),\n    \"quinoline44\": (\"Quinoline 4,4′\", \"喹啉 4,4′\"),\n    \"quinoline22\": (\"Quinoline 2,2′\", \"喹啉 2,2′\"),\n    \"cy\": (\"Cy3 and Cy5\", \"Cy3 與 Cy5\"),\n    \"all\": (\"Every dye\", \"全部染料\"),\n}\n\n\ndef seen_colour(nm: float) -> str:\n    \"\"\"Roughly the colour the eye sees: the complement of the absorbed wavelength, as #rrggbb.\n\n    A dye absorbing green looks red, and one absorbing red looks blue-green. Above 700 nm the absorption is in the\n    near infrared, which the eye does not see at all, so the sample looks faintly coloured; draw it grey-blue.\n    \"\"\"\n    if nm > 700:\n        return \"#64748b\"\n    hue = {400: 60.0, 450: 50.0, 500: 300.0, 550: 270.0, 600: 210.0, 650: 180.0, 700: 170.0}\n    keys = sorted(hue)\n    lo = max([k for k in keys if k <= nm], default=keys[0])\n    hi = min([k for k in keys if k >= nm], default=keys[-1])\n    h = hue[lo] if lo == hi else hue[lo] + (hue[hi] - hue[lo]) * (nm - lo) / (hi - lo)\n    # HSL(h, 70%, 50%) as hex\n    c, x = 0.7, 0.7 * (1 - abs(((h / 60) % 2) - 1))\n    rgb = [(c, x, 0), (x, c, 0), (0, c, x), (0, x, c), (x, 0, c), (c, 0, x)][int(h // 60) % 6]\n    return \"#\" + \"\".join(f\"{round(255 * (v + 0.5 - c / 2)):02x}\" for v in rgb)\n\n\ndef run(p: dict) -> list:\n    rows_in = DYES if p[\"series\"] == \"all\" else [d for d in DYES if d[\"series\"] == p[\"series\"]]\n    alpha = float(p[\"alpha\"])\n    chain = [chain_length(d[\"smiles\"]) for d in rows_in]\n    measured = [float(d[\"lambda_max_nm\"]) for d in rows_in]\n    predicted = [lambda_max(c, alpha) for c in chain]\n    best = fit_alpha(chain, measured)\n    worst = max(abs(a - b) for a, b in zip(predicted, measured))\n    rows = [\n        [d[\"name\"], c, f\"{pred:.0f}\", f\"{m:.0f}\", f\"{pred - m:+.0f}\", d[\"source\"].split(\" via \")[0]]\n        for d, c, pred, m in zip(rows_in, chain, predicted, measured)\n    ]\n    return [\n        r.metric((\"End correction used\", \"使用的端點修正\"), f\"α = {alpha:g}\"),\n        r.metric((\"Best α for this series\", \"此系列最佳 α\"), f\"{best:.2f}\"),\n        r.metric((\"Worst error\", \"最大誤差\"), f\"{worst:.0f}\", \"nm\", good=worst < 40),\n        r.scatter(\n            chain,\n            measured,\n            [d[\"name\"].split(\" (\")[0] for d in rows_in],\n            (\n                f\"Measured absorption against chain length (the line is the model, α = {alpha:g})\",\n                f\"實測吸收峰對鏈長（線是模型，α = {alpha:g}）\",\n            ),\n            (\"Carbons between the two nitrogens, P\", \"兩個氮之間的碳數 P\"),\n            (\"Absorption maximum (nm)\", \"吸收峰（nm）\"),\n        ),\n        r.bars(\n            [f\"{d['name'].split(' (')[0]}  P={c}\" for d, c in zip(rows_in, chain)],\n            measured,\n            (\"Where each dye absorbs, in the colour the eye sees\", \"每個染料的吸收位置，以肉眼看到的顏色表示\"),\n            colours=[seen_colour(m) for m in measured],\n            unit=\"nm\",\n        ),\n        r.table(\n            [(\"Dye\", \"染料\"), (\"P\", \"P\"), (\"Predicted (nm)\", \"預測（nm）\"), (\"Measured (nm)\", \"實測（nm）\"), (\"Error\", \"誤差\"), (\"Source\", \"來源\")],\n            rows,\n            (\"Prediction against experiment\", \"預測與實驗比較\"),\n        ),\n        r.grid(\n            [Chem.MolFromSmiles(d[\"smiles\"]) for d in rows_in[:6]],\n            [f\"{d['name'].split(' (')[0]}  {d['lambda_max_nm']} nm\" for d in rows_in[:6]],\n            (\"The dyes: the chain between the two nitrogens grows by one -CH=CH- each time\", \"這些染料：兩個氮之間的鏈每次增加一個 -CH=CH-\"),\n            per_row=2,\n        ),\n    ]\n",
+  "params": [
+   {
+    "id": "series",
+    "type": "select",
+    "label": [
+     "Dye series",
+     "染料系列"
+    ],
+    "default": "thia",
+    "options": [
+     [
+      "thiacyanines (Cy-like)",
+      "噻唑菁（類 Cy 染料）",
+      "thia"
+     ],
+     [
+      "quinoline 4,4′",
+      "喹啉 4,4′",
+      "quinoline44"
+     ],
+     [
+      "quinoline 2,2′",
+      "喹啉 2,2′",
+      "quinoline22"
+     ],
+     [
+      "Cy3 and Cy5",
+      "Cy3 與 Cy5",
+      "cy"
+     ],
+     [
+      "all of them",
+      "全部",
+      "all"
+     ]
+    ]
+   },
+   {
+    "id": "alpha",
+    "type": "float",
+    "label": [
+     "End correction α (bonds)",
+     "端點修正 α（鍵數）"
+    ],
+    "default": 0.0,
+    "min": 0.0,
+    "max": 2.0,
+    "step": 0.05
+   }
+  ],
+  "results": "results/fluorophore.json",
+  "test": "\"\"\"The contract for fluorophore. Read-only: your answer.py must make these pass.\n\nThe measured absorption maxima come from data/dyes.csv (every value cited in data/SOURCE.md).\n\"\"\"\n\nimport csv\nfrom pathlib import Path\n\nimport pytest\nfrom rdkit import RDLogger\n\nfrom answer import BOND, chain_length, fit_alpha, lambda_max\n\nRDLogger.DisableLog(\"rdApp.*\")\n\nDYES = list(csv.DictReader((Path(__file__).parent / \"data\" / \"dyes.csv\").read_text(encoding=\"utf-8\").splitlines()))\nCY3 = next(d for d in DYES if d[\"name\"] == \"Cy3\")\nCY5 = next(d for d in DYES if d[\"name\"] == \"Cy5\")\n\n\ndef test_chain_length_of_every_dye():\n    \"\"\"P is the number of carbons between the two nitrogens: 3, 5, 7 … as the dye's name says.\"\"\"\n    for dye in DYES:\n        assert chain_length(dye[\"smiles\"]) == int(dye[\"p\"]), dye[\"name\"]\n\n\ndef test_cy5_chain_is_one_vinylene_longer_than_cy3():\n    assert chain_length(CY5[\"smiles\"]) - chain_length(CY3[\"smiles\"]) == 2\n\n\ndef test_not_a_dye_raises():\n    with pytest.raises(ValueError):\n        chain_length(\"CCO\")  # no nitrogen at all\n    with pytest.raises(ValueError):\n        chain_length(\"C1CC\")  # not valid SMILES\n\n\ndef test_the_box_formula():\n    # worked by hand for p = 9, alpha = 0: N = 12, L = 12 × 1.39 Å\n    length = 12 * BOND\n    want = 8 * 9.1093837015e-31 * 2.99792458e8 * length**2 / (6.62607015e-34 * 13) * 1e9\n    assert lambda_max(9) == pytest.approx(want, rel=1e-9)\n    assert lambda_max(9) == pytest.approx(705.7, abs=1.0)\n\n\ndef test_longer_chain_absorbs_further_to_the_red():\n    lambdas = [lambda_max(p) for p in (3, 5, 7, 9, 11)]\n    assert lambdas == sorted(lambdas)\n    # each extra -CH=CH- adds at least 100 nm in this model\n    assert all(b - a > 100 for a, b in zip(lambdas, lambdas[1:]))\n\n\ndef test_the_end_correction_makes_it_longer():\n    assert lambda_max(5, alpha=1.0) > lambda_max(5, alpha=0.0)\n    assert lambda_max(5, alpha=0.0) == pytest.approx(453.0, abs=1.0)\n\n\ndef test_quinoline_44_series_needs_almost_no_end_correction():\n    \"\"\"The one series the plain particle in a box already fits: alpha comes out near zero.\"\"\"\n    series = [d for d in DYES if d[\"series\"] == \"quinoline44\"]\n    alpha = fit_alpha([int(d[\"p\"]) for d in series], [float(d[\"lambda_max_nm\"]) for d in series])\n    assert 0.0 <= alpha < 0.15\n    for dye in series:\n        assert lambda_max(int(dye[\"p\"]), alpha) == pytest.approx(float(dye[\"lambda_max_nm\"]), rel=0.05), dye[\"name\"]\n\n\ndef test_the_thiacyanines_need_a_real_end_correction():\n    \"\"\"Their end rings lengthen the box: alpha is clearly above zero, and then the fit is good.\"\"\"\n    series = [d for d in DYES if d[\"series\"] == \"thia\"]\n    alpha = fit_alpha([int(d[\"p\"]) for d in series], [float(d[\"lambda_max_nm\"]) for d in series])\n    assert 0.3 < alpha < 1.2\n    for dye in series:\n        assert lambda_max(int(dye[\"p\"]), alpha) == pytest.approx(float(dye[\"lambda_max_nm\"]), rel=0.12), dye[\"name\"]\n\n\ndef test_a_fitted_series_beats_the_uncorrected_model():\n    series = [d for d in DYES if d[\"series\"] == \"quinoline22\"]\n    p = [int(d[\"p\"]) for d in series]\n    measured = [float(d[\"lambda_max_nm\"]) for d in series]\n    alpha = fit_alpha(p, measured)\n    worse = sum((lambda_max(x, 0.0) - m) ** 2 for x, m in zip(p, measured))\n    better = sum((lambda_max(x, alpha) - m) ** 2 for x, m in zip(p, measured))\n    assert better < worse / 4\n",
+  "picture": "problems/molecules/fluorophore.svg"
+ },
+ {
   "id": "biomolecules/translate",
   "category": "biomolecules",
   "level": "beginner",

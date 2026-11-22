@@ -61,81 +61,6 @@
  },
  {
   "kind": "molecules",
-  "key": "cid:5904",
-  "id": "CID 5904",
-  "name": [
-   "Penicillin G",
-   "青黴素 G"
-  ],
-  "detail": "C16H18N2O4S · 334.40 g/mol",
-  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5904",
-  "smiles": "CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C",
-  "code": "\"\"\"Penicillin G: PubChem CID 5904 (https://pubchem.ncbi.nlm.nih.gov/compound/5904)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Penicillin G\", \"青黴素 G\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
-  "licence": "PubChem: free to use; each depositor may set its own terms",
-  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
- },
- {
-  "kind": "molecules",
-  "key": "cid:5288826",
-  "id": "CID 5288826",
-  "name": [
-   "Morphine",
-   "嗎啡"
-  ],
-  "detail": "C17H19NO3 · 285.34 g/mol",
-  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5288826",
-  "smiles": "CN1CC[C@]23[C@@H]4[C@H]1CC5=C2C(=C(C=C5)O)O[C@H]3[C@H](C=C4)O",
-  "code": "\"\"\"Morphine: PubChem CID 5288826 (https://pubchem.ncbi.nlm.nih.gov/compound/5288826)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CN1CC[C@]23[C@@H]4[C@H]1CC5=C2C(=C(C=C5)O)O[C@H]3[C@H](C=C4)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Morphine\", \"嗎啡\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
-  "licence": "PubChem: free to use; each depositor may set its own terms",
-  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
- },
- {
-  "kind": "molecules",
-  "key": "cid:89594",
-  "id": "CID 89594",
-  "name": [
-   "Nicotine",
-   "尼古丁"
-  ],
-  "detail": "C10H14N2 · 162.23 g/mol",
-  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/89594",
-  "smiles": "CN1CCC[C@H]1C2=CN=CC=C2",
-  "code": "\"\"\"Nicotine: PubChem CID 89594 (https://pubchem.ncbi.nlm.nih.gov/compound/89594)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CN1CCC[C@H]1C2=CN=CC=C2\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Nicotine\", \"尼古丁\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
-  "licence": "PubChem: free to use; each depositor may set its own terms",
-  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
- },
- {
-  "kind": "molecules",
-  "key": "cid:681",
-  "id": "CID 681",
-  "name": [
-   "Dopamine",
-   "多巴胺"
-  ],
-  "detail": "C8H11NO2 · 153.18 g/mol",
-  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/681",
-  "smiles": "C1=CC(=C(C=C1CCN)O)O",
-  "code": "\"\"\"Dopamine: PubChem CID 681 (https://pubchem.ncbi.nlm.nih.gov/compound/681)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC(=C(C=C1CCN)O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Dopamine\", \"多巴胺\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
-  "licence": "PubChem: free to use; each depositor may set its own terms",
-  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
- },
- {
-  "kind": "molecules",
-  "key": "cid:5202",
-  "id": "CID 5202",
-  "name": [
-   "Serotonin",
-   "血清素"
-  ],
-  "detail": "C10H12N2O · 176.21 g/mol",
-  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5202",
-  "smiles": "C1=CC2=C(C=C1O)C(=CN2)CCN",
-  "code": "\"\"\"Serotonin: PubChem CID 5202 (https://pubchem.ncbi.nlm.nih.gov/compound/5202)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC2=C(C=C1O)C(=CN2)CCN\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Serotonin\", \"血清素\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
-  "licence": "PubChem: free to use; each depositor may set its own terms",
-  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
- },
- {
-  "kind": "molecules",
   "key": "cid:5793",
   "id": "CID 5793",
   "name": [
@@ -146,6 +71,81 @@
   "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5793",
   "smiles": "C([C@@H]1[C@H]([C@@H]([C@H](C(O1)O)O)O)O)O",
   "code": "\"\"\"Glucose: PubChem CID 5793 (https://pubchem.ncbi.nlm.nih.gov/compound/5793)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C([C@@H]1[C@H]([C@@H]([C@H](C(O1)O)O)O)O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Glucose\", \"葡萄糖\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5988",
+  "id": "CID 5988",
+  "name": [
+   "Sucrose",
+   "蔗糖"
+  ],
+  "detail": "C12H22O11 · 342.30 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5988",
+  "smiles": "C([C@@H]1[C@H]([C@@H]([C@H]([C@H](O1)O[C@]2([C@H]([C@@H]([C@H](O2)CO)O)O)CO)O)O)O)O",
+  "code": "\"\"\"Sucrose: PubChem CID 5988 (https://pubchem.ncbi.nlm.nih.gov/compound/5988)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C([C@@H]1[C@H]([C@@H]([C@H]([C@H](O1)O[C@]2([C@H]([C@@H]([C@H](O2)CO)O)O)CO)O)O)O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Sucrose\", \"蔗糖\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:962",
+  "id": "CID 962",
+  "name": [
+   "Water",
+   "水"
+  ],
+  "detail": "H2O · 18.02 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/962",
+  "smiles": "O",
+  "code": "\"\"\"Water: PubChem CID 962 (https://pubchem.ncbi.nlm.nih.gov/compound/962)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Water\", \"水\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:702",
+  "id": "CID 702",
+  "name": [
+   "Ethanol",
+   "乙醇"
+  ],
+  "detail": "C2H6O · 46.07 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/702",
+  "smiles": "CCO",
+  "code": "\"\"\"Ethanol: PubChem CID 702 (https://pubchem.ncbi.nlm.nih.gov/compound/702)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCO\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Ethanol\", \"乙醇\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:241",
+  "id": "CID 241",
+  "name": [
+   "Benzene",
+   "苯"
+  ],
+  "detail": "C6H6 · 78.11 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/241",
+  "smiles": "C1=CC=CC=C1",
+  "code": "\"\"\"Benzene: PubChem CID 241 (https://pubchem.ncbi.nlm.nih.gov/compound/241)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC=CC=C1\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Benzene\", \"苯\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:6324",
+  "id": "CID 6324",
+  "name": [
+   "Ethene (ethylene)",
+   "乙烯"
+  ],
+  "detail": "C2H6 · 30.07 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/6324",
+  "smiles": "CC",
+  "code": "\"\"\"Ethene (ethylene): PubChem CID 6324 (https://pubchem.ncbi.nlm.nih.gov/compound/6324)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Ethene (ethylene)\", \"乙烯\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
   "licence": "PubChem: free to use; each depositor may set its own terms",
   "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
  },
@@ -181,16 +181,151 @@
  },
  {
   "kind": "molecules",
-  "key": "cid:60823",
-  "id": "CID 60823",
+  "key": "cid:681",
+  "id": "CID 681",
   "name": [
-   "Atorvastatin",
-   "阿托伐他汀"
+   "Dopamine",
+   "多巴胺"
   ],
-  "detail": "C33H35FN2O5 · 558.60 g/mol",
-  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/60823",
-  "smiles": "CC(C)C1=C(C(=C(N1CC[C@H](C[C@H](CC(=O)O)O)O)C2=CC=C(C=C2)F)C3=CC=CC=C3)C(=O)NC4=CC=CC=C4",
-  "code": "\"\"\"Atorvastatin: PubChem CID 60823 (https://pubchem.ncbi.nlm.nih.gov/compound/60823)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC(C)C1=C(C(=C(N1CC[C@H](C[C@H](CC(=O)O)O)O)C2=CC=C(C=C2)F)C3=CC=CC=C3)C(=O)NC4=CC=CC=C4\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Atorvastatin\", \"阿托伐他汀\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "detail": "C8H11NO2 · 153.18 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/681",
+  "smiles": "C1=CC(=C(C=C1CCN)O)O",
+  "code": "\"\"\"Dopamine: PubChem CID 681 (https://pubchem.ncbi.nlm.nih.gov/compound/681)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC(=C(C=C1CCN)O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Dopamine\", \"多巴胺\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5202",
+  "id": "CID 5202",
+  "name": [
+   "Serotonin",
+   "血清素"
+  ],
+  "detail": "C10H12N2O · 176.21 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5202",
+  "smiles": "C1=CC2=C(C=C1O)C(=CN2)CCN",
+  "code": "\"\"\"Serotonin: PubChem CID 5202 (https://pubchem.ncbi.nlm.nih.gov/compound/5202)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC2=C(C=C1O)C(=CN2)CCN\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Serotonin\", \"血清素\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5816",
+  "id": "CID 5816",
+  "name": [
+   "Adrenaline (epinephrine)",
+   "腎上腺素"
+  ],
+  "detail": "C9H13NO3 · 183.20 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5816",
+  "smiles": "CNC[C@@H](C1=CC(=C(C=C1)O)O)O",
+  "code": "\"\"\"Adrenaline (epinephrine): PubChem CID 5816 (https://pubchem.ncbi.nlm.nih.gov/compound/5816)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CNC[C@@H](C1=CC(=C(C=C1)O)O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Adrenaline (epinephrine)\", \"腎上腺素\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:6305",
+  "id": "CID 6305",
+  "name": [
+   "Tryptophan",
+   "色胺酸"
+  ],
+  "detail": "C11H12N2O2 · 204.22 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/6305",
+  "smiles": "C1=CC=C2C(=C1)C(=CN2)C[C@@H](C(=O)O)N",
+  "code": "\"\"\"Tryptophan: PubChem CID 6305 (https://pubchem.ncbi.nlm.nih.gov/compound/6305)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC=C2C(=C1)C(=CN2)C[C@@H](C(=O)O)N\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Tryptophan\", \"色胺酸\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5950",
+  "id": "CID 5950",
+  "name": [
+   "Alanine",
+   "丙胺酸"
+  ],
+  "detail": "C3H7NO2 · 89.09 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5950",
+  "smiles": "C[C@@H](C(=O)O)N",
+  "code": "\"\"\"Alanine: PubChem CID 5950 (https://pubchem.ncbi.nlm.nih.gov/compound/5950)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C[C@@H](C(=O)O)N\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Alanine\", \"丙胺酸\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5280343",
+  "id": "CID 5280343",
+  "name": [
+   "Quercetin",
+   "槲皮素"
+  ],
+  "detail": "C15H10O7 · 302.23 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5280343",
+  "smiles": "C1=CC(=C(C=C1C2=C(C(=O)C3=C(C=C(C=C3O2)O)O)O)O)O",
+  "code": "\"\"\"Quercetin: PubChem CID 5280343 (https://pubchem.ncbi.nlm.nih.gov/compound/5280343)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC(=C(C=C1C2=C(C(=O)C3=C(C=C(C=C3O2)O)O)O)O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Quercetin\", \"槲皮素\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:445639",
+  "id": "CID 445639",
+  "name": [
+   "Oleic acid",
+   "油酸"
+  ],
+  "detail": "C18H34O2 · 282.50 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/445639",
+  "smiles": "CCCCCCCC/C=C\\CCCCCCCC(=O)O",
+  "code": "\"\"\"Oleic acid: PubChem CID 445639 (https://pubchem.ncbi.nlm.nih.gov/compound/445639)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCCCCCCC/C=C\\CCCCCCCC(=O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Oleic acid\", \"油酸\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:1148",
+  "id": "CID 1148",
+  "name": [
+   "Vitamin C (ascorbic acid)",
+   "維生素 C（抗壞血酸）"
+  ],
+  "detail": "C11H12N2O2 · 204.22 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/1148",
+  "smiles": "C1=CC=C2C(=C1)C(=CN2)CC(C(=O)O)N",
+  "code": "\"\"\"Vitamin C (ascorbic acid): PubChem CID 1148 (https://pubchem.ncbi.nlm.nih.gov/compound/1148)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC=C2C(=C1)C(=CN2)CC(C(=O)O)N\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Vitamin C (ascorbic acid)\", \"維生素 C（抗壞血酸）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5280489",
+  "id": "CID 5280489",
+  "name": [
+   "Beta-carotene",
+   "β-胡蘿蔔素"
+  ],
+  "detail": "C40H56 · 536.90 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5280489",
+  "smiles": "CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C/C=C/C=C(/C=C/C=C(/C=C/C2=C(CCCC2(C)C)C)\\C)\\C)/C)/C",
+  "code": "\"\"\"Beta-carotene: PubChem CID 5280489 (https://pubchem.ncbi.nlm.nih.gov/compound/5280489)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C/C=C/C=C(/C=C/C=C(/C=C/C2=C(CCCC2(C)C)C)\\C)\\C)/C)/C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Beta-carotene\", \"β-胡蘿蔔素\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:445354",
+  "id": "CID 445354",
+  "name": [
+   "Retinal",
+   "視黃醛"
+  ],
+  "detail": "C20H30O · 286.50 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/445354",
+  "smiles": "CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C/CO)/C)/C",
+  "code": "\"\"\"Retinal: PubChem CID 445354 (https://pubchem.ncbi.nlm.nih.gov/compound/445354)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C/CO)/C)/C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Retinal\", \"視黃醛\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
   "licence": "PubChem: free to use; each depositor may set its own terms",
   "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
  },
@@ -199,13 +334,208 @@
   "key": "cid:5291",
   "id": "CID 5291",
   "name": [
-   "Imatinib",
-   "伊馬替尼"
+   "Imatinib (Gleevec)",
+   "伊馬替尼（基利克）"
   ],
   "detail": "C29H31N7O · 493.60 g/mol",
   "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5291",
   "smiles": "CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5",
-  "code": "\"\"\"Imatinib: PubChem CID 5291 (https://pubchem.ncbi.nlm.nih.gov/compound/5291)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Imatinib\", \"伊馬替尼\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "code": "\"\"\"Imatinib (Gleevec): PubChem CID 5291 (https://pubchem.ncbi.nlm.nih.gov/compound/5291)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Imatinib (Gleevec)\", \"伊馬替尼（基利克）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:123631",
+  "id": "CID 123631",
+  "name": [
+   "Gefitinib (Iressa)",
+   "吉非替尼（艾瑞莎）"
+  ],
+  "detail": "C22H24ClFN4O3 · 446.90 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/123631",
+  "smiles": "COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4",
+  "code": "\"\"\"Gefitinib (Iressa): PubChem CID 123631 (https://pubchem.ncbi.nlm.nih.gov/compound/123631)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Gefitinib (Iressa)\", \"吉非替尼（艾瑞莎）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:176870",
+  "id": "CID 176870",
+  "name": [
+   "Erlotinib (Tarceva)",
+   "厄洛替尼（得舒緩）"
+  ],
+  "detail": "C22H23N3O4 · 393.40 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/176870",
+  "smiles": "COCCOC1=C(C=C2C(=C1)C(=NC=N2)NC3=CC=CC(=C3)C#C)OCCOC",
+  "code": "\"\"\"Erlotinib (Tarceva): PubChem CID 176870 (https://pubchem.ncbi.nlm.nih.gov/compound/176870)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"COCCOC1=C(C=C2C(=C1)C(=NC=N2)NC3=CC=CC(=C3)C#C)OCCOC\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Erlotinib (Tarceva)\", \"厄洛替尼（得舒緩）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:216239",
+  "id": "CID 216239",
+  "name": [
+   "Osimertinib (Tagrisso)",
+   "奧希替尼（泰格莎）"
+  ],
+  "detail": "C21H16ClF3N4O3 · 464.80 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/216239",
+  "smiles": "CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F",
+  "code": "\"\"\"Osimertinib (Tagrisso): PubChem CID 216239 (https://pubchem.ncbi.nlm.nih.gov/compound/216239)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Osimertinib (Tagrisso)\", \"奧希替尼（泰格莎）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:36314",
+  "id": "CID 36314",
+  "name": [
+   "Paclitaxel (Taxol)",
+   "太平洋紫杉醇（紫杉醇）"
+  ],
+  "detail": "C47H51NO14 · 853.90 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/36314",
+  "smiles": "CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C",
+  "code": "\"\"\"Paclitaxel (Taxol): PubChem CID 36314 (https://pubchem.ncbi.nlm.nih.gov/compound/36314)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Paclitaxel (Taxol)\", \"太平洋紫杉醇（紫杉醇）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:31703",
+  "id": "CID 31703",
+  "name": [
+   "Doxorubicin",
+   "多柔比星"
+  ],
+  "detail": "C27H29NO11 · 543.50 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/31703",
+  "smiles": "C[C@H]1[C@H]([C@H](C[C@@H](O1)O[C@H]2C[C@@](CC3=C2C(=C4C(=C3O)C(=O)C5=C(C4=O)C(=CC=C5)OC)O)(C(=O)CO)O)N)O",
+  "code": "\"\"\"Doxorubicin: PubChem CID 31703 (https://pubchem.ncbi.nlm.nih.gov/compound/31703)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C[C@H]1[C@H]([C@H](C[C@@H](O1)O[C@H]2C[C@@](CC3=C2C(=C4C(=C3O)C(=O)C5=C(C4=O)C(=CC=C5)OC)O)(C(=O)CO)O)N)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Doxorubicin\", \"多柔比星\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5746",
+  "id": "CID 5746",
+  "name": [
+   "Methotrexate",
+   "甲氨蝶呤"
+  ],
+  "detail": "C15H18N4O5 · 334.33 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5746",
+  "smiles": "CC1=C(C(=O)C2=C(C1=O)N3C[C@H]4[C@@H]([C@@]3([C@@H]2COC(=O)N)OC)N4)N",
+  "code": "\"\"\"Methotrexate: PubChem CID 5746 (https://pubchem.ncbi.nlm.nih.gov/compound/5746)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1=C(C(=O)C2=C(C1=O)N3C[C@H]4[C@@H]([C@@]3([C@@H]2COC(=O)N)OC)N4)N\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Methotrexate\", \"甲氨蝶呤\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:2907",
+  "id": "CID 2907",
+  "name": [
+   "Cisplatin",
+   "順鉑"
+  ],
+  "detail": "C7H15Cl2N2O2P · 261.08 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/2907",
+  "smiles": "C1CNP(=O)(OC1)N(CCCl)CCCl",
+  "code": "\"\"\"Cisplatin: PubChem CID 2907 (https://pubchem.ncbi.nlm.nih.gov/compound/2907)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1CNP(=O)(OC1)N(CCCl)CCCl\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Cisplatin\", \"順鉑\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5311",
+  "id": "CID 5311",
+  "name": [
+   "Tamoxifen",
+   "泰莫西芬"
+  ],
+  "detail": "C14H20N2O3 · 264.32 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5311",
+  "smiles": "C1=CC=C(C=C1)NC(=O)CCCCCCC(=O)NO",
+  "code": "\"\"\"Tamoxifen: PubChem CID 5311 (https://pubchem.ncbi.nlm.nih.gov/compound/5311)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC=C(C=C1)NC(=O)CCCCCCC(=O)NO\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Tamoxifen\", \"泰莫西芬\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:60750",
+  "id": "CID 60750",
+  "name": [
+   "Gemcitabine",
+   "吉西他濱"
+  ],
+  "detail": "C9H11F2N3O4 · 263.20 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/60750",
+  "smiles": "C1=CN(C(=O)N=C1N)[C@H]2C([C@@H]([C@H](O2)CO)O)(F)F",
+  "code": "\"\"\"Gemcitabine: PubChem CID 60750 (https://pubchem.ncbi.nlm.nih.gov/compound/60750)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CN(C(=O)N=C1N)[C@H]2C([C@@H]([C@H](O2)CO)O)(F)F\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Gemcitabine\", \"吉西他濱\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5904",
+  "id": "CID 5904",
+  "name": [
+   "Penicillin G",
+   "青黴素 G"
+  ],
+  "detail": "C16H18N2O4S · 334.40 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5904",
+  "smiles": "CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C",
+  "code": "\"\"\"Penicillin G: PubChem CID 5904 (https://pubchem.ncbi.nlm.nih.gov/compound/5904)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)NC(=O)CC3=CC=CC=C3)C(=O)O)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Penicillin G\", \"青黴素 G\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:60823",
+  "id": "CID 60823",
+  "name": [
+   "Atorvastatin (Lipitor)",
+   "阿托伐他汀（立普妥）"
+  ],
+  "detail": "C33H35FN2O5 · 558.60 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/60823",
+  "smiles": "CC(C)C1=C(C(=C(N1CC[C@H](C[C@H](CC(=O)O)O)O)C2=CC=C(C=C2)F)C3=CC=CC=C3)C(=O)NC4=CC=CC=C4",
+  "code": "\"\"\"Atorvastatin (Lipitor): PubChem CID 60823 (https://pubchem.ncbi.nlm.nih.gov/compound/60823)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC(C)C1=C(C(=C(N1CC[C@H](C[C@H](CC(=O)O)O)O)C2=CC=C(C=C2)F)C3=CC=CC=C3)C(=O)NC4=CC=CC=C4\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Atorvastatin (Lipitor)\", \"阿托伐他汀（立普妥）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:4091",
+  "id": "CID 4091",
+  "name": [
+   "Metformin",
+   "二甲雙胍"
+  ],
+  "detail": "C4H11N5 · 129.16 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/4091",
+  "smiles": "CN(C)C(=N)N=C(N)N",
+  "code": "\"\"\"Metformin: PubChem CID 4091 (https://pubchem.ncbi.nlm.nih.gov/compound/4091)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CN(C)C(=N)N=C(N)N\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Metformin\", \"二甲雙胍\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:135398744",
+  "id": "CID 135398744",
+  "name": [
+   "Sildenafil (Viagra)",
+   "西地那非（威而鋼）"
+  ],
+  "detail": "C22H30N6O4S · 474.60 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/135398744",
+  "smiles": "CCCC1=NN(C2=C1N=C(NC2=O)C3=C(C=CC(=C3)S(=O)(=O)N4CCN(CC4)C)OCC)C",
+  "code": "\"\"\"Sildenafil (Viagra): PubChem CID 135398744 (https://pubchem.ncbi.nlm.nih.gov/compound/135398744)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCCC1=NN(C2=C1N=C(NC2=O)C3=C(C=CC(=C3)S(=O)(=O)N4CCN(CC4)C)OCC)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Sildenafil (Viagra)\", \"西地那非（威而鋼）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
   "licence": "PubChem: free to use; each depositor may set its own terms",
   "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
  },
@@ -226,6 +556,51 @@
  },
  {
   "kind": "molecules",
+  "key": "cid:5288826",
+  "id": "CID 5288826",
+  "name": [
+   "Morphine",
+   "嗎啡"
+  ],
+  "detail": "C17H19NO3 · 285.34 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5288826",
+  "smiles": "CN1CC[C@]23[C@@H]4[C@H]1CC5=C2C(=C(C=C5)O)O[C@H]3[C@H](C=C4)O",
+  "code": "\"\"\"Morphine: PubChem CID 5288826 (https://pubchem.ncbi.nlm.nih.gov/compound/5288826)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CN1CC[C@]23[C@@H]4[C@H]1CC5=C2C(=C(C=C5)O)O[C@H]3[C@H](C=C4)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Morphine\", \"嗎啡\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:89594",
+  "id": "CID 89594",
+  "name": [
+   "Nicotine",
+   "尼古丁"
+  ],
+  "detail": "C10H14N2 · 162.23 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/89594",
+  "smiles": "CN1CCC[C@H]1C2=CN=CC=C2",
+  "code": "\"\"\"Nicotine: PubChem CID 89594 (https://pubchem.ncbi.nlm.nih.gov/compound/89594)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CN1CCC[C@H]1C2=CN=CC=C2\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Nicotine\", \"尼古丁\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:155903259",
+  "id": "CID 155903259",
+  "name": [
+   "Nirmatrelvir (Paxlovid)",
+   "奈瑪特韋（Paxlovid）"
+  ],
+  "detail": "C23H32F3N5O4 · 499.50 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/155903259",
+  "smiles": "CC1([C@@H]2[C@H]1[C@H](N(C2)C(=O)[C@H](C(C)(C)C)NC(=O)C(F)(F)F)C(=O)N[C@@H](C[C@@H]3CCNC3=O)C#N)C",
+  "code": "\"\"\"Nirmatrelvir (Paxlovid): PubChem CID 155903259 (https://pubchem.ncbi.nlm.nih.gov/compound/155903259)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1([C@@H]2[C@H]1[C@H](N(C2)C(=O)[C@H](C(C)(C)C)NC(=O)C(F)(F)F)C(=O)N[C@@H](C[C@@H]3CCNC3=O)C#N)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Nirmatrelvir (Paxlovid)\", \"奈瑪特韋（Paxlovid）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
   "key": "cid:5280795",
   "id": "CID 5280795",
   "name": [
@@ -236,6 +611,231 @@
   "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5280795",
   "smiles": "C[C@H](CCCC(C)C)[C@H]1CC[C@@H]\\2[C@@]1(CCC/C2=C\\C=C/3\\C[C@H](CCC3=C)O)C",
   "code": "\"\"\"Vitamin D3 (cholecalciferol): PubChem CID 5280795 (https://pubchem.ncbi.nlm.nih.gov/compound/5280795)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C[C@H](CCCC(C)C)[C@H]1CC[C@@H]\\2[C@@]1(CCC/C2=C\\C=C/3\\C[C@H](CCC3=C)O)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Vitamin D3 (cholecalciferol)\", \"維生素 D3（膽鈣化醇）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5284373",
+  "id": "CID 5284373",
+  "name": [
+   "Cyclosporine",
+   "環孢素"
+  ],
+  "detail": "C62H111N11O12 · 1202.60 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5284373",
+  "smiles": "CC[C@H]1C(=O)N(CC(=O)N([C@H](C(=O)N[C@H](C(=O)N([C@H](C(=O)N[C@H](C(=O)N[C@@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N1)[C@@H]([C@H](C)C/C=C/C)O)C)C(C)C)C)CC(C)C)C)CC(C)C)C)C)C)CC(C)C)C)C(C)C)CC(C)C)C)C",
+  "code": "\"\"\"Cyclosporine: PubChem CID 5284373 (https://pubchem.ncbi.nlm.nih.gov/compound/5284373)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC[C@H]1C(=O)N(CC(=O)N([C@H](C(=O)N[C@H](C(=O)N([C@H](C(=O)N[C@H](C(=O)N[C@@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N([C@H](C(=O)N1)[C@@H]([C@H](C)C/C=C/C)O)C)C(C)C)C)CC(C)C)C)CC(C)C)C)C)C)CC(C)C)C)C(C)C)CC(C)C)C)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Cyclosporine\", \"環孢素\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5090",
+  "id": "CID 5090",
+  "name": [
+   "Rofecoxib (Vioxx, withdrawn 2004)",
+   "羅非昔布（偉克適，2004 年下市）"
+  ],
+  "detail": "C17H14O4S · 314.40 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5090",
+  "smiles": "CS(=O)(=O)C1=CC=C(C=C1)C2=C(C(=O)OC2)C3=CC=CC=C3",
+  "code": "\"\"\"Rofecoxib (Vioxx, withdrawn 2004): PubChem CID 5090 (https://pubchem.ncbi.nlm.nih.gov/compound/5090)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CS(=O)(=O)C1=CC=C(C=C1)C2=C(C(=O)OC2)C3=CC=CC=C3\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Rofecoxib (Vioxx, withdrawn 2004)\", \"羅非昔布（偉克適，2004 年下市）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5405",
+  "id": "CID 5405",
+  "name": [
+   "Terfenadine (withdrawn)",
+   "特非那定（已下市）"
+  ],
+  "detail": "C32H41NO2 · 471.70 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5405",
+  "smiles": "CC(C)(C)C1=CC=C(C=C1)C(CCCN2CCC(CC2)C(C3=CC=CC=C3)(C4=CC=CC=C4)O)O",
+  "code": "\"\"\"Terfenadine (withdrawn): PubChem CID 5405 (https://pubchem.ncbi.nlm.nih.gov/compound/5405)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC(C)(C)C1=CC=C(C=C1)C(CCCN2CCC(CC2)C(C3=CC=CC=C3)(C4=CC=CC=C4)O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Terfenadine (withdrawn)\", \"特非那定（已下市）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5591",
+  "id": "CID 5591",
+  "name": [
+   "Troglitazone (withdrawn)",
+   "曲格列酮（已下市）"
+  ],
+  "detail": "C24H27NO5S · 441.50 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5591",
+  "smiles": "CC1=C(C2=C(CCC(O2)(C)COC3=CC=C(C=C3)CC4C(=O)NC(=O)S4)C(=C1O)C)C",
+  "code": "\"\"\"Troglitazone (withdrawn): PubChem CID 5591 (https://pubchem.ncbi.nlm.nih.gov/compound/5591)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1=C(C2=C(CCC(O2)(C)COC3=CC=C(C=C3)CC4C(=O)NC(=O)S4)C(=C1O)C)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Troglitazone (withdrawn)\", \"曲格列酮（已下市）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5426",
+  "id": "CID 5426",
+  "name": [
+   "Thalidomide",
+   "沙利竇邁"
+  ],
+  "detail": "C13H10N2O4 · 258.23 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5426",
+  "smiles": "C1CC(=O)NC(=O)C1N2C(=O)C3=CC=CC=C3C2=O",
+  "code": "\"\"\"Thalidomide: PubChem CID 5426 (https://pubchem.ncbi.nlm.nih.gov/compound/5426)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1CC(=O)NC(=O)C1N2C(=O)C3=CC=CC=C3C2=O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Thalidomide\", \"沙利竇邁\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:16850",
+  "id": "CID 16850",
+  "name": [
+   "Fluorescein",
+   "螢光素"
+  ],
+  "detail": "C20H12O5 · 332.30 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/16850",
+  "smiles": "C1=CC=C2C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O",
+  "code": "\"\"\"Fluorescein: PubChem CID 16850 (https://pubchem.ncbi.nlm.nih.gov/compound/16850)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC=C2C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Fluorescein\", \"螢光素\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:6694",
+  "id": "CID 6694",
+  "name": [
+   "Rhodamine B",
+   "羅丹明 B"
+  ],
+  "detail": "C28H31ClN2O3 · 479.00 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/6694",
+  "smiles": "CCN(CC)C1=CC2=C(C=C1)C(=C3C=CC(=[N+](CC)CC)C=C3O2)C4=CC=CC=C4C(=O)O.[Cl-]",
+  "code": "\"\"\"Rhodamine B: PubChem CID 6694 (https://pubchem.ncbi.nlm.nih.gov/compound/6694)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCN(CC)C1=CC2=C(C=C1)C(=C3C=CC(=[N+](CC)CC)C=C3O2)C4=CC=CC=C4C(=O)O.[Cl-]\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Rhodamine B\", \"羅丹明 B\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:13806",
+  "id": "CID 13806",
+  "name": [
+   "Rhodamine 6G",
+   "羅丹明 6G"
+  ],
+  "detail": "C28H31ClN2O3 · 479.00 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/13806",
+  "smiles": "CCNC1=CC2=C(C=C1C)C(=C3C=C(C(=[NH+]CC)C=C3O2)C)C4=CC=CC=C4C(=O)OCC.[Cl-]",
+  "code": "\"\"\"Rhodamine 6G: PubChem CID 13806 (https://pubchem.ncbi.nlm.nih.gov/compound/13806)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCNC1=CC2=C(C=C1C)C(=C3C=C(C(=[NH+]CC)C=C3O2)C)C4=CC=CC=C4C(=O)OCC.[Cl-]\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Rhodamine 6G\", \"羅丹明 6G\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:2954",
+  "id": "CID 2954",
+  "name": [
+   "DAPI (DNA stain)",
+   "DAPI（DNA 染劑）"
+  ],
+  "detail": "C16H15N5 · 277.32 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/2954",
+  "smiles": "C1=CC(=CC=C1C2=CC3=C(N2)C=C(C=C3)C(=N)N)C(=N)N",
+  "code": "\"\"\"DAPI (DNA stain): PubChem CID 2954 (https://pubchem.ncbi.nlm.nih.gov/compound/2954)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"C1=CC(=CC=C1C2=CC3=C(N2)C=C(C=C3)C(=N)N)C(=N)N\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"DAPI (DNA stain)\", \"DAPI（DNA 染劑）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:1464",
+  "id": "CID 1464",
+  "name": [
+   "Hoechst 33342 (DNA stain)",
+   "Hoechst 33342（DNA 染劑）"
+  ],
+  "detail": "C27H28N6O · 452.60 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/1464",
+  "smiles": "CCOC1=CC=C(C=C1)C2=NC3=C(N2)C=C(C=C3)C4=NC5=C(N4)C=C(C=C5)N6CCN(CC6)C",
+  "code": "\"\"\"Hoechst 33342 (DNA stain): PubChem CID 1464 (https://pubchem.ncbi.nlm.nih.gov/compound/1464)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCOC1=CC=C(C=C1)C2=NC3=C(N2)C=C(C=C3)C4=NC5=C(N4)C=C(C=C5)N6CCN(CC6)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Hoechst 33342 (DNA stain)\", \"Hoechst 33342（DNA 染劑）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5463350",
+  "id": "CID 5463350",
+  "name": [
+   "Pinacyanol (a cyanine dye)",
+   "Pinacyanol（菁染料）"
+  ],
+  "detail": "C25H25IN2 · 480.40 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5463350",
+  "smiles": "CCN1/C(=C/C=C/C2=[N+](C3=CC=CC=C3C=C2)CC)/C=CC4=CC=CC=C41.[I-]",
+  "code": "\"\"\"Pinacyanol (a cyanine dye): PubChem CID 5463350 (https://pubchem.ncbi.nlm.nih.gov/compound/5463350)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCN1/C(=C/C=C/C2=[N+](C3=CC=CC=C3C=C2)CC)/C=CC4=CC=CC=C41.[I-]\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Pinacyanol (a cyanine dye)\", \"Pinacyanol（菁染料）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:5702697",
+  "id": "CID 5702697",
+  "name": [
+   "3,3'-diethylthiadicarbocyanine",
+   "3,3′-二乙基噻二碳菁"
+  ],
+  "detail": "C23H23IN2S2 · 518.50 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5702697",
+  "smiles": "CCN\\1C2=CC=CC=C2S/C1=C\\C=C\\C=C\\C3=[N+](C4=CC=CC=C4S3)CC.[I-]",
+  "code": "\"\"\"3,3'-diethylthiadicarbocyanine: PubChem CID 5702697 (https://pubchem.ncbi.nlm.nih.gov/compound/5702697)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCN\\1C2=CC=CC=C2S/C1=C\\C=C\\C=C\\C3=[N+](C4=CC=CC=C4S3)CC.[I-]\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"3,3'-diethylthiadicarbocyanine\", \"3,3′-二乙基噻二碳菁\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:7050",
+  "id": "CID 7050",
+  "name": [
+   "Coumarin 1",
+   "香豆素 1"
+  ],
+  "detail": "C14H17NO2 · 231.29 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/7050",
+  "smiles": "CCN(CC)C1=CC2=C(C=C1)C(=CC(=O)O2)C",
+  "code": "\"\"\"Coumarin 1: PubChem CID 7050 (https://pubchem.ncbi.nlm.nih.gov/compound/7050)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CCN(CC)C1=CC2=C(C=C1)C(=CC(=O)O2)C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Coumarin 1\", \"香豆素 1\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:129849628",
+  "id": "CID 129849628",
+  "name": [
+   "GFP chromophore (HBDI)",
+   "GFP 發色團（HBDI）"
+  ],
+  "detail": "C12H12N2O2 · 216.24 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/129849628",
+  "smiles": "CC1=NC(=O)C(=CC2=CC=C(C=C2)O)N1C",
+  "code": "\"\"\"GFP chromophore (HBDI): PubChem CID 129849628 (https://pubchem.ncbi.nlm.nih.gov/compound/129849628)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"CC1=NC(=O)C(=CC2=CC=C(C=C2)O)N1C\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"GFP chromophore (HBDI)\", \"GFP 發色團（HBDI）\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "licence": "PubChem: free to use; each depositor may set its own terms",
+  "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
+ },
+ {
+  "kind": "molecules",
+  "key": "cid:445858",
+  "id": "CID 445858",
+  "name": [
+   "Ferulic acid",
+   "阿魏酸"
+  ],
+  "detail": "C10H10O4 · 194.18 g/mol",
+  "url": "https://pubchem.ncbi.nlm.nih.gov/compound/445858",
+  "smiles": "COC1=C(C=CC(=C1)/C=C/C(=O)O)O",
+  "code": "\"\"\"Ferulic acid: PubChem CID 445858 (https://pubchem.ncbi.nlm.nih.gov/compound/445858)\"\"\"\n\nimport render as r\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\nSMILES = r\"COC1=C(C=CC(=C1)/C=C/C(=O)O)O\"\n\n\ndef run():\n    mol = Chem.MolFromSmiles(SMILES)\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{Descriptors.MolWt(mol):.2f}\", \"g/mol\"),\n        r.metric((\"logP\", \"logP\"), f\"{Crippen.MolLogP(mol):.2f}\"),\n        r.metric((\"H-bond donors / acceptors\", \"氫鍵供體 / 受體\"), f\"{Lipinski.NumHDonors(mol)} / {Lipinski.NumHAcceptors(mol)}\"),\n        r.svg(mol, (\"Ferulic acid\", \"阿魏酸\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
   "licence": "PubChem: free to use; each depositor may set its own terms",
   "licence_url": "https://pubchem.ncbi.nlm.nih.gov/docs/data-sources"
  },
@@ -311,20 +911,6 @@
  },
  {
   "kind": "structures",
-  "key": "pdb:1HSG",
-  "id": "PDB 1HSG",
-  "name": [
-   "HIV protease with the inhibitor L-735,524",
-   "HIV 蛋白酶與抑制劑 L-735,524"
-  ],
-  "detail": "x-ray diffraction · 2.0 Å · 1996 · 1686 atoms",
-  "url": "https://www.rcsb.org/structure/1HSG",
-  "code": "\"\"\"HIV protease with the inhibitor L-735,524: PDB 1HSG (https://www.rcsb.org/structure/1HSG)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1HSG\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"HIV protease with the inhibitor L-735,524\", \"HIV 蛋白酶與抑制劑 L-735,524\")),\n    ]\n",
-  "licence": "PDB: CC0 1.0",
-  "licence_url": "https://www.wwpdb.org/about/usage-policies"
- },
- {
-  "kind": "structures",
   "key": "pdb:6LYZ",
   "id": "PDB 6LYZ",
   "name": [
@@ -339,43 +925,15 @@
  },
  {
   "kind": "structures",
-  "key": "pdb:1GFL",
-  "id": "PDB 1GFL",
-  "name": [
-   "Green fluorescent protein (GFP)",
-   "綠色螢光蛋白（GFP）"
-  ],
-  "detail": "x-ray diffraction · 1.9 Å · 1997 · 3950 atoms",
-  "url": "https://www.rcsb.org/structure/1GFL",
-  "code": "\"\"\"Green fluorescent protein (GFP): PDB 1GFL (https://www.rcsb.org/structure/1GFL)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1GFL\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Green fluorescent protein (GFP)\", \"綠色螢光蛋白（GFP）\")),\n    ]\n",
-  "licence": "PDB: CC0 1.0",
-  "licence_url": "https://www.wwpdb.org/about/usage-policies"
- },
- {
-  "kind": "structures",
   "key": "pdb:3PTB",
   "id": "PDB 3PTB",
   "name": [
-   "Trypsin",
-   "胰蛋白酶"
+   "Trypsin with benzamidine",
+   "胰蛋白酶與苯甲脒"
   ],
   "detail": "x-ray diffraction · 1.7 Å · 1983 · 1701 atoms",
   "url": "https://www.rcsb.org/structure/3PTB",
-  "code": "\"\"\"Trypsin: PDB 3PTB (https://www.rcsb.org/structure/3PTB)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"3PTB\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Trypsin\", \"胰蛋白酶\")),\n    ]\n",
-  "licence": "PDB: CC0 1.0",
-  "licence_url": "https://www.wwpdb.org/about/usage-policies"
- },
- {
-  "kind": "structures",
-  "key": "pdb:2PTC",
-  "id": "PDB 2PTC",
-  "name": [
-   "Trypsin bound to an inhibitor",
-   "胰蛋白酶與抑制劑結合"
-  ],
-  "detail": "x-ray diffraction · 1.9 Å · 1983 · 2241 atoms",
-  "url": "https://www.rcsb.org/structure/2PTC",
-  "code": "\"\"\"Trypsin bound to an inhibitor: PDB 2PTC (https://www.rcsb.org/structure/2PTC)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"2PTC\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Trypsin bound to an inhibitor\", \"胰蛋白酶與抑制劑結合\")),\n    ]\n",
+  "code": "\"\"\"Trypsin with benzamidine: PDB 3PTB (https://www.rcsb.org/structure/3PTB)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"3PTB\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Trypsin with benzamidine\", \"胰蛋白酶與苯甲脒\")),\n    ]\n",
   "licence": "PDB: CC0 1.0",
   "licence_url": "https://www.wwpdb.org/about/usage-policies"
  },
@@ -395,6 +953,132 @@
  },
  {
   "kind": "structures",
+  "key": "pdb:1GFL",
+  "id": "PDB 1GFL",
+  "name": [
+   "Green fluorescent protein (GFP)",
+   "綠色螢光蛋白（GFP）"
+  ],
+  "detail": "x-ray diffraction · 1.9 Å · 1997 · 3950 atoms",
+  "url": "https://www.rcsb.org/structure/1GFL",
+  "code": "\"\"\"Green fluorescent protein (GFP): PDB 1GFL (https://www.rcsb.org/structure/1GFL)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1GFL\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Green fluorescent protein (GFP)\", \"綠色螢光蛋白（GFP）\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1EMA",
+  "id": "PDB 1EMA",
+  "name": [
+   "GFP S65T, the bright mutant",
+   "GFP S65T：高亮度突變體"
+  ],
+  "detail": "x-ray diffraction · 1.9 Å · 1996 · 1866 atoms",
+  "url": "https://www.rcsb.org/structure/1EMA",
+  "code": "\"\"\"GFP S65T, the bright mutant: PDB 1EMA (https://www.rcsb.org/structure/1EMA)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1EMA\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"GFP S65T, the bright mutant\", \"GFP S65T：高亮度突變體\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:2H5Q",
+  "id": "PDB 2H5Q",
+  "name": [
+   "mCherry, a red fluorescent protein",
+   "mCherry：紅色螢光蛋白"
+  ],
+  "detail": "x-ray diffraction · 1.36 Å · 2006 · 2121 atoms",
+  "url": "https://www.rcsb.org/structure/2H5Q",
+  "code": "\"\"\"mCherry, a red fluorescent protein: PDB 2H5Q (https://www.rcsb.org/structure/2H5Q)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"2H5Q\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"mCherry, a red fluorescent protein\", \"mCherry：紅色螢光蛋白\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1IEP",
+  "id": "PDB 1IEP",
+  "name": [
+   "Imatinib bound to the ABL kinase",
+   "伊馬替尼與 ABL 激酶結合"
+  ],
+  "detail": "x-ray diffraction · 2.1 Å · 2001 · 4710 atoms",
+  "url": "https://www.rcsb.org/structure/1IEP",
+  "code": "\"\"\"Imatinib bound to the ABL kinase: PDB 1IEP (https://www.rcsb.org/structure/1IEP)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1IEP\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Imatinib bound to the ABL kinase\", \"伊馬替尼與 ABL 激酶結合\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1HSG",
+  "id": "PDB 1HSG",
+  "name": [
+   "HIV protease with indinavir",
+   "HIV 蛋白酶與茚地那韋"
+  ],
+  "detail": "x-ray diffraction · 2.0 Å · 1996 · 1686 atoms",
+  "url": "https://www.rcsb.org/structure/1HSG",
+  "code": "\"\"\"HIV protease with indinavir: PDB 1HSG (https://www.rcsb.org/structure/1HSG)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1HSG\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"HIV protease with indinavir\", \"HIV 蛋白酶與茚地那韋\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:7SI9",
+  "id": "PDB 7SI9",
+  "name": [
+   "SARS-CoV-2 main protease with nirmatrelvir",
+   "SARS-CoV-2 主要蛋白酶與奈瑪特韋"
+  ],
+  "detail": "x-ray diffraction · 2.0 Å · 2021 · 2537 atoms",
+  "url": "https://www.rcsb.org/structure/7SI9",
+  "code": "\"\"\"SARS-CoV-2 main protease with nirmatrelvir: PDB 7SI9 (https://www.rcsb.org/structure/7SI9)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"7SI9\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"SARS-CoV-2 main protease with nirmatrelvir\", \"SARS-CoV-2 主要蛋白酶與奈瑪特韋\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1M17",
+  "id": "PDB 1M17",
+  "name": [
+   "EGFR kinase with erlotinib",
+   "EGFR 激酶與厄洛替尼"
+  ],
+  "detail": "x-ray diffraction · 2.6 Å · 2002 · 2560 atoms",
+  "url": "https://www.rcsb.org/structure/1M17",
+  "code": "\"\"\"EGFR kinase with erlotinib: PDB 1M17 (https://www.rcsb.org/structure/1M17)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1M17\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"EGFR kinase with erlotinib\", \"EGFR 激酶與厄洛替尼\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:4HJO",
+  "id": "PDB 4HJO",
+  "name": [
+   "EGFR kinase domain",
+   "EGFR 激酶結構域"
+  ],
+  "detail": "x-ray diffraction · 2.75 Å · 2012 · 2264 atoms",
+  "url": "https://www.rcsb.org/structure/4HJO",
+  "code": "\"\"\"EGFR kinase domain: PDB 4HJO (https://www.rcsb.org/structure/4HJO)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"4HJO\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"EGFR kinase domain\", \"EGFR 激酶結構域\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:3LN1",
+  "id": "PDB 3LN1",
+  "name": [
+   "Cyclooxygenase-2 with celecoxib",
+   "環氧合酶-2 與塞來昔布"
+  ],
+  "detail": "x-ray diffraction · 2.4 Å · 2010 · 18603 atoms",
+  "url": "https://www.rcsb.org/structure/3LN1",
+  "code": "\"\"\"Cyclooxygenase-2 with celecoxib: PDB 3LN1 (https://www.rcsb.org/structure/3LN1)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"3LN1\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Cyclooxygenase-2 with celecoxib\", \"環氧合酶-2 與塞來昔布\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
   "key": "pdb:6M0J",
   "id": "PDB 6M0J",
   "name": [
@@ -404,6 +1088,188 @@
   "detail": "x-ray diffraction · 2.45 Å · 2020 · 6571 atoms",
   "url": "https://www.rcsb.org/structure/6M0J",
   "code": "\"\"\"SARS-CoV-2 spike receptor-binding domain with ACE2: PDB 6M0J (https://www.rcsb.org/structure/6M0J)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"6M0J\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"SARS-CoV-2 spike receptor-binding domain with ACE2\", \"SARS-CoV-2 棘蛋白受體結合區與 ACE2\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1AO7",
+  "id": "PDB 1AO7",
+  "name": [
+   "A6 T-cell receptor on a peptide-MHC (HLA-A2)",
+   "A6 T 細胞受體結合胜肽–MHC（HLA-A2）"
+  ],
+  "detail": "x-ray diffraction · 2.6 Å · 1997 · 5711 atoms",
+  "url": "https://www.rcsb.org/structure/1AO7",
+  "code": "\"\"\"A6 T-cell receptor on a peptide-MHC (HLA-A2): PDB 1AO7 (https://www.rcsb.org/structure/1AO7)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1AO7\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"A6 T-cell receptor on a peptide-MHC (HLA-A2)\", \"A6 T 細胞受體結合胜肽–MHC（HLA-A2）\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:2BNR",
+  "id": "PDB 2BNR",
+  "name": [
+   "1G4 T-cell receptor on NY-ESO-1 peptide-MHC",
+   "1G4 T 細胞受體結合 NY-ESO-1 胜肽–MHC"
+  ],
+  "detail": "x-ray diffraction · 1.9 Å · 2005 · 7145 atoms",
+  "url": "https://www.rcsb.org/structure/2BNR",
+  "code": "\"\"\"1G4 T-cell receptor on NY-ESO-1 peptide-MHC: PDB 2BNR (https://www.rcsb.org/structure/2BNR)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"2BNR\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"1G4 T-cell receptor on NY-ESO-1 peptide-MHC\", \"1G4 T 細胞受體結合 NY-ESO-1 胜肽–MHC\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:3QDG",
+  "id": "PDB 3QDG",
+  "name": [
+   "DMF5 T-cell receptor on a MART-1 peptide-MHC",
+   "DMF5 T 細胞受體結合 MART-1 胜肽–MHC"
+  ],
+  "detail": "x-ray diffraction · 2.69 Å · 2011 · 6633 atoms",
+  "url": "https://www.rcsb.org/structure/3QDG",
+  "code": "\"\"\"DMF5 T-cell receptor on a MART-1 peptide-MHC: PDB 3QDG (https://www.rcsb.org/structure/3QDG)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"3QDG\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"DMF5 T-cell receptor on a MART-1 peptide-MHC\", \"DMF5 T 細胞受體結合 MART-1 胜肽–MHC\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1HHK",
+  "id": "PDB 1HHK",
+  "name": [
+   "Class I MHC (HLA-A2) with a peptide",
+   "第一型 MHC（HLA-A2）與胜肽"
+  ],
+  "detail": "x-ray diffraction · 2.5 Å · 1993 · 6322 atoms",
+  "url": "https://www.rcsb.org/structure/1HHK",
+  "code": "\"\"\"Class I MHC (HLA-A2) with a peptide: PDB 1HHK (https://www.rcsb.org/structure/1HHK)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1HHK\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Class I MHC (HLA-A2) with a peptide\", \"第一型 MHC（HLA-A2）與胜肽\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:5WT9",
+  "id": "PDB 5WT9",
+  "name": [
+   "PD-1 bound by nivolumab",
+   "PD-1 與納武利尤單抗結合"
+  ],
+  "detail": "x-ray diffraction · 2.401 Å · 2017 · 4391 atoms",
+  "url": "https://www.rcsb.org/structure/5WT9",
+  "code": "\"\"\"PD-1 bound by nivolumab: PDB 5WT9 (https://www.rcsb.org/structure/5WT9)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"5WT9\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"PD-1 bound by nivolumab\", \"PD-1 與納武利尤單抗結合\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:7URV",
+  "id": "PDB 7URV",
+  "name": [
+   "CD19 bound by the FMC63 binder used in CAR-T cells",
+   "CD19 與 CAR-T 細胞所用的 FMC63 結合"
+  ],
+  "detail": "electron microscopy · 3.05 Å · 2023 · 3460 atoms",
+  "url": "https://www.rcsb.org/structure/7URV",
+  "code": "\"\"\"CD19 bound by the FMC63 binder used in CAR-T cells: PDB 7URV (https://www.rcsb.org/structure/7URV)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"7URV\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"CD19 bound by the FMC63 binder used in CAR-T cells\", \"CD19 與 CAR-T 細胞所用的 FMC63 結合\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:6AL5",
+  "id": "PDB 6AL5",
+  "name": [
+   "CD19 bound by the B43 antibody fragment",
+   "CD19 與 B43 抗體片段結合"
+  ],
+  "detail": "x-ray diffraction · 3.0 Å · 2018 · 5063 atoms",
+  "url": "https://www.rcsb.org/structure/6AL5",
+  "code": "\"\"\"CD19 bound by the B43 antibody fragment: PDB 6AL5 (https://www.rcsb.org/structure/6AL5)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"6AL5\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"CD19 bound by the B43 antibody fragment\", \"CD19 與 B43 抗體片段結合\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1IGT",
+  "id": "PDB 1IGT",
+  "name": [
+   "An intact antibody (IgG)",
+   "完整抗體（IgG）"
+  ],
+  "detail": "x-ray diffraction · 2.8 Å · 1997 · 10434 atoms",
+  "url": "https://www.rcsb.org/structure/1IGT",
+  "code": "\"\"\"An intact antibody (IgG): PDB 1IGT (https://www.rcsb.org/structure/1IGT)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1IGT\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"An intact antibody (IgG)\", \"完整抗體（IgG）\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1HZH",
+  "id": "PDB 1HZH",
+  "name": [
+   "An intact human IgG antibody (b12)",
+   "完整的人類 IgG 抗體（b12）"
+  ],
+  "detail": "x-ray diffraction · 2.7 Å · 2001 · 10647 atoms",
+  "url": "https://www.rcsb.org/structure/1HZH",
+  "code": "\"\"\"An intact human IgG antibody (b12): PDB 1HZH (https://www.rcsb.org/structure/1HZH)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1HZH\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"An intact human IgG antibody (b12)\", \"完整的人類 IgG 抗體（b12）\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1BL8",
+  "id": "PDB 1BL8",
+  "name": [
+   "KcsA potassium channel",
+   "KcsA 鉀離子通道"
+  ],
+  "detail": "x-ray diffraction · 3.2 Å · 1998 · 2824 atoms",
+  "url": "https://www.rcsb.org/structure/1BL8",
+  "code": "\"\"\"KcsA potassium channel: PDB 1BL8 (https://www.rcsb.org/structure/1BL8)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1BL8\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"KcsA potassium channel\", \"KcsA 鉀離子通道\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1ATP",
+  "id": "PDB 1ATP",
+  "name": [
+   "Protein kinase A with ATP",
+   "蛋白激酶 A 與 ATP"
+  ],
+  "detail": "x-ray diffraction · 2.2 Å · 1993 · 3070 atoms",
+  "url": "https://www.rcsb.org/structure/1ATP",
+  "code": "\"\"\"Protein kinase A with ATP: PDB 1ATP (https://www.rcsb.org/structure/1ATP)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1ATP\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"Protein kinase A with ATP\", \"蛋白激酶 A 與 ATP\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:6VXX",
+  "id": "PDB 6VXX",
+  "name": [
+   "SARS-CoV-2 spike protein, closed",
+   "SARS-CoV-2 棘蛋白（閉合）"
+  ],
+  "detail": "electron microscopy · 2.8 Å · 2020 · 23694 atoms",
+  "url": "https://www.rcsb.org/structure/6VXX",
+  "code": "\"\"\"SARS-CoV-2 spike protein, closed: PDB 6VXX (https://www.rcsb.org/structure/6VXX)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"6VXX\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"SARS-CoV-2 spike protein, closed\", \"SARS-CoV-2 棘蛋白（閉合）\")),\n    ]\n",
+  "licence": "PDB: CC0 1.0",
+  "licence_url": "https://www.wwpdb.org/about/usage-policies"
+ },
+ {
+  "kind": "structures",
+  "key": "pdb:1TUP",
+  "id": "PDB 1TUP",
+  "name": [
+   "p53 core domain bound to DNA",
+   "p53 核心結構域與 DNA 結合"
+  ],
+  "detail": "x-ray diffraction · 2.2 Å · 1995 · 5828 atoms",
+  "url": "https://www.rcsb.org/structure/1TUP",
+  "code": "\"\"\"p53 core domain bound to DNA: PDB 1TUP (https://www.rcsb.org/structure/1TUP)\"\"\"\n\nimport render as r\nfrom data import fetch_pdb  # downloads from RCSB the first time, then keeps a copy on your computer\n\nPDB = fetch_pdb(\"1TUP\")\n\n\ndef run():\n    atoms = [ln for ln in PDB.splitlines() if ln.startswith((\"ATOM  \", \"HETATM\"))]\n    chains = sorted({ln[21] for ln in atoms})\n    residues = {(ln[21], ln[22:27]) for ln in atoms if ln.startswith(\"ATOM  \")}\n    ligands = sorted({ln[17:20].strip() for ln in atoms if ln.startswith(\"HETATM\")} - {\"HOH\"})\n    return [\n        r.metric((\"Atoms\", \"原子\"), len(atoms)),\n        r.metric((\"Chains\", \"鏈\"), \", \".join(chains)),\n        r.metric((\"Residues\", \"殘基\"), len(residues)),\n        r.metric((\"Other molecules\", \"其他分子\"), \", \".join(ligands) or \"–\"),\n        r.pdb3d([{\"pdb\": PDB, \"colour\": \"#0f766e\"}], (\"p53 core domain bound to DNA\", \"p53 核心結構域與 DNA 結合\")),\n    ]\n",
   "licence": "PDB: CC0 1.0",
   "licence_url": "https://www.wwpdb.org/about/usage-policies"
  },
@@ -516,6 +1382,146 @@
   "detail": "Homo sapiens · 685 aa · mean pLDDT 88.62",
   "url": "https://alphafold.ebi.ac.uk/entry/P0CG48",
   "code": "\"\"\"Polyubiquitin-C: AlphaFold DB model of UniProt P0CG48 (https://alphafold.ebi.ac.uk/entry/P0CG48)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P0CG48\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Polyubiquitin-C, coloured by pLDDT\", \"多泛素 C，依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P00533",
+  "id": "UniProt P00533",
+  "name": [
+   "Epidermal growth factor receptor",
+   "表皮生長因子受體（EGFR）"
+  ],
+  "detail": "Homo sapiens · 1210 aa · mean pLDDT 75.94",
+  "url": "https://alphafold.ebi.ac.uk/entry/P00533",
+  "code": "\"\"\"Epidermal growth factor receptor: AlphaFold DB model of UniProt P00533 (https://alphafold.ebi.ac.uk/entry/P00533)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P00533\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Epidermal growth factor receptor, coloured by pLDDT\", \"表皮生長因子受體（EGFR），依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P11362",
+  "id": "UniProt P11362",
+  "name": [
+   "Fibroblast growth factor receptor 1",
+   "纖維母細胞生長因子受體 1（FGFR1）"
+  ],
+  "detail": "Homo sapiens · 822 aa · mean pLDDT 73.88",
+  "url": "https://alphafold.ebi.ac.uk/entry/P11362",
+  "code": "\"\"\"Fibroblast growth factor receptor 1: AlphaFold DB model of UniProt P11362 (https://alphafold.ebi.ac.uk/entry/P11362)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P11362\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Fibroblast growth factor receptor 1, coloured by pLDDT\", \"纖維母細胞生長因子受體 1（FGFR1），依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P00519",
+  "id": "UniProt P00519",
+  "name": [
+   "Tyrosine-protein kinase ABL1",
+   "ABL1 酪胺酸激酶"
+  ],
+  "detail": "Homo sapiens · 1130 aa · mean pLDDT 63.38",
+  "url": "https://alphafold.ebi.ac.uk/entry/P00519",
+  "code": "\"\"\"Tyrosine-protein kinase ABL1: AlphaFold DB model of UniProt P00519 (https://alphafold.ebi.ac.uk/entry/P00519)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P00519\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Tyrosine-protein kinase ABL1, coloured by pLDDT\", \"ABL1 酪胺酸激酶，依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P42212",
+  "id": "UniProt P42212",
+  "name": [
+   "Green fluorescent protein",
+   "綠色螢光蛋白（GFP）"
+  ],
+  "detail": "Aequorea victoria · 238 aa · mean pLDDT 96.62",
+  "url": "https://alphafold.ebi.ac.uk/entry/P42212",
+  "code": "\"\"\"Green fluorescent protein: AlphaFold DB model of UniProt P42212 (https://alphafold.ebi.ac.uk/entry/P42212)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P42212\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Green fluorescent protein, coloured by pLDDT\", \"綠色螢光蛋白（GFP），依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P15391",
+  "id": "UniProt P15391",
+  "name": [
+   "B-lymphocyte antigen CD19",
+   "CD19"
+  ],
+  "detail": "Homo sapiens · 556 aa · mean pLDDT 62.22",
+  "url": "https://alphafold.ebi.ac.uk/entry/P15391",
+  "code": "\"\"\"B-lymphocyte antigen CD19: AlphaFold DB model of UniProt P15391 (https://alphafold.ebi.ac.uk/entry/P15391)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P15391\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"B-lymphocyte antigen CD19, coloured by pLDDT\", \"CD19，依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:Q9NZQ7",
+  "id": "UniProt Q9NZQ7",
+  "name": [
+   "Programmed cell death 1 ligand 1",
+   "PD-L1"
+  ],
+  "detail": "Homo sapiens · 290 aa · mean pLDDT 88.25",
+  "url": "https://alphafold.ebi.ac.uk/entry/Q9NZQ7",
+  "code": "\"\"\"Programmed cell death 1 ligand 1: AlphaFold DB model of UniProt Q9NZQ7 (https://alphafold.ebi.ac.uk/entry/Q9NZQ7)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"Q9NZQ7\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Programmed cell death 1 ligand 1, coloured by pLDDT\", \"PD-L1，依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P01116",
+  "id": "UniProt P01116",
+  "name": [
+   "GTPase KRas",
+   "KRAS"
+  ],
+  "detail": "Homo sapiens · 189 aa · mean pLDDT 91.5",
+  "url": "https://alphafold.ebi.ac.uk/entry/P01116",
+  "code": "\"\"\"GTPase KRas: AlphaFold DB model of UniProt P01116 (https://alphafold.ebi.ac.uk/entry/P01116)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P01116\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"GTPase KRas, coloured by pLDDT\", \"KRAS，依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P38398",
+  "id": "UniProt P38398",
+  "name": [
+   "Breast cancer type 1 susceptibility protein",
+   "BRCA1"
+  ],
+  "detail": "Homo sapiens · 1863 aa · mean pLDDT 41.59",
+  "url": "https://alphafold.ebi.ac.uk/entry/P38398",
+  "code": "\"\"\"Breast cancer type 1 susceptibility protein: AlphaFold DB model of UniProt P38398 (https://alphafold.ebi.ac.uk/entry/P38398)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P38398\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Breast cancer type 1 susceptibility protein, coloured by pLDDT\", \"BRCA1，依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P0DTC2",
+  "id": "UniProt P0DTC2",
+  "name": [
+   "Spike glycoprotein",
+   "SARS-CoV-2 棘蛋白"
+  ],
+  "detail": "Severe acute respiratory syndrome coronavirus 2 · 1273 aa · mean pLDDT 67.14",
+  "url": "https://alphafold.ebi.ac.uk/entry/P0DTC2",
+  "code": "\"\"\"Spike glycoprotein: AlphaFold DB model of UniProt P0DTC2 (https://alphafold.ebi.ac.uk/entry/P0DTC2)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P0DTC2\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Spike glycoprotein, coloured by pLDDT\", \"SARS-CoV-2 棘蛋白，依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
+  "licence": "AlphaFold DB: CC BY 4.0",
+  "licence_url": "https://alphafold.ebi.ac.uk/faq"
+ },
+ {
+  "kind": "predictions",
+  "key": "afdb:P02751",
+  "id": "UniProt P02751",
+  "name": [
+   "Fibronectin",
+   "纖維連接蛋白"
+  ],
+  "detail": "Homo sapiens · 2477 aa · mean pLDDT 69.62",
+  "url": "https://alphafold.ebi.ac.uk/entry/P02751",
+  "code": "\"\"\"Fibronectin: AlphaFold DB model of UniProt P02751 (https://alphafold.ebi.ac.uk/entry/P02751)\"\"\"\n\nimport render as r\nfrom data import fetch_alphafold  # downloads from AlphaFold DB the first time, then keeps a copy\n\nMODEL = fetch_alphafold(\"P02751\")\n\n\ndef run():\n    plddt = [float(ln[60:66]) for ln in MODEL.splitlines() if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"]\n    colour = [\"#0053d6\" if v > 90 else \"#65cbf3\" if v > 70 else \"#ffdb13\" if v > 50 else \"#ff7d45\" for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.metric((\"Residues below 50 (likely disordered)\", \"低於 50 的殘基（可能無序）\"), sum(v <= 50 for v in plddt)),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Fibronectin, coloured by pLDDT\", \"纖維連接蛋白，依 pLDDT 上色\")),\n        r.bars([str(i + 1) for i in range(len(plddt))], plddt, (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"), colours=colour, vertical=True),\n    ]\n",
   "licence": "AlphaFold DB: CC BY 4.0",
   "licence_url": "https://alphafold.ebi.ac.uk/faq"
  }

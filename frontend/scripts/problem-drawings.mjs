@@ -205,6 +205,30 @@ const H = (x, y) => circle(x, y, 10, "#fff", "#9ca3af", 1.5) + t(x, y + 4, "H", 
   files["pro/rmsd"] = svg("A predicted backbone laid over the crystal structure with the deviation between matching atoms drawn; for crambin the RMSD is 0.43 angstroms", b);
 }
 
+// fluorophore: the chain grows, the colour moves to the red
+{
+  let b = head("Longer chain, redder colour");
+  const rows = [["Cy3", 5, 554, "#7ac943"], ["Cy5", 7, 644, "#e03b2f"]];
+  rows.forEach(([name, P, nm, col], i) => {
+    const y = 96 + i * 92;
+    b += t(30, y + 4, name, { bold: true, size: 13 });
+    b += circle(86, y, 13, "#dbeafe", "#1d4ed8", 2) + t(86, y + 4, "N", { anchor: "middle", bold: true, fill: "#1d4ed8", size: 12 });
+    const n = P + 1;
+    const step = 212 / n;
+    for (let k = 0; k < n; k++) {
+      const x1 = 86 + 13 + k * step, x2 = x1 + step - (k === n - 1 ? 13 : 0);
+      b += line(x1, y + (k % 2 ? 3 : -3), x2, y + (k % 2 ? -3 : 3), "#374151", 2.5);
+      if (k < P) b += circle(x1 + step / 2, y + (k % 2 ? 0 : 0), 3.5, "#374151");
+    }
+    b += circle(86 + 13 + 212 + 13, y, 13, "#dbeafe", "#1d4ed8", 2) + t(86 + 238, y + 4, "N", { anchor: "middle", bold: true, fill: "#1d4ed8", size: 12 });
+    b += t(176, y + 26, `P = ${P} carbons`, { anchor: "middle", fill: "#6b7280", size: 11.5 });
+    b += rect(344, y - 16, 110, 32, col, "none", { rx: 6 }) + t(399, y - 2, `absorbs`, { anchor: "middle", fill: "#fff", size: 10.5 }) + t(399, y + 11, `${nm} nm`, { anchor: "middle", fill: "#fff", bold: true, size: 12.5 });
+  });
+  b += t(240, 252, "one more -CH=CH- : about +90 nm, green light to red", { anchor: "middle", fill: EM, size: 13, bold: true });
+  b += foot("a box of length L holds the electrons: λ = 8mcL²/(h(N+1))");
+  files["molecules/fluorophore"] = svg("Cy3 and Cy5 drawn as a chain of carbons between two nitrogens: the longer chain of Cy5 absorbs at a longer wavelength", b);
+}
+
 for (const [id, s] of Object.entries(files)) writeFileSync(`${ROOT}/${id}/diagram.svg`, s);
 console.log(Object.keys(files).length, "pictures");
 // silence unused-import lint in editors
