@@ -18,7 +18,7 @@ test("every concept text is in English and Traditional Chinese", () => {
       if (s.table) for (const r of [s.table.head, ...s.table.rows]) assert.ok(r.every(filled), `${c.id}/${s.id} table`);
       if (s.callout) assert.ok(filled(s.callout.title) && filled(s.callout.text));
     }
-    assert.ok(c.sources.length && c.sources.every((s) => s.url.startsWith("https://")), `${c.id} sources`);
+    for (const s of c.sections) assert.ok(s.sources.length && s.sources.every((x) => x.url.startsWith("https://")), `${c.id}/${s.id}: sources`);
   }
 });
 

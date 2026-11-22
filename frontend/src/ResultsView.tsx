@@ -15,7 +15,61 @@ export type ResultItem =
   | { kind: "table"; title: Pair; head: Pair[]; rows: (string | number)[][] }
   | { kind: "bars"; title: Pair; labels: string[]; values: number[]; limits: (number | null)[] | null; colours: string[] | null; unit: string; vertical: boolean }
   | { kind: "text"; title: Pair; body: Pair; mono: boolean }
-  | { kind: "link"; title: Pair; url: string; text: string };
+  | { kind: "link"; title: Pair; url: string; text: string }
+  | { kind: "scatter"; title: Pair; x: number[]; y: number[]; labels: string[]; x_label: Pair; y_label: Pair; box: [number | null, number | null] | null };
+
+/** a scatter plot, one labelled point per molecule; `box` shades the region below both limits */
+function Scatter({ item }: { item: Extract<ResultItem, { kind: "scatter" }> }) {
+  const { pick } = useLang();
+  const W = 460, H = 300, L = 48, B = 36, T = 10, R = 12;
+  const xs = [...item.x, ...(item.box?.[0] != null ? [item.box[0]] : [])];
+  const ys = [...item.y, ...(item.box?.[1] != null ? [item.box[1]] : [])];
+  const pad = (lo: number, hi: number) => {
+    const d = hi - lo || Math.abs(hi) || 1;
+    return [lo - 0.08 * d, hi + 0.08 * d];
+  };
+  const [x0, x1] = pad(Math.min(...xs), Math.max(...xs));
+  const [y0, y1] = pad(Math.min(...ys), Math.max(...ys));
+  const px = (v: number) => L + ((v - x0) / (x1 - x0)) * (W - L - R);
+  const py = (v: number) => H - B - ((v - y0) / (y1 - y0)) * (H - B - T);
+  const ticks = (lo: number, hi: number) => {
+    const step = 10 ** Math.floor(Math.log10((hi - lo) / 4 || 1));
+    const nice = [1, 2, 5, 10].map((m) => m * step).find((s) => (hi - lo) / s <= 6) ?? step * 10;
+    const out = [];
+    for (let v = Math.ceil(lo / nice) * nice; v <= hi; v += nice) out.push(+v.toFixed(6));
+    return out;
+  };
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={item.labels.map((l, i) => `${l}: ${item.x[i]}, ${item.y[i]}`).join("; ")} data-testid="result-scatter">
+      {item.box && (
+        <rect x={L} y={item.box[1] != null ? py(item.box[1]) : T} width={(item.box[0] != null ? px(item.box[0]) : W - R) - L} height={H - B - (item.box[1] != null ? py(item.box[1]) : T)} fill="#dcfce7" />
+      )}
+      {ticks(x0, x1).map((v) => (
+        <g key={`x${v}`}>
+          <line x1={px(v)} x2={px(v)} y1={T} y2={H - B} stroke="#f3f4f6" />
+          <text x={px(v)} y={H - B + 14} fontSize="10" textAnchor="middle" fill="#6b7280">{v}</text>
+        </g>
+      ))}
+      {ticks(y0, y1).map((v) => (
+        <g key={`y${v}`}>
+          <line x1={L} x2={W - R} y1={py(v)} y2={py(v)} stroke="#f3f4f6" />
+          <text x={L - 6} y={py(v) + 3} fontSize="10" textAnchor="end" fill="#6b7280">{v}</text>
+        </g>
+      ))}
+      <rect x={L} y={T} width={W - L - R} height={H - B - T} fill="none" stroke="#d1d5db" />
+      {item.x.map((v, i) => (
+        <g key={i}>
+          <circle cx={px(v)} cy={py(item.y[i])} r="4" fill="var(--lk-accent)" opacity="0.85">
+            <title>{`${item.labels[i]}: ${item.x[i].toFixed(2)}, ${item.y[i].toFixed(2)}`}</title>
+          </circle>
+          <text x={px(v) + 6} y={py(item.y[i]) - 5} fontSize="10" fill="#374151">{item.labels[i]}</text>
+        </g>
+      ))}
+      <text x={(L + W - R) / 2} y={H - 6} fontSize="11" textAnchor="middle" fill="#374151">{item.x_label && pick(item.x_label)}</text>
+      <text x={12} y={(T + H - B) / 2} fontSize="11" textAnchor="middle" fill="#374151" transform={`rotate(-90 12 ${(T + H - B) / 2})`}>{item.y_label && pick(item.y_label)}</text>
+    </svg>
+  );
+}
 
 /** wide: the whole row; tall: two rows on the left (a structure, with smaller cards stacked beside it) */
 function Card({ title, wide, tall, children }: { title: Pair; wide?: boolean; tall?: boolean; children: React.ReactNode }) {
@@ -160,6 +214,12 @@ export default function ResultsView({ items }: { items: ResultItem[] }) {
                   ) : (
                     <p className="text-sm text-gray-700">{item.body && <RichText text={pick(item.body)} />}</p>
                   )}
+                </Card>
+              );
+            case "scatter":
+              return (
+                <Card key={i} title={item.title} wide>
+                  <Scatter item={item} />
                 </Card>
               );
             case "link":

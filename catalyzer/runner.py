@@ -163,3 +163,64 @@ def run_main(problem: Problem, source: str, params: dict | None = None, timeout:
             return RunResult("error", problems=last, output=output)
         results = json.loads((work / "results.json").read_text(encoding="utf-8"))
         return RunResult("done", output=output, results=results)
+
+
+CACHE = Path(os.environ.get("CATALYZER_CACHE") or Path.home() / ".cache" / "catalyzer")
+INPUT_SUFFIXES = (".smi", ".txt", ".csv", ".sdf", ".pdb", ".cif", ".fasta")
+MAX_INPUT_BYTES = 20_000_000
+
+
+def run_script(source: str, inputs: dict[str, str] | None = None, timeout: float = TIMEOUT_S) -> RunResult:
+    """Run a workspace script: the reader's own code, defining run() -> results to draw, with the reader's input
+    files (molecules.smi, a .csv, an .sdf…) beside it. It runs like a problem (a fresh folder, a separate
+    process, a timeout), with render.py and data.py next to it; data.py reads the input files and may download
+    public structures (RCSB PDB, AlphaFold DB, PubChem) into the cache. The server only calls this for a paired
+    page (serve.py)."""
+    try:
+        compile(source, "workspace.py", "exec")
+    except SyntaxError as e:
+        return RunResult("rejected", problems=[f"syntax error on line {e.lineno}: {e.msg}"])
+    inputs = inputs or {}
+    for name in inputs:
+        if Path(name).name != name or not name.lower().endswith(INPUT_SUFFIXES) or name.startswith("."):
+            return RunResult(
+                "rejected", problems=[f"input file {name!r}: a plain name ending in {', '.join(INPUT_SUFFIXES)}"]
+            )
+    if sum(len(t) for t in inputs.values()) > MAX_INPUT_BYTES:
+        return RunResult("rejected", problems=["the input files are larger than 20 MB together"])
+    with tempfile.TemporaryDirectory(prefix="catalyzer-ws-") as tmp:
+        work = Path(tmp)
+        (work / "workspace.py").write_text(source, encoding="utf-8")
+        for name, text in inputs.items():
+            (work / name).write_text(text, encoding="utf-8")
+        shutil.copy(Path(__file__).parent / "render.py", work / "render.py")
+        shutil.copy(Path(__file__).parent / "data.py", work / "data.py")
+        boot = (
+            "import sys, json; sys.path.insert(0, '.'); import workspace; "
+            "out = workspace.run(); "
+            "json.dump(out, open('results.json', 'w', encoding='utf-8'))"
+        )
+        env = {**_env(), "CATALYZER_CACHE": str(CACHE)}
+        for k in ("USERPROFILE", "HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY", "SSL_CERT_FILE"):  # downloads need these
+            if k in os.environ:
+                env[k] = os.environ[k]
+        try:
+            proc = subprocess.run(
+                [sys.executable, "-I", "-c", boot],
+                cwd=work,
+                env=env,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=timeout,
+                preexec_fn=_limits if os.name == "posix" else None,
+            )
+        except subprocess.TimeoutExpired:
+            return RunResult("error", problems=[f"the run took longer than {timeout:.0f} s and was stopped"])
+        output = (proc.stdout + proc.stderr)[-8000:]
+        if proc.returncode != 0 or not (work / "results.json").is_file():
+            last = [ln for ln in output.strip().splitlines() if ln.strip()][-1:] or ["the run failed"]
+            return RunResult("error", problems=last, output=output)
+        results = json.loads((work / "results.json").read_text(encoding="utf-8"))
+        return RunResult("done", output=output, results=results)

@@ -21,6 +21,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { findProblem, LEVEL, type Param, type Problem, PROBLEMS, problemName, TRACKS } from "./problems";
 import ResultsView, { type ResultItem } from "./ResultsView";
+import WorkspacePage from "./WorkspacePage";
 import { loadDraft, RUNNER, runAnswer, type RunResult, runnerAlive, saveDraft } from "./runner";
 
 const PY = python();
@@ -33,7 +34,40 @@ const LEVEL_TEXT: Record<Problem["level"], string> = { beginner: "text-green-700
 
 type PhoneTab = "problem" | "code" | "results";
 
+/** the left column's two tabs (as Formalizer's Problems | Research, Tensorizer's Problems | Workspace) */
+export function LeftTabs({ current }: { current: "problems" | "workspace" }) {
+  const { pick } = useLang();
+  const last = () => {
+    try {
+      return localStorage.getItem(LAST);
+    } catch {
+      return null;
+    }
+  };
+  return (
+    <div role="tablist" className="grid flex-1 grid-cols-2 gap-1 rounded-lg bg-gray-100 p-1" data-testid="left-tabs">
+      {(["problems", "workspace"] as const).map((id) => (
+        <button
+          key={id}
+          role="tab"
+          aria-selected={current === id}
+          onClick={() => (id === "workspace" ? go("problems", "workspace") : go("problems", last() ?? problemName(PROBLEMS[0])))}
+          data-testid={`left-tab-${id}`}
+          className={`rounded-md px-2 py-1 text-xs font-medium transition ${current === id ? "bg-(--lk-accent) text-white shadow-sm" : "text-gray-600 hover:bg-gray-200 hover:text-gray-900"}`}
+        >
+          {id === "problems" ? pick(["Problems", "題目"]) : pick(["Workspace", "工作區"])}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function ProblemsPage({ name }: { name: string | null }) {
+  if (name === "workspace") return <WorkspacePage leftTabs={<LeftTabs current="workspace" />} />;
+  return <ProblemView name={name} />;
+}
+
+function ProblemView({ name }: { name: string | null }) {
   const { pick } = useLang();
   const remembered = (() => {
     try {
@@ -80,7 +114,8 @@ export default function ProblemsPage({ name }: { name: string | null }) {
   return (
     <div className="flex flex-col bg-white xl:h-full xl:min-h-0 xl:flex-row" data-testid="problem-view">
       {/* phones and tablets: pick a problem, then a tab */}
-      <div className="border-b border-gray-200 p-3 xl:hidden">
+      <div className="space-y-2 border-b border-gray-200 p-3 xl:hidden">
+        <LeftTabs current="problems" />
         <select
           value={current}
           onChange={(e) => go("problems", e.target.value)}
@@ -190,7 +225,13 @@ function Library({ selected, onClose }: { selected: string; onClose: () => void 
   return (
     <>
       <div className="flex shrink-0 items-center gap-1.5 border-b border-gray-100 p-2">
-        <div className="relative flex-1">
+        <LeftTabs current="problems" />
+        <button onClick={onClose} className="rounded px-1.5 py-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700" title={pick(["Hide the problem list", "隱藏題目清單"])} data-testid="library-close">
+          «
+        </button>
+      </div>
+      <div className="shrink-0 border-b border-gray-100 p-2">
+        <div className="relative">
           <input
             ref={box}
             type="search"
@@ -202,9 +243,6 @@ function Library({ selected, onClose }: { selected: string; onClose: () => void 
           />
           <kbd className="pointer-events-none absolute top-1.5 right-2 rounded border border-gray-200 px-1 text-xs text-gray-400">/</kbd>
         </div>
-        <button onClick={onClose} className="rounded px-1.5 py-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700" title={pick(["Hide the problem list", "隱藏題目清單"])} data-testid="library-close">
-          «
-        </button>
       </div>
       <nav className="min-h-0 flex-1 overflow-y-auto p-2" aria-label={pick(["Problems", "題目"])}>
         {hits ? (
@@ -569,8 +607,8 @@ function RunnerHelp({ problem }: { problem: Problem }) {
       <p>
         <RichText
           text={pick([
-            `Your code runs on your own computer, never on a server. Install [pixi](https://pixi.sh), start the runner (it listens on ${RUNNER} only), then press Run again:`,
-            `你的程式碼在你自己的電腦上執行，絕不會在伺服器上執行。安裝 [pixi](https://pixi.sh)，啟動執行器（它只在 ${RUNNER} 上接聽），再按一次「執行」：`,
+            `The local runner runs the code on your own computer, so it stays there. Install [pixi](https://pixi.sh), start the runner (it listens on ${RUNNER} only), then press Run again:`,
+            `本機執行器在你自己的電腦上執行程式碼，所以程式碼留在你的電腦上。安裝 [pixi](https://pixi.sh)，啟動執行器（它只在 ${RUNNER} 上接聽），再按一次「執行」：`,
           ])}
         />
       </p>

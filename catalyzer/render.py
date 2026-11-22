@@ -132,6 +132,29 @@ def bars(
     }
 
 
+def scatter(
+    x: list[float],
+    y: list[float],
+    labels: list[str],
+    title: Label | str | None = None,
+    x_label: Label | str = "x",
+    y_label: Label | str = "y",
+    box: tuple[float | None, float | None] | None = None,
+) -> dict:
+    """A scatter plot, one labelled point per molecule; `box` = (x limit, y limit) shades the region below both
+    (e.g. Lipinski's molecular weight ≤ 500 and logP ≤ 5)."""
+    return {
+        "kind": "scatter",
+        "title": _label(title),
+        "x": [float(v) for v in x],
+        "y": [float(v) for v in y],
+        "labels": labels,
+        "x_label": _label(x_label),
+        "y_label": _label(y_label),
+        "box": list(box) if box else None,
+    }
+
+
 def metric(label: Label | str, value, unit: str = "", good: bool | None = None) -> dict:
     """One headline number or word; good=True/False colours it green/red."""
     return {"kind": "metric", "label": _label(label), "value": str(value), "unit": unit, "good": good}

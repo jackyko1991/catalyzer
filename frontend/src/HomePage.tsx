@@ -13,7 +13,7 @@ const STARTS: { title: L; text: L; picture: string; to: [string, string?] }[] = 
   },
   {
     title: ["Solve problems", "解題"],
-    text: [`${PROBLEMS.length} problems from reading a SMILES string to measuring an AlphaFold model against experiment, checked by tests on your own computer.`, `${PROBLEMS.length} 道題目，從讀懂一個 SMILES 字串，到拿 AlphaFold 模型和實驗比對，由測試在你自己的電腦上檢查。`],
+    text: [`${PROBLEMS.length} runnable problems, from reading a SMILES string to measuring an AlphaFold model against experiment, with results in 2D and 3D and tests to check your changes.`, `${PROBLEMS.length} 道可以執行的題目，從讀懂一個 SMILES 字串，到拿 AlphaFold 模型和實驗比對，結果以 2D 與 3D 呈現，並有測試檢查你的修改。`],
     picture: "problems/molecules/lipinski.svg",
     to: ["problems"],
   },

@@ -17,6 +17,7 @@ OUT = FRONTEND / "src" / "generated" / "problems.json"
 PICTURES = FRONTEND / "public" / "problems"
 RESULTS = FRONTEND / "public" / "results"
 LIBRARY = FRONTEND / "src" / "generated" / "library.json"
+WORKSPACE = FRONTEND / "src" / "generated" / "workspace.json"
 
 
 def problems_data() -> list[dict]:
@@ -77,6 +78,26 @@ def main() -> None:
         text = json.dumps(r.results, ensure_ascii=False) + "\n"
         (RESULTS / f"{p.id.split('/')[1]}.json").write_text(text, encoding="utf-8", newline="\n")
     print(f"wrote {len(all_problems())} default results to frontend/public/results")
+    templates = Path(__file__).with_name("templates")
+    workspace = {
+        "templates": [
+            {
+                "id": "calculator",
+                "title": ["Molecule calculator", "分子計算機"],
+                "code": (templates / "calculator.py").read_text(encoding="utf-8"),
+            },
+            {
+                "id": "similarity",
+                "title": ["Similarity matrix", "相似度矩陣"],
+                "code": (templates / "similarity.py").read_text(encoding="utf-8"),
+            },
+        ],
+        "molecules": (templates / "molecules.smi").read_text(encoding="utf-8"),
+        # the Library's code for any PDB entry or AlphaFold model found by live search: @ID@, @EN@, @ZH@ filled in
+        "structure": library._structure_code({"id": "@ID@", "name": ["@EN@", "@ZH@"]}),
+        "prediction": library._prediction_code({"uniprot": "@ID@", "name": ["@EN@", "@ZH@"]}),
+    }
+    WORKSPACE.write_text(json.dumps(workspace, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     lib = library.entries()
     LIBRARY.write_text(json.dumps(lib, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     print(f"wrote {LIBRARY.relative_to(FRONTEND.parent)} ({len(lib)} entries)")

@@ -57,3 +57,25 @@ export function saveDraft(id: string, code: string | null) {
     /* private window: drafts are not kept */
   }
 }
+
+/** the runner's health as seen by this page: null if no runner answers; paired if the pairing code matches */
+export async function runnerStatus(pairing: string, signal?: AbortSignal): Promise<{ paired: boolean } | null> {
+  try {
+    const r = await fetch(`${RUNNER}/api/health`, { signal, headers: pairing ? { "x-catalyzer-pairing": pairing } : {} });
+    return r.ok ? { paired: Boolean((await r.json()).paired) } : null;
+  } catch {
+    return null;
+  }
+}
+
+/** run a workspace script with its input files; throws "not paired" on 403 */
+export async function runScript(code: string, inputs: Record<string, string>, pairing: string): Promise<RunResult> {
+  const r = await fetch(`${RUNNER}/api/script`, {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-catalyzer-pairing": pairing },
+    body: JSON.stringify({ code, inputs }),
+  });
+  if (r.status === 403) throw new Error("not paired");
+  if (!r.ok) throw new Error(`runner answered ${r.status}`);
+  return r.json();
+}

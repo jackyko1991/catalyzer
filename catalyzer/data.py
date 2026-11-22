@@ -1,6 +1,7 @@
-"""Public data for workspace code: download a structure or a molecule once, keep it on this computer.
+"""Data for workspace code: your own molecules, and public structures downloaded once and kept on this computer.
 
-    from data import fetch_pdb, fetch_alphafold, fetch_smiles
+    from data import molecules, fetch_pdb, fetch_alphafold, fetch_smiles
+    for name, mol in molecules():           # every molecule you pasted or dropped in (.smi, .csv, .sdf)
     crambin = fetch_pdb("1CRN")             # text of the PDB file (RCSB PDB, CC0)
     model = fetch_alphafold("P69905")       # text of the AlphaFold DB model (CC BY 4.0)
     smiles = fetch_smiles(2519)             # PubChem CID 2519, caffeine
@@ -56,6 +57,50 @@ def fetch_alphafold(uniprot: str) -> str:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(_get(entry["pdbUrl"]))
     return path.read_text(encoding="utf-8")
+
+
+def molecules(folder: str | Path = ".") -> list[tuple[str, object]]:
+    """Every molecule in the input files beside the script, as (name, RDKit Mol), in file order:
+    .smi / .txt (one "SMILES [name]" per line; # starts a comment), .csv (a column called smiles, and a name
+    column if there is one) and .sdf. Lines that are not valid SMILES are skipped with a warning."""
+    import csv
+
+    from rdkit import Chem, RDLogger
+
+    RDLogger.DisableLog("rdApp.*")
+    out: list[tuple[str, object]] = []
+    for path in sorted(Path(folder).iterdir()):
+        suffix = path.suffix.lower()
+        if suffix in (".smi", ".txt"):
+            rows = []
+            for k, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+                line = line.split("#", 1)[0].strip()
+                if line:
+                    smi, _, name = line.partition(" ")
+                    rows.append((name.strip() or f"{path.stem} {k}", smi))
+        elif suffix == ".csv":
+            reader = csv.DictReader(path.read_text(encoding="utf-8").splitlines())
+            cols = {c.lower().strip(): c for c in reader.fieldnames or []}
+            if "smiles" not in cols:
+                print(f"{path.name}: no 'smiles' column, skipped")
+                continue
+            name_col = cols.get("name") or cols.get("id")
+            rows = [((r.get(name_col) or "").strip() if name_col else "", r[cols["smiles"]]) for r in reader]
+            rows = [(n or f"{path.stem} {k}", s) for k, (n, s) in enumerate(rows, 1)]
+        elif suffix == ".sdf":
+            for k, mol in enumerate(Chem.SDMolSupplier(str(path)), 1):
+                if mol is not None:
+                    out.append((mol.GetProp("_Name") or f"{path.stem} {k}", mol))
+            continue
+        else:
+            continue
+        for name, smi in rows:
+            mol = Chem.MolFromSmiles(smi.strip())
+            if mol is None:
+                print(f"{path.name}: {name}: not a valid SMILES string ({smi!r}), skipped")
+            else:
+                out.append((name, mol))
+    return out
 
 
 def fetch_smiles(cid: int) -> str:

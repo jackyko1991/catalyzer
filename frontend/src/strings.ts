@@ -15,6 +15,7 @@ export const STRINGS = {
   "page.agents": ["AI agent", "AI 代理"],
   "page.reading": ["Further reading", "延伸閱讀"],
   "reading.books": ["Books & papers", "書籍與論文"],
+  "tab.about": ["What Catalyzer does", "Catalyzer 能做什麼"],
   "tab.molecule": ["What a molecule is", "分子是什麼"],
   "tab.data": ["Molecules as data", "把分子變成資料"],
   "tab.proteins": ["Proteins: sequence to function", "蛋白質：從序列到功能"],

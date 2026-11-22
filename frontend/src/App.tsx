@@ -24,7 +24,7 @@ const REPO_URL = "https://github.com/jackyko1991/catalyzer";
 const SCROLL = "cz-scroll";
 const HOME = "home";
 /** Concept's sub-pages: learning from scratch, then History (the only one built so far) */
-const CONCEPT_TABS = ["molecule", "data", "proteins", "ai", "history"] as const;
+const CONCEPT_TABS = ["about", "molecule", "data", "proteins", "ai", "history"] as const;
 /** Further reading: books & papers, then the learnkit series (Code labs, Explorables) */
 const READING = ["books", "labs", "explorables"] as const;
 
@@ -38,7 +38,7 @@ export default function App() {
       id: "concept",
       label: t("page.concept"),
       tabs: CONCEPT_TABS.map((id) => ({ id, label: t(`tab.${id}`) })),
-      defaultTab: "molecule",
+      defaultTab: "about",
     },
     {
       id: "skills",
@@ -55,7 +55,7 @@ export default function App() {
     },
   ];
   const concept = route.page === "concept";
-  const conceptTab = CONCEPT_TABS.includes(route.tab as never) ? route.tab! : "molecule";
+  const conceptTab = CONCEPT_TABS.includes(route.tab as never) ? route.tab! : "about";
 
   return (
     <Shell
@@ -96,6 +96,8 @@ export default function App() {
         <HistoryPage section={route.section} />
       ) : concept ? (
         <ConceptPage key={conceptTab} page={CONCEPTS.find((c) => c.id === conceptTab)!} focus={route.section} scrollRoot={SCROLL} />
+      ) : route.page === "workspace" ? (
+        <ProblemsPage name="workspace" />
       ) : route.page === "library" ? (
         <LibraryPage />
       ) : route.page === "problems" ? (

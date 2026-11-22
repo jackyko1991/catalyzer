@@ -1,5 +1,5 @@
 /** One "learn from scratch" page (concepts.ts): one sentence, then numbered, illustrated sections, then sources. */
-import { Callout, Figure, go, P, Page, RichText, Section, Sources, Table, type L, useLang } from "@learnkit/web";
+import { Callout, Figure, go, P, Page, RichText, Section, Sources, Table, useLang } from "@learnkit/web";
 import type { ConceptPage as Concept, ConceptSection } from "./concepts";
 import MoleculeViewer from "./MoleculeViewer";
 import { findProblem } from "./problems";
@@ -8,18 +8,14 @@ import { useMolecules } from "./SkillsPage";
 export default function ConceptPage({ page, focus, scrollRoot }: { page: Concept; focus: string | null; scrollRoot: string }) {
   const sections = [
     ...page.sections.map((s) => ({ id: s.id, title: s.title })),
-    { id: "sources", title: ["Sources", "資料來源"] as L },
   ];
   return (
-    <Page id={page.id} scrollRoot={scrollRoot} focus={focus} sections={sections} title={page.title} intro={page.oneSentence} overline={["Learn from scratch", "從零開始學"]}>
+    <Page id={page.id} scrollRoot={scrollRoot} focus={focus} sections={sections} title={page.title} intro={page.oneSentence} overline={page.id === "about" ? ["Concept", "概念"] : ["Learn from scratch", "從零開始學"]}>
       {page.sections.map((s, i) => (
         <Section key={s.id} page={page.id} id={s.id} n={i + 1} title={s.title}>
           <Body s={s} />
         </Section>
       ))}
-      <Section page={page.id} id="sources" n={page.sections.length + 1} title={sections[sections.length - 1].title}>
-        <Sources items={page.sources} />
-      </Section>
     </Page>
   );
 }
@@ -68,6 +64,11 @@ function Body({ s }: { s: ConceptSection }) {
         ),
       )}
       {s.table && <Table head={s.table.head} rows={s.table.rows} />}
+      {s.sources.length > 0 && (
+        <div className="mt-4 border-t border-gray-100 pt-3">
+          <Sources items={s.sources} />
+        </div>
+      )}
       {s.problems && (
         <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-gray-500">
           {pick(["Practise:", "練習："])}

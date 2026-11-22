@@ -15,18 +15,86 @@ export interface ConceptSection {
   callout?: { kind: "tip" | "note" | "warn"; title: L; text: L };
   /** problem names this section prepares for */
   problems?: string[];
+  /** shown at the bottom of the section's card */
+  sources: { label: string; url: string }[];
 }
 
 export interface ConceptPage {
-  id: "molecule" | "data" | "proteins" | "ai";
+  id: "about" | "molecule" | "data" | "proteins" | "ai";
   title: L;
   oneSentence: L;
   sections: ConceptSection[];
-  sources: { label: string; url: string }[];
 }
 
 
 export const CONCEPTS: ConceptPage[] = [
+  {
+    id: "about",
+    title: ["What Catalyzer does", "Catalyzer 能做什麼"],
+    oneSentence: [
+      "Catalyzer is a place to compute with molecules in Python: ready-made problems to run and change, a workspace for your own molecules, and the public databases one search away, every result drawn in 2D and 3D.",
+      "Catalyzer 是用 Python 計算分子的地方：現成的題目可以執行與修改，工作區可以放你自己的分子，公開資料庫只差一次搜尋，每個結果都畫成 2D 與 3D。",
+    ],
+    sections: [
+      {
+        id: "problems",
+        title: ["Problems: a library of runnable molecular questions", "題庫：一座可以執行的分子問題庫"],
+        paragraphs: [
+          [
+            "Each problem is a small, complete program about one idea: read a SMILES string, count rings, apply Lipinski's rule, align two proteins, measure an AlphaFold model against a crystal structure. Choose the inputs (a molecule, a residue, a cutoff), press **Run**, and the results appear as structures, 3D views, charts and tables.",
+            "每道題目都是一個關於單一想法的完整小程式：讀懂 SMILES 字串、數環、套用利平斯基規則、比對兩個蛋白質、拿 AlphaFold 模型和晶體結構比較。選好輸入（一個分子、一個殘基、一個截止距離），按下**執行**，結果就以結構、3D 圖、圖表與表格呈現。",
+          ],
+          [
+            "The code is open in the editor: change it and run again. Each problem also has **tests**, written first, that say what a correct answer must do; they check your changes, and \"Start from blank\" lets you write the functions yourself.",
+            "程式碼就在編輯器裡：改一改再執行。每道題目也有先寫好的**測試**，說明正確答案必須做到什麼；它們會檢查你的修改，而「從空白開始」讓你自己寫出這些函式。",
+          ],
+        ],
+        figures: [{ src: "problems/pro/rmsd.svg", caption: ["One of the problems: lay an AlphaFold model on the crystal structure and measure the RMSD.", "其中一道題目：把 AlphaFold 模型疊到晶體結構上，量出 RMSD。"] }],
+        problems: ["read_smiles", "rmsd"],
+        sources: [{ label: "RDKit documentation", url: "https://www.rdkit.org/docs/" }, { label: "Biopython tutorial", url: "https://biopython.org/docs/latest/Tutorial/" }],
+      },
+      {
+        id: "workspace",
+        title: ["Workspace: a calculator for your own molecules", "工作區：你自己分子的計算機"],
+        paragraphs: [
+          [
+            "Paste SMILES strings, drop .smi, .csv or .sdf files, or add molecules from the Library; then run a script over all of them. The starting **molecule calculator** tabulates formula, mass, logP, hydrogen-bond donors and acceptors, polar surface area and the rule of five, and plots mass against logP; the **similarity matrix** compares every pair. Change the script to compute anything RDKit, Biopython or NumPy can.",
+            "貼上 SMILES 字串，拖放 .smi、.csv 或 .sdf 檔，或從資料庫加入分子；接著對它們全部執行一段程式。內建的**分子計算機**列出分子式、分子量、logP、氫鍵供體與受體、極性表面積與五規則，並畫出分子量對 logP 的散佈圖；**相似度矩陣**比較每一對分子。改寫程式，就能計算 RDKit、Biopython 或 NumPy 能算的任何東西。",
+          ],
+        ],
+        figures: [{ src: "concepts/adjacency.svg", caption: ["Inside every calculation: a molecule as a graph, and the graph as numbers.", "每個計算的核心：把分子看成圖，再把圖變成數字。"] }],
+        sources: [{ label: "RDKit: descriptors", url: "https://www.rdkit.org/docs/GettingStartedInPython.html#list-of-available-descriptors" }],
+      },
+      {
+        id: "library",
+        title: ["Library: the public databases, live", "資料庫：即時連到公開資料庫"],
+        paragraphs: [
+          [
+            "Search **PubChem** (over a hundred million compounds), the **Protein Data Bank** (every experimental structure) and the **AlphaFold DB** (over two hundred million predictions) by name, SMILES or id. Look at any result in 2D and 3D, add molecules to your workspace, or open a structure there as a script.",
+            "以名稱、SMILES 或編號搜尋 **PubChem**（超過一億個化合物）、**蛋白質資料庫**（所有實驗結構）與 **AlphaFold DB**（超過兩億個預測）。任何結果都能看 2D 與 3D，可以把分子加入工作區，或把結構當成程式在那裡開啟。",
+          ],
+        ],
+        figures: [{ viewer: "crambin-plddt", caption: ["An AlphaFold DB model, coloured by the model's own confidence (pLDDT).", "AlphaFold DB 的模型，依模型自己的信心分數（pLDDT）上色。"] }],
+        sources: [
+          { label: "PubChem", url: "https://pubchem.ncbi.nlm.nih.gov/" },
+          { label: "RCSB Protein Data Bank", url: "https://www.rcsb.org/" },
+          { label: "AlphaFold Protein Structure Database", url: "https://alphafold.ebi.ac.uk/" },
+        ],
+      },
+      {
+        id: "runner",
+        title: ["Where the code runs", "程式碼在哪裡執行"],
+        paragraphs: [
+          [
+            "The website only shows things; code runs in a **runner**, and the page always says which one it is using. The **local runner** is a small program you start on your own computer with `pixi run runner`: with it, your molecules and code stay on your machine. A runner hosted on a server would run them there instead. Before a problem runs, the runner checks that the code keeps the problem's functions and imports only the libraries it allows (a learning aid, not a security sandbox); workspace scripts are your own code, so a runner runs them only for a page you have **paired** with it.",
+            "網站只負責顯示；程式碼在**執行器**中執行，頁面也總會標明它正在使用哪一個執行器。**本機執行器**是你用 `pixi run runner` 在自己電腦上啟動的小程式：使用它時，你的分子與程式碼都留在你的電腦上。架設在伺服器上的執行器，則會在那台伺服器上執行。題目執行之前，執行器會檢查程式碼保留了題目的函式，而且只匯入題目允許的函式庫（這是學習輔助，不是安全沙箱）；工作區的程式是你自己的程式碼，所以執行器只替你配對過的頁面執行。",
+          ],
+        ],
+        figures: [{ src: "history/rdkit.svg", caption: ["The same open-source code runs for a student and for a pharmaceutical company.", "同一份開放原始碼，學生和藥廠都能執行。"] }],
+        sources: [{ label: "pixi: the package manager that installs the runner", url: "https://pixi.sh/" }],
+      },
+    ],
+  },
   {
     id: "molecule",
     title: ["What a molecule is", "分子是什麼"],
@@ -49,6 +117,7 @@ export const CONCEPTS: ConceptPage[] = [
           ],
         ],
         figures: [{ src: "concepts/atom.svg", caption: ["Carbon: 6 protons in the nucleus, 2 inner electrons and 4 valence electrons, so it usually makes 4 bonds.", "碳：原子核中有 6 個質子，內層 2 個電子、價電子 4 個，所以通常形成 4 個鍵。"] }],
+        sources: [{ label: "OpenStax Chemistry 2e, ch. 2: Atoms, Molecules, and Ions", url: "https://openstax.org/books/chemistry-2e/pages/2-introduction" }],
       },
       {
         id: "bonds",
@@ -65,6 +134,7 @@ export const CONCEPTS: ConceptPage[] = [
         ],
         figures: [{ src: "concepts/bonds.svg", caption: ["One, two or three shared pairs: single, double and triple bonds, each shorter than the last.", "共用一對、兩對或三對電子：單鍵、雙鍵與參鍵，一個比一個短。"] }, { src: "problems/molecules/formal_charge.svg", caption: ["Formal charge is bookkeeping of electrons: ammonium's nitrogen is +1.", "形式電荷是電子的記帳：銨離子中的氮是 +1。"] }],
         problems: ["formal_charge", "atoms_bonds"],
+        sources: [{ label: "OpenStax Chemistry 2e, ch. 7: Chemical Bonding and Molecular Geometry", url: "https://openstax.org/books/chemistry-2e/pages/7-introduction" }, { label: "G. N. Lewis, The Atom and the Molecule (1916)", url: "https://doi.org/10.1021/ja02261a002" }],
       },
       {
         id: "shape",
@@ -80,6 +150,7 @@ export const CONCEPTS: ConceptPage[] = [
           ],
         ],
         figures: [{ src: "concepts/shapes.svg", caption: ["Two, three or four bonds around an atom spread to 180°, 120° or 109.5°.", "原子周圍的兩個、三個或四個鍵，分別張開成 180°、120° 或 109.5°。"] }, { viewer: "caffeine", caption: ["Caffeine in 3D: flat rings (each ring atom has three bonds) with methyl groups sticking out.", "3D 的咖啡因：平面的環（每個環原子有三個鍵），甲基向外伸出。"] }],
+        sources: [{ label: "OpenStax Chemistry 2e, 7.6: Molecular Structure and Polarity", url: "https://openstax.org/books/chemistry-2e/pages/7-6-molecular-structure-and-polarity" }],
       },
       {
         id: "rings",
@@ -92,11 +163,8 @@ export const CONCEPTS: ConceptPage[] = [
         ],
         figures: [{ src: "problems/molecules/rings.svg", caption: ["Naphthalene has two aromatic rings; cyclohexane has one ring that is not aromatic.", "萘有兩個芳香環；環己烷有一個環，但不是芳香環。"] }],
         problems: ["rings"],
+        sources: [{ label: "Aromaticity (Wikipedia)", url: "https://en.wikipedia.org/wiki/Aromaticity" }],
       },
-    ],
-    sources: [
-      { label: "OpenStax Chemistry 2e, ch. 7: Chemical Bonding and Molecular Geometry", url: "https://openstax.org/books/chemistry-2e/pages/7-introduction" },
-      { label: "G. N. Lewis, The Atom and the Molecule (1916)", url: "https://doi.org/10.1021/ja02261a002" },
     ],
   },
   {
@@ -122,6 +190,7 @@ export const CONCEPTS: ConceptPage[] = [
         ],
         figures: [{ src: "history/smiles.svg", caption: ["CCO is ethanol; c1ccccc1 is benzene.", "CCO 是乙醇；c1ccccc1 是苯。"] }],
         problems: ["read_smiles"],
+        sources: [{ label: "D. Weininger, SMILES (1988)", url: "https://doi.org/10.1021/ci00057a005" }],
       },
       {
         id: "graph",
@@ -138,6 +207,7 @@ export const CONCEPTS: ConceptPage[] = [
         ],
         figures: [{ src: "concepts/adjacency.svg", caption: ["The graph of acetaldehyde and its adjacency matrix: a 1 wherever two atoms are bonded.", "乙醛的圖與它的鄰接矩陣：兩個原子相連的地方就是 1。"] }],
         problems: ["atoms_bonds", "similarity"],
+        sources: [{ label: "RDKit: Getting Started in Python", url: "https://www.rdkit.org/docs/GettingStartedInPython.html" }],
       },
       {
         id: "coordinates",
@@ -158,12 +228,8 @@ export const CONCEPTS: ConceptPage[] = [
           ],
         },
         problems: ["pdb_neighbours"],
+        sources: [{ label: "PDB-101: Introduction to PDB data", url: "https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction" }],
       },
-    ],
-    sources: [
-      { label: "D. Weininger, SMILES (1988)", url: "https://doi.org/10.1021/ci00057a005" },
-      { label: "RDKit: Getting Started in Python", url: "https://www.rdkit.org/docs/GettingStartedInPython.html" },
-      { label: "PDB-101: Introduction to PDB data", url: "https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction" },
     ],
   },
   {
@@ -185,6 +251,7 @@ export const CONCEPTS: ConceptPage[] = [
         ],
         figures: [{ src: "problems/biomolecules/translate.svg", caption: ["ATG GCC TAA: methionine, alanine, stop.", "ATG GCC TAA：甲硫胺酸、丙胺酸、終止。"] }],
         problems: ["translate", "sequence_identity"],
+        sources: [{ label: "Genetic code (Wikipedia)", url: "https://en.wikipedia.org/wiki/Genetic_code" }],
       },
       {
         id: "structure",
@@ -201,6 +268,7 @@ export const CONCEPTS: ConceptPage[] = [
         ],
         figures: [{ src: "concepts/protein-levels.svg", caption: ["Sequence, then helices and sheets, then one compact fold, and the fold makes a pocket that does the job.", "先是序列，再是螺旋與摺板，接著是緊密的摺疊，而摺疊形成執行工作的口袋。"] }, { viewer: "crambin", caption: ["Crambin: 46 amino acids folded into two helices and a small sheet, held by three disulphide bridges.", "Crambin：46 個胺基酸摺成兩個螺旋與一個小摺板，由三個雙硫鍵固定。"] }],
         problems: ["pdb_neighbours"],
+        sources: [{ label: "OpenStax Biology 2e, ch. 3.4: Proteins", url: "https://openstax.org/books/biology-2e/pages/3-4-proteins" }, { label: "Anfinsen et al., PNAS 47, 1309 (1961)", url: "https://doi.org/10.1073/pnas.47.9.1309" }],
       },
       {
         id: "function",
@@ -213,11 +281,8 @@ export const CONCEPTS: ConceptPage[] = [
         ],
         callout: { kind: "tip", title: ["Residue", "殘基"], text: ["One amino acid inside a chain is called a **residue**: what remains of it after joining the chain.", "鏈中的一個胺基酸稱為**殘基**：它加入鏈之後剩下的部分。"] },
         figures: [{ src: "problems/biomolecules/pdb_neighbours.svg", caption: ["The residues within 4 Å of Cys16, including its disulphide partner Cys26.", "距 Cys16 4 Å 以內的殘基，包括它的雙硫鍵夥伴 Cys26。"] }],
+        sources: [{ label: "OpenStax Biology 2e, ch. 3.4: Proteins", url: "https://openstax.org/books/biology-2e/pages/3-4-proteins" }],
       },
-    ],
-    sources: [
-      { label: "OpenStax Biology 2e, ch. 3.4: Proteins", url: "https://openstax.org/books/biology-2e/pages/3-4-proteins" },
-      { label: "PDB-101: Guide to understanding PDB data", url: "https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction" },
     ],
   },
   {
@@ -238,6 +303,7 @@ export const CONCEPTS: ConceptPage[] = [
           ],
         ],
         figures: [{ src: "history/alphafold2.svg", caption: ["Sequence → residue pairs → 3D structure with a confidence per residue.", "序列 → 殘基對 → 附每個殘基信心分數的 3D 結構。"] }],
+        sources: [{ label: "Jumper et al., AlphaFold (Nature 2021)", url: "https://doi.org/10.1038/s41586-021-03819-2" }],
       },
       {
         id: "generate",
@@ -249,6 +315,7 @@ export const CONCEPTS: ConceptPage[] = [
           ],
         ],
         figures: [{ src: "history/rfdiffusion.svg", caption: ["Generate a backbone, write a sequence, refold to check.", "生成骨架、寫出序列、重新摺疊來檢查。"] }],
+        sources: [{ label: "Watson et al., RFdiffusion (Nature 2023)", url: "https://doi.org/10.1038/s41586-023-06415-8" }],
       },
       {
         id: "check",
@@ -270,12 +337,8 @@ export const CONCEPTS: ConceptPage[] = [
           ],
         },
         problems: ["alphafold_plddt", "rmsd"],
+        sources: [{ label: "AlphaFold DB: FAQ on pLDDT and PAE", url: "https://alphafold.ebi.ac.uk/faq" }],
       },
-    ],
-    sources: [
-      { label: "Jumper et al., AlphaFold (Nature 2021)", url: "https://doi.org/10.1038/s41586-021-03819-2" },
-      { label: "AlphaFold DB: FAQ on pLDDT and PAE", url: "https://alphafold.ebi.ac.uk/faq" },
-      { label: "Watson et al., RFdiffusion (Nature 2023)", url: "https://doi.org/10.1038/s41586-023-06415-8" },
     ],
   },
 ];
