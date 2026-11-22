@@ -22,6 +22,12 @@ test("every concept text is in English and Traditional Chinese", () => {
           assert.ok(r.every(filled), `${c.id}/${s.id} table`);
       if (s.callout)
         assert.ok(filled(s.callout.title) && filled(s.callout.text));
+      assert.ok(filled(s.takeaway), `${c.id}/${s.id}: takeaway`);
+    }
+    if (c.recap) {
+      assert.ok(c.recap.mistakes.length > 0 && filled(c.recap.next), `${c.id}: recap`);
+      for (const m of c.recap.mistakes)
+        assert.ok(filled(m.title) && filled(m.text), `${c.id}: recap mistake`);
     }
     if (c.note)
       assert.ok(filled(c.note.title) && filled(c.note.text), `${c.id}: note`);
@@ -58,8 +64,9 @@ test("every in-site link in a concept page goes somewhere real", () => {
       ...s.paragraphs.flat(),
       ...(s.table ? [s.table.head, ...s.table.rows].flat().flat() : []),
       ...(s.callout ? s.callout.text : []),
+      ...s.takeaway,
     ]),
-  );
+  ).concat(CONCEPTS.flatMap((c) => (c.recap ? [...c.recap.next, ...c.recap.mistakes.flatMap((m) => m.text)] : [])));
   for (const text of texts)
     for (const [, route] of text.matchAll(/\]\(#\/([^)]+)\)/g)) {
       found++;

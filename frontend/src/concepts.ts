@@ -4,6 +4,22 @@
  */
 import type { L } from "@learnkit/web";
 
+/**
+ * Where each page sits on the path (see the "path" page): the Concept tabs run in this order, so a reader who
+ * follows them straight through walks the four stages from school chemistry to research.
+ */
+export const STAGES: Record<string, { n: number; title: L }> = {
+  molecule: { n: 1, title: ["Read and compute", "讀懂與計算"] },
+  data: { n: 1, title: ["Read and compute", "讀懂與計算"] },
+  pdb: { n: 2, title: ["Structures", "結構"] },
+  proteins: { n: 2, title: ["Structures", "結構"] },
+  energy: { n: 3, title: ["Energy and quantum", "能量與量子"] },
+  quantum: { n: 3, title: ["Energy and quantum", "能量與量子"] },
+  ml: { n: 4, title: ["Machine learning", "機器學習"] },
+  ai: { n: 4, title: ["Machine learning", "機器學習"] },
+};
+export const STAGE_COUNT = 4;
+
 export interface ConceptSection {
   id: string;
   title: L;
@@ -18,6 +34,8 @@ export interface ConceptSection {
   callout?: { kind: "tip" | "note" | "warn"; title: L; text: L };
   /** problem names this section prepares for */
   problems?: string[];
+  /** the one sentence to carry away; gathered into the page's recap, so it must stand on its own */
+  takeaway: L;
   /** shown at the bottom of the section's card */
   sources: { label: string; url: string }[];
 }
@@ -37,6 +55,8 @@ export interface ConceptPage {
   title: L;
   oneSentence: L;
   sections: ConceptSection[];
+  /** closes the page: the section takeaways are gathered automatically, then these mistakes and where to go next */
+  recap?: { mistakes: { title: L; text: L }[]; next: L };
   /** a small folded note under the sections (details for those who want them) */
   note?: { title: L; text: L };
 }
@@ -79,6 +99,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://www.rdkit.org/docs/",
           },
         ],
+        takeaway: ["Problems are where you learn: the tests are written first and say what counts as correct, so you always know whether you are right.", "題目是你學習的地方：測試先寫好，說清楚什麼才算正確，所以你隨時知道自己對不對。"],
       },
       {
         id: "data",
@@ -110,6 +131,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://alphafold.ebi.ac.uk/",
           },
         ],
+        takeaway: ["The Library is where the molecules come from: real compounds, structures and predictions, searched live and taken into your own code.", "資料庫是分子的來源：真實的化合物、結構與預測，可即時搜尋，並帶進你自己的程式碼。"],
       },
       {
         id: "compute",
@@ -135,8 +157,15 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://www.rdkit.org/docs/GettingStartedInPython.html#list-of-available-descriptors",
           },
         ],
+        takeaway: ["The Workspace is where you compute your own: the same tools, your molecules, no problem to solve.", "工作區是你計算自己東西的地方：同樣的工具、你自己的分子，沒有題目要解。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“It runs in the browser, so my data is safe.”", "「東西在瀏覽器裡跑，所以我的資料是安全的。」"], text: ["The page is only the screen. The computing happens wherever the runner is: on your own computer if you started it there, or on a server if you point the site at one. Where your molecules go depends on which runner you connect to, not on this site.", "頁面只是畫面。真正的計算發生在執行器所在的地方：你在自己電腦上啟動它，就在你的電腦；你把網站指向某台伺服器，就在那台伺服器。你的分子會去哪裡，取決於你連到哪個執行器，而不是取決於這個網站。"] },
+      ],
+      next: ["Next: [the path from school chemistry to research](#/concept/path), or go straight to the [Problems](#/problems/read_smiles).", "接下來：[從中學化學到研究的那條路](#/concept/path)，或直接前往[題庫](#/problems/read_smiles)。"],
+    },
     note: {
       title: [
         "Want to run the code on your own computer? The local runner and privacy",
@@ -191,6 +220,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://www.rdkit.org/docs/GettingStartedInPython.html",
           },
         ],
+        takeaway: ["School chemistry is the whole starting point: computational chemistry only adds writing the molecule down so a computer can hold it.", "中學化學就是全部的起點：計算化學只多做一件事——把分子寫成電腦能保存的形式。"],
       },
       {
         id: "stages",
@@ -270,6 +300,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://pdb101.rcsb.org/",
           },
         ],
+        takeaway: ["Four stages, each needing only the one before it: read and compute, structures, energy and quantum, machine learning.", "四個階段，每個只需要前一個作為基礎：讀懂與計算、結構、能量與量子、機器學習。"],
       },
       {
         id: "habit",
@@ -296,8 +327,15 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://predictioncenter.org/",
           },
         ],
+        takeaway: ["At every stage a number is worth only as much as its check, which is why every problem here carries tests.", "在每個階段，一個數字的價值都取決於它的檢查——這就是這裡每道題都帶著測試的原因。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“I should finish all the reading first.”", "「我應該先把所有內容讀完。」"], text: ["The stages are made to be entered and left. Read one page, run its problems, and come back when the next one is needed. Nothing later depends on your having memorised anything earlier.", "這些階段本來就可以隨時進入、隨時離開。讀一頁、跑它的題目，需要下一頁時再回來。後面的內容不會要求你先背下前面的任何東西。"] },
+      ],
+      next: ["Start at stage one: [what a molecule is](#/concept/molecule), then [molecules as data](#/concept/data).", "從第一階段開始：[分子是什麼](#/concept/molecule)，接著是[把分子變成資料](#/concept/data)。"],
+    },
   },
   {
     id: "molecule",
@@ -335,6 +373,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://openstax.org/books/chemistry-2e/pages/2-introduction",
           },
         ],
+        takeaway: ["An atom's outer electrons decide its chemistry: carbon has 4, nitrogen 5, oxygen 6, and they share until each has 8.", "原子的外層電子決定它的化學性質：碳 4 個、氮 5 個、氧 6 個，它們互相共用，直到各自湊滿 8 個。"],
       },
       {
         id: "bonds",
@@ -377,6 +416,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://doi.org/10.1021/ja02261a002",
           },
         ],
+        takeaway: ["A bond is a shared pair of electrons; more shared pairs make a shorter, stronger bond.", "鍵就是共用的一對電子；共用的對數越多，鍵越短也越強。"],
       },
       {
         id: "shape",
@@ -414,6 +454,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://openstax.org/books/chemistry-2e/pages/7-6-molecular-structure-and-polarity",
           },
         ],
+        takeaway: ["Electron pairs push apart, so the shape follows from the bonds, and the shape is what decides what a molecule can bind.", "電子對會互相推開，所以形狀由鍵決定；而形狀又決定這個分子能結合什麼。"],
       },
       {
         id: "rings",
@@ -440,8 +481,15 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://en.wikipedia.org/wiki/Aromaticity",
           },
         ],
+        takeaway: ["A ring whose electrons are shared all the way round is aromatic: flat, unusually stable, and everywhere in drugs.", "電子在整個環上共用的環是芳香環：平坦、異常穩定，而且在藥物中無所不在。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“A structural formula shows what the molecule looks like.”", "「結構式畫出來就是分子的樣子。」"], text: ["A drawing on paper is flat and a molecule is not. Two molecules with the same formula and the same bonds can still be mirror images that behave differently in the body.", "紙上的圖是平的，分子不是。兩個分子式相同、鍵也相同的分子，仍然可能互為鏡像，而在人體內表現完全不同。"] },
+      ],
+      next: ["Next: [how a computer holds all of this](#/concept/data), then practise on [Read a SMILES string](#/problems/read_smiles).", "接下來：[電腦如何保存這一切](#/concept/data)，然後用[讀懂一個 SMILES 字串](#/problems/read_smiles)練習。"],
+    },
   },
   {
     id: "data",
@@ -480,6 +528,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://doi.org/10.1021/ci00057a005",
           },
         ],
+        takeaway: ["SMILES is a molecule written as one line of text, which is why a database can hold millions of them and search them fast.", "SMILES 是把分子寫成一行文字，這就是資料庫能存放數百萬個分子並快速搜尋的原因。"],
       },
       {
         id: "graph",
@@ -513,6 +562,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://www.rdkit.org/docs/GettingStartedInPython.html",
           },
         ],
+        takeaway: ["Inside a program a molecule is a graph: atoms as nodes, bonds as edges, and most properties are questions about that graph.", "在程式內部，分子是一張圖：原子是節點、鍵是邊；大多數性質，都是在問這張圖的問題。"],
       },
       {
         id: "coordinates",
@@ -568,8 +618,15 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction",
           },
         ],
+        takeaway: ["Coordinates are the third form: three numbers per atom, needed for anything about shape, distance or fit.", "座標是第三種形式：每個原子三個數字；任何關於形狀、距離或契合的問題都需要它。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“One molecule, one SMILES string.”", "「一個分子只有一個 SMILES。」"], text: ["The same molecule can be written many ways, which is why programs compute a canonical form before comparing. Two different strings are not two different molecules.", "同一個分子可以有很多種寫法，所以程式在比較之前會先算出標準形式。兩個不同的字串，並不代表兩個不同的分子。"] },
+      ],
+      next: ["Next: coordinates in earnest, in [reading a structure file](#/concept/pdb); practise on [Atoms and bonds as a graph](#/problems/atoms_bonds).", "接下來：在[讀懂結構檔](#/concept/pdb)中正式處理座標；並用[把原子與鍵看成一張圖](#/problems/atoms_bonds)練習。"],
+    },
   },
   {
     id: "pdb",
@@ -662,6 +719,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://pdb101.rcsb.org/learn/guide-to-understanding-pdb-data/introduction",
           },
         ],
+        takeaway: ["Read a PDB file by fixed columns, never by splitting on spaces, and the B-factor column holds pLDDT in a predicted model.", "讀 PDB 檔要用固定欄位，絕不能用空白切分；而在預測模型中，B 因子那一欄放的是 pLDDT。"],
       },
       {
         id: "rest",
@@ -692,6 +750,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://www.wwpdb.org/documentation/file-format",
           },
         ],
+        takeaway: ["The lines above the atoms save you work: SEQRES, HELIX, MODRES and LINK say things the coordinates alone never would.", "原子之上的那些行能替你省事：SEQRES、HELIX、MODRES 與 LINK 說的，是單看座標永遠看不出來的事。"],
       },
       {
         id: "trust",
@@ -723,8 +782,15 @@ export const CONCEPTS: ConceptPage[] = [
           },
           { label: "wwPDB: the mmCIF format", url: "https://mmcif.wwpdb.org/" },
         ],
+        takeaway: ["A structure is a model fitted to data: check the resolution, the R-free, what is missing, and what else is in the file.", "結構是擬合到數據上的模型：要檢查解析度、R-free、缺了什麼，以及檔案裡還有什麼。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“Every atom of the protein is in the file.”", "「蛋白質的每個原子都在檔案裡。」"], text: ["Residues that moved too much to be seen have no coordinates at all, and hydrogens are usually absent. Compare SEQRES with what actually has coordinates before you count anything.", "動得太厲害而看不見的殘基根本沒有座標，氫原子通常也不存在。在你數任何東西之前，先把 SEQRES 和真正有座標的部分比對一遍。"] },
+      ],
+      next: ["Next: [proteins](#/concept/proteins) for what the fold does, or [energy and shape](#/concept/energy) for where coordinates come from when no one measured them.", "接下來：想知道摺疊有什麼用，看[蛋白質](#/concept/proteins)；想知道沒人量測時座標從哪來，看[能量與形狀](#/concept/energy)。"],
+    },
   },
   {
     id: "proteins",
@@ -762,6 +828,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://en.wikipedia.org/wiki/Genetic_code",
           },
         ],
+        takeaway: ["A protein is a chain of twenty kinds of amino acid, and the order of that chain is written by a gene.", "蛋白質是由二十種胺基酸組成的鏈，而這條鏈的順序由基因寫成。"],
       },
       {
         id: "structure",
@@ -803,6 +870,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://doi.org/10.1073/pnas.47.9.1309",
           },
         ],
+        takeaway: ["The chain folds into helices and sheets and then into one shape, and the sequence alone is enough to decide it.", "這條鏈摺成螺旋與摺板，再摺成一個形狀；而光是序列本身就足以決定它。"],
       },
       {
         id: "function",
@@ -836,8 +904,15 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://openstax.org/books/biology-2e/pages/3-4-proteins",
           },
         ],
+        takeaway: ["Function lives in a pocket: a few residues in the right places, which is why structure is worth computing at all.", "功能存在於口袋之中：幾個殘基落在對的位置——這正是結構值得計算的理由。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“A predicted structure is a measured structure.”", "「預測出來的結構就等於量測到的結構。」"], text: ["A prediction is a model with a confidence attached, and low-confidence regions are often disordered rather than wrong. Read the pLDDT before using the coordinates.", "預測是附帶信心分數的模型；信心低的區域往往是本來就無序，而不是算錯了。在使用座標之前，先讀 pLDDT。"] },
+      ],
+      next: ["Next: [reading a structure file](#/concept/pdb) column by column, then [Is the model right?](#/problems/rmsd)", "接下來：逐欄[讀懂結構檔](#/concept/pdb)，然後是[模型對嗎？](#/problems/rmsd)"],
+    },
   },
   {
     id: "energy",
@@ -882,6 +957,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://openmm.org/",
           },
         ],
+        takeaway: ["A force field is a formula for the energy of a shape, with no electrons in it: fast enough for millions of atoms, blind to anything the electrons decide.", "力場是一條計算形狀能量的公式，裡面沒有電子：快到能處理上百萬個原子，卻對電子決定的一切視而不見。"],
       },
       {
         id: "minimise",
@@ -920,6 +996,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://www.rdkit.org/docs/GettingStartedInPython.html#working-with-3d-molecules",
           },
         ],
+        takeaway: ["3D coordinates are made by guessing a shape and walking downhill, which finds the nearest valley and not the deepest one.", "3D 座標的做法是先猜一個形狀再往下坡走；這只會找到最近的谷底，而不是最深的那個。"],
       },
       {
         id: "dynamics",
@@ -956,8 +1033,15 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://doi.org/10.1098/rspa.1924.0082",
           },
         ],
+        takeaway: ["Molecular dynamics follows the atoms in femtosecond steps, so you can watch a side chain move but never a protein fold.", "分子動力學以飛秒為步長追蹤原子，所以你看得到側鏈移動，卻永遠看不到蛋白質摺疊。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“The minimised structure is the structure.”", "「能量最小化之後的結構就是那個結構。」"], text: ["Minimisation stops in the nearest valley, and a flexible molecule has many. Generate several conformers before claiming anything about shape.", "最小化只會停在最近的谷底，而柔軟的分子有很多谷底。在你對形狀下任何結論之前，先產生幾個構形。"] },
+      ],
+      next: ["Next: what a force field cannot see, in [quantum chemistry](#/concept/quantum).", "接下來：力場看不見的東西，在[量子化學](#/concept/quantum)。"],
+    },
   },
   {
     id: "quantum",
@@ -1006,6 +1090,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://psicode.org/",
           },
         ],
+        takeaway: ["Electrons repel one another, so every method is an approximation; Hartree-Fock averages that repulsion and misses correlation.", "電子彼此排斥，所以每個方法都是近似；Hartree-Fock 把這種排斥平均掉，因而漏掉了關聯。"],
       },
       {
         id: "dft",
@@ -1045,6 +1130,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://doi.org/10.1103/PhysRevLett.52.997",
           },
         ],
+        takeaway: ["DFT works from the electron density, so a DFT number means nothing without its functional and basis set; colour needs TD-DFT.", "DFT 從電子密度出發，所以沒有說明泛函與基底函數的 DFT 數字毫無意義；而顏色需要 TD-DFT。"],
       },
       {
         id: "choosing",
@@ -1082,8 +1168,15 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://www.rdkit.org/docs/GettingStartedInPython.html",
           },
         ],
+        takeaway: ["Cost rises steeply with the number of electrons, so the work is a hierarchy: screen cheaply, keep a few, pay for those.", "成本隨電子數急遽上升，所以工作方式是一套層級：先便宜地篩選，留下少數幾個，再為它們付出代價。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“DFT is the exact answer.”", "「DFT 算出來就是正確答案。」"], text: ["The exact relation between density and energy is unknown, so every DFT number carries the functional that approximated it. Quote the functional and the basis set, or the number cannot be reproduced.", "密度與能量之間的精確關係並不知道，所以每個 DFT 數字都帶著做近似的那個泛函。要寫出泛函與基底函數，否則這個數字無法被重現。"] },
+      ],
+      next: ["Next: what to do when even DFT is too slow, in [machine learning on molecules](#/concept/ml).", "接下來：當 DFT 也太慢時該怎麼辦，見[分子上的機器學習](#/concept/ml)。"],
+    },
   },
   {
     id: "ml",
@@ -1127,6 +1220,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://www.rdkit.org/docs/GettingStartedInPython.html#fingerprinting-and-molecular-similarity",
           },
         ],
+        takeaway: ["Fingerprints work with hundreds of examples, graph networks need thousands, and both are only a way of handing the model a molecule.", "指紋在幾百筆資料下就能用，圖網路則需要上千筆；而兩者都只是把分子交給模型的方式。"],
       },
       {
         id: "splits",
@@ -1169,6 +1263,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://doi.org/10.1039/C7SC02664A",
           },
         ],
+        takeaway: ["A random split lets a model score well by recognising a scaffold it has seen; a scaffold split asks the question you actually care about.", "隨機切分會讓模型靠認出看過的骨架就拿高分；骨架切分問的，才是你真正在意的問題。"],
       },
       {
         id: "generate",
@@ -1206,8 +1301,15 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://predictioncenter.org/",
           },
         ],
+        takeaway: ["A generated molecule is a hypothesis: optimised hard against a score, a model finds where the score is wrong.", "生成出來的分子是一個假設：當模型拚命朝著某個分數最佳化時，它找到的是分數出錯的地方。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“The model scores 0.95, so it works.”", "「模型分數 0.95，所以它有用。」"], text: ["A score is a property of the split, not of the model. Ask how the test set was chosen before you believe any number, and compare against a fingerprint baseline.", "分數是切分方式的性質，不是模型的性質。在你相信任何數字之前，先問測試集是怎麼挑的，並且和指紋基準線比一比。"] },
+      ],
+      next: ["Next: [how AI designs molecules](#/concept/ai), and the four questions to ask of anything it proposes.", "接下來：[AI 如何設計分子](#/concept/ai)，以及該對它提出的任何東西問的四個問題。"],
+    },
   },
   {
     id: "ai",
@@ -1241,6 +1343,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://doi.org/10.1038/s41586-021-03819-2",
           },
         ],
+        takeaway: ["Prediction turned a decades-long experiment into an afternoon's computation, with a confidence score attached to every residue.", "預測把一個耗時數十年的實驗，變成一個下午的計算，而且每個殘基都附上信心分數。"],
       },
       {
         id: "generate",
@@ -1266,6 +1369,7 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://doi.org/10.1038/s41586-023-06415-8",
           },
         ],
+        takeaway: ["Design runs the prediction backwards: ask for a shape or a binder, and the model proposes sequences that should fold to it.", "設計是把預測反過來跑：你要一個形狀或一個結合者，模型就提出應該能摺成那樣的序列。"],
       },
       {
         id: "check",
@@ -1338,7 +1442,14 @@ export const CONCEPTS: ConceptPage[] = [
             url: "https://alphafold.ebi.ac.uk/faq",
           },
         ],
+        takeaway: ["Four questions, cheapest first: is the model sure, does it obey physics, does it match what is known, and does it work.", "四個問題，從最便宜的開始：模型有把握嗎、符合物理嗎、和已知相符嗎、真的有用嗎。"],
       },
     ],
+    recap: {
+      mistakes: [
+        { title: ["“The AI designed a drug.”", "「AI 設計出了一個藥。」"], text: ["A model proposes; experiments decide. Everything between the two — confidence, physics, agreement with what is known — narrows the list, and none of it replaces making the molecule.", "模型只是提案，決定的是實驗。兩者之間的一切——信心分數、物理、與已知的相符程度——都只是把清單縮短，沒有任何一項能取代真的把分子做出來。"] },
+      ],
+      next: ["Next: run the checks yourself on [pLDDT](#/problems/alphafold_plddt) and [RMSD](#/problems/rmsd).", "接下來：親手跑一次檢查——[pLDDT](#/problems/alphafold_plddt) 與 [RMSD](#/problems/rmsd)。"],
+    },
   },
 ];
