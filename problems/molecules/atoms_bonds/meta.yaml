@@ -1,0 +1,30 @@
+title: Atoms and bonds as a graph
+category: molecules
+level: beginner
+order: 2
+summary: >
+  A molecule is a graph: atoms are the points and bonds are the lines. Count the bonds of each kind (single,
+  double, triple, aromatic) between the atoms written in the SMILES string, and list each atom's degree: how many
+  other written atoms it is bonded to. Acetaldehyde `CC=O` has one single and one double bond, and degrees
+  $[1, 2, 1]$.
+imports: [rdkit.Chem]
+forbidden: [GetDegree, GetAdjacencyMatrix, GetNeighbors]
+uses:
+  - {library: RDKit, api: Mol.GetBonds, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Mol.GetBonds"}
+  - {library: RDKit, api: Bond.GetBondType, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Bond.GetBondType"}
+mirror:
+  - text: Read the molecule; hydrogens stay implicit, so only the written atoms are points of the graph.
+    code: |-
+      mol = Chem.MolFromSmiles(smiles)
+      if mol is None:
+          raise ValueError(f"not a valid SMILES string: {smiles!r}")
+  - text: Every bond is a line of the graph. Name its type in lower case and count it.
+    code: |-
+      for bond in mol.GetBonds():
+          kind = str(bond.GetBondType()).lower()
+          counts[kind] = counts.get(kind, 0) + 1
+  - text: An atom's degree is the number of lines that touch it, so each bond adds one to both of its ends.
+    code: |-
+      for bond in mol.GetBonds():
+          degree[bond.GetBeginAtomIdx()] += 1
+          degree[bond.GetEndAtomIdx()] += 1

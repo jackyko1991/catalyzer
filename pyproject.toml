@@ -1,0 +1,21 @@
+[project]
+name = "catalyzer"
+version = "0.1.0"
+description = "Molecular science in Python, learned by doing: the problem library, its lock and the local runner"
+license = "Apache-2.0"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+# problems/*/test.py are contracts run by catalyzer.runner against an answer, never collected directly
+norecursedirs = ["problems", "frontend", "vendor", ".pixi"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+# problem stubs keep imports the reader will need (unused until they write the body)
+per-file-ignores = { "problems/*/*/stub.py" = ["F401", "B905"], "problems/*/*/solution.py" = ["B905"], "problems/*/*/test.py" = ["I001", "B905", "E501"] }

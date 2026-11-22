@@ -1,0 +1,3 @@
+# LF everywhere: exported data (problems.json, structures, .out files) is written with LF and checked byte for byte
+* text=auto eol=lf
+*.webp binary

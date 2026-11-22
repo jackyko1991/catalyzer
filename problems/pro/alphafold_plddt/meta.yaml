@@ -1,0 +1,31 @@
+title: Read an AlphaFold model's confidence (pLDDT)
+category: pro
+level: pro
+order: 1
+summary: >
+  An AlphaFold DB model looks like an experimental PDB file, but the column that normally holds the B-factor holds
+  the model's confidence instead: pLDDT, from 0 to 100, one value per residue. Build the download address of a
+  model from its UniProt accession, read the pLDDT of every residue of the crambin model, and sort the residues into
+  AlphaFold's four bands: very high (> 90), confident (> 70), low (> 50) and very low.
+imports: [numpy]
+forbidden: [Bio]
+uses:
+  - {library: AlphaFold DB, api: AF-P01542-F1, url: "https://alphafold.ebi.ac.uk/entry/P01542"}
+  - {library: AlphaFold DB, api: "pLDDT and PAE (FAQ)", url: "https://alphafold.ebi.ac.uk/faq"}
+mirror:
+  - text: Every AlphaFold DB model file has the same address pattern - accession, fragment F1, model version.
+    code: |-
+      return f"https://alphafold.ebi.ac.uk/files/AF-{uniprot}-F1-model_v{version}.pdb"
+  - text: Every atom of a residue carries the same pLDDT, so read it once per residue, from the alpha carbon (CA).
+    code: |-
+      if line.startswith("ATOM  ") and line[12:16].strip() == "CA":
+          plddt.append(float(line[60:66]))
+  - text: Put each value in the first band whose lower limit it exceeds.
+    code: |-
+      for p in plddt:
+          band = "very_high" if p > 90 else "confident" if p > 70 else "low" if p > 50 else "very_low"
+          counts[band] += 1
+notes: >
+  pLDDT says how sure the model is about each residue's local surroundings, not whether the whole fold or the
+  arrangement of two domains is right; that is what the predicted aligned error (PAE) is for. Regions below 50 are
+  often disordered in reality: they have no single shape to predict.

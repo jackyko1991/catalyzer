@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "katex/dist/katex.min.css";
+/* Noto Sans for text, Source Code Pro for code: shared by the learnkit sites */
+@import "../../vendor/learnkit/web/src/fonts.css";
+/* learnkit's components use Tailwind classes too */
+@source "../../vendor/learnkit/web/src";
+
+:root {
+  color-scheme: light;
+  --lk-header: #065f46; /* emerald-800 */
+  --lk-accent: #047857; /* emerald-700 */
+}

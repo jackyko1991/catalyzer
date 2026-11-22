@@ -1,0 +1,39 @@
+title: Read a PDB file and find a residue's neighbours
+category: biomolecules
+level: intermediate
+order: 3
+summary: >
+  A PDB file lists a protein's atoms one per line, with the $x, y, z$ position of each in ångströms (Å) at fixed
+  columns. Read the atoms of crambin, a small plant protein (PDB entry 1CRN, 46 residues), then find which residues
+  touch a given one: those with any atom within a cutoff distance (4 Å) of any of its atoms. That is how a chemist
+  finds the pocket around a bound drug or the partners of a cysteine.
+imports: [numpy]
+forbidden: [Bio, NeighborSearch, PDBParser]
+uses:
+  - {library: Biopython, api: PDB.PDBParser, url: "https://biopython.org/docs/latest/Tutorial/chapter_pdb.html"}
+  - {library: Biopython, api: PDB.NeighborSearch, url: "https://biopython.org/docs/latest/api/Bio.PDB.NeighborSearch.html"}
+  - {library: Protein Data Bank, api: 1CRN, url: "https://www.rcsb.org/structure/1CRN"}
+mirror:
+  - text: Only ATOM and HETATM lines hold atoms; every field sits at fixed columns (the PDB format's rule).
+    code: |-
+      if not line.startswith(("ATOM  ", "HETATM")):
+          continue
+  - text: Chain, residue number and name, atom name, then the three coordinates.
+    code: |-
+      atoms.append(
+          (
+              line[21],
+              int(line[22:26]),
+              line[17:20].strip(),
+              line[12:16].strip(),
+              float(line[30:38]),
+              float(line[38:46]),
+              float(line[46:54]),
+          )
+      )
+  - text: All distances from the residue's atoms to every atom at once, as a table (broadcasting).
+    code: |-
+      d = np.linalg.norm(xyz[mine][:, None, :] - xyz[None, :, :], axis=-1)
+  - text: A residue is a neighbour if any of its atoms is close enough to any atom of ours.
+    code: |-
+      close = (d <= cutoff).any(axis=0)

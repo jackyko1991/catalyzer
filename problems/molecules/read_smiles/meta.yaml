@@ -1,0 +1,31 @@
+title: Read a SMILES string
+category: molecules
+level: beginner
+order: 1
+summary: >
+  A SMILES string is a molecule written as one line of text: `CCO` is ethanol. Turn it into a molecule with RDKit
+  and count the atoms of each element, hydrogens included, to get its molecular formula: ethanol is
+  $\mathrm{C_2H_6O}$. Most hydrogens are not written in SMILES; RDKit works them out from each atom's usual number
+  of bonds, and you have to count them too.
+imports: [rdkit.Chem]
+forbidden: [CalcMolFormula, rdMolDescriptors, Descriptors, AddHs]
+uses:
+  - {library: RDKit, api: Chem.MolFromSmiles, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdmolfiles.html#rdkit.Chem.rdmolfiles.MolFromSmiles"}
+  - {library: RDKit, api: Atom.GetTotalNumHs, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Atom.GetTotalNumHs"}
+mirror:
+  - text: Read the string into a molecule. RDKit returns None when the string is not valid SMILES; say so.
+    code: |-
+      mol = Chem.MolFromSmiles(smiles)
+      if mol is None:
+          raise ValueError(f"not a valid SMILES string: {smiles!r}")
+  - text: Go through the atoms that are written in the string (the "heavy" atoms) and count each element.
+    code: |-
+      for atom in mol.GetAtoms():
+          counts[atom.GetSymbol()] = counts.get(atom.GetSymbol(), 0) + 1
+  - text: Each atom also carries hydrogens that SMILES leaves out; add them to the hydrogen count.
+    code: |-
+          h = atom.GetTotalNumHs()
+          if h:
+              counts["H"] = counts.get("H", 0) + h
+notes: >
+  Hydrogens written in brackets, like `[NH4+]`, are counted the same way: `GetTotalNumHs` includes them.

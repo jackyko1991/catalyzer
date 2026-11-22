@@ -1,0 +1,36 @@
+title: Is the model right? RMSD against the experiment
+category: pro
+level: pro
+order: 2
+summary: >
+  To check a predicted structure, lay it over the experimental one and measure how far apart matching atoms are.
+  The root-mean-square deviation is $\mathrm{RMSD} = \sqrt{\tfrac1N\sum_i \lVert p_i - q_i\rVert^2}$, after the best
+  rotation and shift, which the Kabsch algorithm finds with one singular value decomposition. Write it in numpy, then
+  compare AlphaFold's crambin model with the crystal structure 1CRN, alpha carbon by alpha carbon.
+imports: [numpy]
+forbidden: [Bio, SVDSuperimposer, Superimposer]
+uses:
+  - {library: Biopython, api: SVD.SVDSuperimposer, url: "https://biopython.org/docs/latest/api/Bio.SVDSuperimposer.html"}
+  - {library: Protein Data Bank, api: 1CRN, url: "https://www.rcsb.org/structure/1CRN"}
+  - {library: AlphaFold DB, api: AF-P01542-F1, url: "https://alphafold.ebi.ac.uk/entry/P01542"}
+mirror:
+  - text: Move both sets of points so their centres sit at the origin; that removes the shift.
+    code: |-
+      P = P - P.mean(axis=0)
+      Q = Q - Q.mean(axis=0)
+  - text: The best rotation comes from the SVD of the 3 × 3 covariance matrix; the sign fix keeps it a rotation, not a mirror image.
+    code: |-
+      U, S, Vt = np.linalg.svd(P.T @ Q)
+      d = np.sign(np.linalg.det(U @ Vt))
+  - text: Rotate P onto Q and take the root of the mean squared distance.
+    code: |-
+      R = U @ np.diag([1.0, 1.0, d]) @ Vt
+      return float(np.sqrt(((P @ R - Q) ** 2).sum(axis=1).mean()))
+  - text: Pair the alpha carbons of the two files by residue number, and compare only residues present in both.
+    code: |-
+      common = sorted(set(model) & set(experiment))
+notes: >
+  For crambin the two agree to well under 1 Å. Crystal 1CRN has isoleucine at position 25 where UniProt (and so
+  the model) has leucine: crambin from seeds is a natural mixture of two forms. Matching by residue number still
+  works, because the backbone is the same. RMSD is dominated by the worst-fitting parts; for large proteins
+  CASP uses GDT and lDDT, which ask what fraction of the structure is close.

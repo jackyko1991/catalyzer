@@ -1,0 +1,33 @@
+title: Lipinski's rule of five
+category: molecules
+level: beginner
+order: 6
+summary: >
+  Lipinski found that a molecule taken as a pill is more likely to be poorly absorbed when it breaks two or more of
+  four limits: molecular weight over 500, logP (how much it prefers oil to water) over 5, more than 5 hydrogen-bond
+  donors, more than 10 hydrogen-bond acceptors. Compute the four numbers with RDKit's descriptors, list the limits
+  a molecule breaks, and decide whether it passes (at most one broken).
+imports: [rdkit.Chem]
+forbidden: [rdMolDescriptors, CalcNumLipinskiHBD, CalcNumLipinskiHBA]
+uses:
+  - {library: RDKit, api: Descriptors.MolWt, url: "https://www.rdkit.org/docs/source/rdkit.Chem.Descriptors.html"}
+  - {library: RDKit, api: Crippen.MolLogP, url: "https://www.rdkit.org/docs/source/rdkit.Chem.Crippen.html"}
+  - {library: RDKit, api: Lipinski.NumHDonors, url: "https://www.rdkit.org/docs/source/rdkit.Chem.Lipinski.html"}
+mirror:
+  - text: Four numbers describe the molecule; RDKit computes each one.
+    code: |-
+      values = {
+          "MW": Descriptors.MolWt(mol),
+          "logP": Crippen.MolLogP(mol),
+          "HBD": Lipinski.NumHDonors(mol),
+          "HBA": Lipinski.NumHAcceptors(mol),
+      }
+  - text: A limit is broken when the number is strictly above it; keep the order MW, logP, HBD, HBA.
+    code: |-
+      return [name for name, limit in LIMITS.items() if values[name] > limit]
+  - text: The rule allows one broken limit; two or more predict poor absorption.
+    code: |-
+      return len(lipinski_violations(smiles)) <= 1
+notes: >
+  It is a rule of thumb from 1997 for drugs taken by mouth, not a law: many antibiotics and natural products break
+  it and work, because they enter cells by transporters.

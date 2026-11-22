@@ -1,0 +1,23 @@
+title: Formal charge
+category: molecules
+level: beginner
+order: 4
+summary: >
+  In a Lewis structure, an atom "owns" its lone-pair electrons and half of the electrons in its bonds. Its formal
+  charge is the number of valence electrons it brings minus the number it owns:
+  $\mathrm{FC} = V - L - \tfrac12 B$. In ammonium $\mathrm{NH_4^+}$ nitrogen has no lone pairs and four bonds
+  (8 bonding electrons), so $\mathrm{FC} = 5 - 0 - 4 = +1$. Plain Python, no libraries: just the bookkeeping.
+imports: []
+forbidden: []
+uses: []
+mirror:
+  - text: A bond holds two electrons, shared, so bonding electrons always come in even numbers.
+    code: |-
+      if bonding_electrons % 2:
+          raise ValueError("bonding electrons come in pairs")
+  - text: Valence electrons brought, minus lone-pair electrons, minus half the bonding electrons.
+    code: |-
+      return VALENCE[element] - lone_pair_electrons - bonding_electrons // 2
+  - text: A molecule's charge is the sum of its atoms' formal charges.
+    code: |-
+      return sum(formal_charge(el, lone, bonding) for el, lone, bonding in atoms)

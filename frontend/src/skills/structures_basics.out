@@ -1,0 +1,6 @@
+46 residues; 327 atoms
+CYS 16 ['N', 'CA', 'C', 'O', 'CB', 'SG']
+S-S distance Cys16-Cys26: 2.05 Å
+[12, 13, 14, 15, 17, 18, 19, 21, 26]
+mean pLDDT 93.5, lowest 75.44 at residue 46
+CA RMSD model vs crystal: 0.43 Å

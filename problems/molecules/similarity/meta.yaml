@@ -1,0 +1,27 @@
+title: Fingerprints and Tanimoto similarity
+category: molecules
+level: intermediate
+order: 7
+summary: >
+  A fingerprint turns a molecule into a set of numbers: one for every small neighbourhood of atoms it contains
+  (RDKit's Morgan fingerprint, the ECFP of the History page). Two molecules are similar when their sets overlap:
+  the Tanimoto similarity is $|A \cap B| \,/\, |A \cup B|$, from 0 (nothing shared) to 1 (identical sets). Write it
+  yourself, then find the molecule in a small library most similar to a query.
+imports: [rdkit.Chem]
+forbidden: [DataStructs, TanimotoSimilarity, BulkTanimotoSimilarity, FingerprintSimilarity]
+uses:
+  - {library: RDKit, api: rdFingerprintGenerator.GetMorganGenerator, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdFingerprintGenerator.html"}
+mirror:
+  - text: A Morgan generator with radius 2 looks at each atom's neighbourhood up to two bonds away, folded into n_bits positions.
+    code: |-
+      gen = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits)
+  - text: The fingerprint is the set of positions that are switched on.
+    code: |-
+      return set(gen.GetFingerprint(mol).GetOnBits())
+  - text: Shared positions divided by positions in either; two empty sets share nothing.
+    code: |-
+      union = a | b
+      return len(a & b) / len(union) if union else 0.0
+  - text: Compare the query with every molecule in the library and keep the closest.
+    code: |-
+      return max(library, key=lambda smi: tanimoto(q, morgan_bits(smi)))

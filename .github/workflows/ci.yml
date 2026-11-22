@@ -1,0 +1,24 @@
+name: CI
+
+# The problem library and the local runner: every reference solution passes its tests, every stub fails them, the
+# lock rejects edited signatures and forbidden imports, the site's exported data is current, and the Coding Skills
+# examples print what the page shows. Needs no access to the private learnkit (the site build is in pages.yml).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  problems:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1 # no submodules: the problems and the runner don't use learnkit
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.70.0
+          # the official binary through the authenticated API (anonymous downloads hit rate-limit 403s)
+          pixi-url: https://api.github.com/repos/prefix-dev/pixi/releases/assets/435151918
+          pixi-url-headers: '{"Accept":"application/octet-stream","Authorization":"Bearer ${{ github.token }}"}'
+          cache: true
+      - run: pixi run lint
+      - run: pixi run test

@@ -1,0 +1,31 @@
+title: Sequence identity and alignment
+category: biomolecules
+level: intermediate
+order: 2
+summary: >
+  To compare two proteins, line their sequences up, with gaps (`-`) where one has letters the other lacks, and
+  count the columns where they agree. Percent identity is $100 \times$ identical columns / columns where both have a
+  residue. Then find the best line-up yourself: the Needleman–Wunsch algorithm fills a table $F$ where
+  $F_{i,j} = \max(F_{i-1,j-1} + s(a_i, b_j),\ F_{i-1,j} + g,\ F_{i,j-1} + g)$, and the bottom-right cell is the score
+  of the best global alignment.
+imports: []
+forbidden: [Bio, PairwiseAligner]
+uses:
+  - {library: Biopython, api: Align.PairwiseAligner, url: "https://biopython.org/docs/latest/Tutorial/chapter_pairwise.html"}
+mirror:
+  - text: Columns where both sequences have a residue are the ones that can agree or disagree.
+    code: |-
+      both = [(x, y) for x, y in zip(a, b) if x != "-" and y != "-"]
+  - text: Identity is the share of those columns where the letters are the same.
+    code: |-
+      return 100.0 * sum(x == y for x, y in both) / len(both) if both else 0.0
+  - text: The first row and column line a prefix up against nothing but gaps.
+    code: |-
+      for i in range(1, n + 1):
+          F[i][0] = i * gap
+      for j in range(1, m + 1):
+          F[0][j] = j * gap
+  - text: Each cell takes the best of three moves - pair the two letters, or put a gap in one sequence.
+    code: |-
+      diag = F[i - 1][j - 1] + (match if a[i - 1] == b[j - 1] else mismatch)
+      F[i][j] = max(diag, F[i - 1][j] + gap, F[i][j - 1] + gap)

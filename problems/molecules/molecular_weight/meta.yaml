@@ -1,0 +1,23 @@
+title: Molecular weight
+category: molecules
+level: beginner
+order: 3
+summary: >
+  The molecular weight is the sum of the average masses of all the atoms, hydrogens included. Water,
+  $\mathrm{H_2O}$, weighs $2 \times 1.008 + 15.999 \approx 18.015$ g/mol. Look up each element's mass in RDKit's
+  periodic table and add them up; your answer must agree with RDKit's own `MolWt` without calling it.
+imports: [rdkit.Chem]
+forbidden: [Descriptors, rdMolDescriptors, MolWt, ExactMolWt, CalcExactMolWt, HeavyAtomMolWt]
+uses:
+  - {library: RDKit, api: Chem.GetPeriodicTable, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.GetPeriodicTable"}
+  - {library: RDKit, api: PeriodicTable.GetAtomicWeight, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.PeriodicTable.GetAtomicWeight"}
+mirror:
+  - text: The periodic table knows each element's average atomic mass (Dalton's table, two hundred years on).
+    code: |-
+      table = Chem.GetPeriodicTable()
+      h_mass = table.GetAtomicWeight("H")
+  - text: Add each written atom's mass, and the mass of the hydrogens it carries.
+    code: |-
+      for atom in mol.GetAtoms():
+          total += table.GetAtomicWeight(atom.GetSymbol())
+          total += atom.GetTotalNumHs() * h_mass

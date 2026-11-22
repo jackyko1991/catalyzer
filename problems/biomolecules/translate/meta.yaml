@@ -1,0 +1,28 @@
+title: From DNA to protein
+category: biomolecules
+level: beginner
+order: 1
+summary: >
+  DNA's two strands pair A with T and G with C, so one strand spells out the other read backwards: its reverse
+  complement. A gene is read three letters (a codon) at a time, and each codon names one amino acid, until a stop
+  codon ends the protein. `ATGGCCTAA` reads ATG GCC TAA: methionine, alanine, stop, so the protein is `MA`. Plain
+  Python; your answer must agree with Biopython.
+imports: []
+forbidden: [Bio]
+uses:
+  - {library: Biopython, api: Seq.translate, url: "https://biopython.org/docs/latest/api/Bio.Seq.html#Bio.Seq.Seq.translate"}
+mirror:
+  - text: Pair each base with its partner, then read the strand from the other end.
+    code: |-
+      return "".join(PAIR[base] for base in reversed(dna))
+  - text: Only the four letters of DNA are allowed.
+    code: |-
+      if set(dna) - set("ACGT"):
+          raise ValueError("DNA has only A, C, G and T")
+  - text: Read three letters at a time from the start; stop at the first stop codon (*) or when fewer than three letters remain.
+    code: |-
+      for i in range(0, len(dna) - 2, 3):
+          aa = CODON_TABLE[dna[i : i + 3]]
+          if aa == "*":
+              break
+          protein.append(aa)

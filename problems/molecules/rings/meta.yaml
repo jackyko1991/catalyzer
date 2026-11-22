@@ -1,0 +1,24 @@
+title: Rings and aromaticity
+category: molecules
+level: beginner
+order: 5
+summary: >
+  Many molecules contain rings, and some rings are aromatic: their $4n+2$ π electrons are shared all the way
+  round, as in benzene. List the size of every ring in the molecule's smallest set of rings, and count how many are
+  aromatic (every bond of the ring aromatic). Naphthalene, two fused benzene rings, gives sizes $[6, 6]$ and 2
+  aromatic rings.
+imports: [rdkit.Chem]
+forbidden: [CalcNumAromaticRings, CalcNumRings, rdMolDescriptors, Descriptors, Lipinski]
+uses:
+  - {library: RDKit, api: Mol.GetRingInfo, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.RingInfo"}
+  - {library: RDKit, api: Bond.GetIsAromatic, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Bond.GetIsAromatic"}
+mirror:
+  - text: RDKit finds the smallest set of smallest rings when it reads the molecule; each ring is a tuple of bond indices.
+    code: |-
+      rings = mol.GetRingInfo().BondRings()
+  - text: A ring's size is its number of bonds (the same as its number of atoms).
+    code: |-
+      sizes = sorted(len(ring) for ring in rings)
+  - text: A ring is aromatic when every one of its bonds is aromatic.
+    code: |-
+      aromatic = sum(all(mol.GetBondWithIdx(i).GetIsAromatic() for i in ring) for ring in rings)
