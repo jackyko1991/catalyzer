@@ -107,6 +107,8 @@ function styleSpec(render: Render, colour: object) {
 export interface Highlight {
   resi: number[];
   colour: string;
+  /** only this chain, when the same numbers appear in several */
+  chain?: string;
 }
 
 export default function MoleculeViewer({ models, height = 360, label, highlight = [] }: { models: ViewerModel[]; height?: number; label: string; highlight?: Highlight[] }) {
@@ -143,7 +145,7 @@ export default function MoleculeViewer({ models, height = 360, label, highlight 
         if (render === "surface") v.addSurface($3Dmol.SurfaceType.VDW, { opacity: 0.85, ...colour } as never, { model } as never);
         if (i === 0)
           for (const h of highlight)
-            if (h.resi.length) v.addStyle({ model, resi: h.resi } as never, { stick: { color: h.colour, radius: 0.25 }, cartoon: { color: h.colour } } as never);
+            if (h.resi.length) v.addStyle({ model, resi: h.resi, ...(h.chain ? { chain: h.chain } : {}) } as never, { stick: { color: h.colour, radius: 0.25 }, cartoon: { color: h.colour } } as never);
       });
       if (keepView) v.setView(keepView as never);
       else v.zoomTo();

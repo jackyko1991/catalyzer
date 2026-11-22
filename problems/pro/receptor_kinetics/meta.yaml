@@ -1,0 +1,52 @@
+title: 'Designing a receptor: how tight is tight enough?'
+category: pro
+level: pro
+order: 3
+summary: >
+  A T cell decides what to kill by how long its receptor **stays** on a target, not by how often it touches one.
+  Two numbers say it: $k_{on}$, how fast the receptor binds, and $k_{off}$, how fast it lets go, with
+  $K_D = k_{off}/k_{on}$ and a dwell time $t_{1/2} = \ln 2 / k_{off}$. Engineers of TCR-T and CAR-T cells tune
+  exactly these. Compute them for a published ladder of eight receptors against one cancer target, feed them to
+  the kinetic-proofreading model, and meet the catch: the model says tighter is always better, and the
+  measurements say the best killer sits in the middle.
+imports: [numpy]
+forbidden: []
+uses:
+  - {library: "Irving et al., J. Biol. Chem. 287, 23068 (2012)", api: "the measured affinity ladder", url: "https://doi.org/10.1074/jbc.M112.357673"}
+  - {library: "Pettmann et al., eLife 10:e67092 (2021)", api: "kinetic proofreading, steady state", url: "https://doi.org/10.7554/eLife.67092"}
+  - {library: Protein Data Bank, api: 2BNR, url: "https://www.rcsb.org/structure/2BNR"}
+params:
+  - id: steps
+    type: int
+    label: [Proofreading steps N, 校對步驟數 N]
+    default: 3
+    min: 0
+    max: 8
+    step: 1
+  - id: k_p
+    type: float
+    label: [Step rate k_p (1/s), 每步速率 k_p（1/s）]
+    default: 1.0
+    min: 0.1
+    max: 5.0
+    step: 0.1
+mirror:
+  - text: A dwell time is a half-life, so the rate of letting go is ln 2 over it.
+    code: |-
+      return math.log(2) / half_life_s
+  - text: The affinity is the ratio of the two rates, so the on-rate follows from the off-rate. K_D arrives in micromolar; the rates are per molar.
+    code: |-
+      return k_off / (kd_micromolar * 1e-6)
+  - text: 'Kinetic proofreading: the receptor must survive N slow steps before it signals, and at each step it may let go.'
+    code: |-
+      return (1 + k_off / k_p) ** (-steps)
+notes: >
+  The proofreading model earns its keep by explaining discrimination: a receptor that lets go ten times slower
+  signals far more than ten times as strongly, because it must survive several steps in a row. What it does not
+  explain is the ceiling. Measured killing by these same receptors peaks at the middle of the ladder (the DMβ and
+  TMβ variants, about 1-2 µM) and falls again for the tightest: a receptor that holds on for nine minutes is
+  triggered by the target cell's own harmless peptides too, and the T cell shuts itself down. Affinity engineering
+  has killed patients for a related reason: an affinity-enhanced receptor against MAGE-A3 also recognised a
+  peptide from titin in heart muscle, and two patients died (Linette et al., Blood 122, 863 (2013);
+  Cameron et al., Sci. Transl. Med. 5, 197ra103 (2013)). CAR-T binders such as FMC63 against CD19 face the same
+  trade-off; the structure of that pair is in the Library.

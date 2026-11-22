@@ -1,0 +1,9 @@
+name,kd_um,half_life_s,k_off_published,k_on_published,note,source
+V49I,100,,,,weaker than wild type (an upper bound),"Hebeisen et al., Front Immunol 13:973986 (2022), doi:10.3389/fimmu.2022.973986"
+wild type,21.4,3.0,,,the receptor as the patient's T cell made it,"Irving et al., J Biol Chem 287:23068 (2012), doi:10.1074/jbc.M112.357673"
+G50A,4.62,,0.069,14900,"the one variant whose k_on and k_off are both published: check your own against them","Irving et al., J Biol Chem 287:23068 (2012), Fig. 1B legend"
+DMb,1.91,15.4,,,one of the two best killers measured,"Irving et al., J Biol Chem 287:23068 (2012); optimum per Hebeisen et al. (2022)"
+TMb,0.91,,,,the other best killer,"Irving et al., J Biol Chem 287:23068 (2012); optimum per Hebeisen et al. (2022)"
+TMa,0.4,,,,tighter than the optimum,"Irving et al., J Biol Chem 287:23068 (2012)"
+QMa,0.14,,,,tighter still,"Irving et al., J Biol Chem 287:23068 (2012)"
+wtc51m,0.015,553.0,,,"supraphysiologic: 1400x tighter than wild type, and a markedly worse killer","Irving et al., J Biol Chem 287:23068 (2012)"

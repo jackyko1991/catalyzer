@@ -57,14 +57,22 @@ function Scatter({ item }: { item: Extract<ResultItem, { kind: "scatter" }> }) {
         </g>
       ))}
       <rect x={L} y={T} width={W - L - R} height={H - B - T} fill="none" stroke="#d1d5db" />
-      {item.x.map((v, i) => (
-        <g key={i}>
-          <circle cx={px(v)} cy={py(item.y[i])} r="4" fill="var(--lk-accent)" opacity="0.85">
-            <title>{`${item.labels[i]}: ${item.x[i].toFixed(2)}, ${item.y[i].toFixed(2)}`}</title>
-          </circle>
-          <text x={px(v) + 6} y={py(item.y[i]) - 5} fontSize="10" fill="#374151">{item.labels[i]}</text>
-        </g>
-      ))}
+      {item.x.map((v, i) => {
+        // a label would be cut off at the right edge, so put it on the left of its point instead
+        const atX = px(v);
+        const room = W - R - atX;
+        const flip = room < 8 + 6 * (item.labels[i]?.length ?? 0);
+        return (
+          <g key={i}>
+            <circle cx={atX} cy={py(item.y[i])} r="4" fill="var(--lk-accent)" opacity="0.85">
+              <title>{`${item.labels[i]}: ${item.x[i].toFixed(2)}, ${item.y[i].toFixed(2)}`}</title>
+            </circle>
+            <text x={atX + (flip ? -7 : 7)} y={py(item.y[i]) - 5} fontSize="10" textAnchor={flip ? "end" : "start"} fill="#374151">
+              {item.labels[i]}
+            </text>
+          </g>
+        );
+      })}
       <text x={(L + W - R) / 2} y={H - 6} fontSize="11" textAnchor="middle" fill="#374151">{item.x_label && pick(item.x_label)}</text>
       <text x={12} y={(T + H - B) / 2} fontSize="11" textAnchor="middle" fill="#374151" transform={`rotate(-90 12 ${(T + H - B) / 2})`}>{item.y_label && pick(item.y_label)}</text>
     </svg>

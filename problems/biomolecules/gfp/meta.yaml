@@ -1,0 +1,42 @@
+title: 'GFP: the lamp a cell builds for itself'
+category: biomolecules
+level: intermediate
+order: 4
+summary: >
+  Green fluorescent protein makes its own chromophore: three of its own residues join into one fused ring system
+  that glows. That is why a cell given the GFP gene lights up with nothing else added. The chromophore only works
+  because the protein wraps it in an eleven-stranded barrel: held rigid, it emits light instead of shaking the
+  energy away. Find the chromophore in the structure, count the strands around it, and list the residues that
+  touch it — among them Arg96, His148, Thr203 and Glu222, the ones that tune the colour.
+imports: [numpy]
+forbidden: [Bio, NeighborSearch, PDBParser]
+uses:
+  - {library: Protein Data Bank, api: 1EMA, url: "https://www.rcsb.org/structure/1EMA"}
+  - {library: Protein Data Bank, api: 2H5Q, url: "https://www.rcsb.org/structure/2H5Q"}
+  - {library: "PDB format: MODRES and SHEET records", api: "wwPDB format guide", url: "https://www.wwpdb.org/documentation/file-format-content/format33/sect3.html"}
+params:
+  - id: protein
+    type: select
+    label: [Protein, 蛋白質]
+    default: 1ema
+    options:
+      - [GFP (1EMA), 綠色螢光蛋白（1EMA）, 1ema]
+      - [mCherry (2H5Q), mCherry（2H5Q）, 2h5q]
+  - id: cutoff
+    type: float
+    label: [Cutoff (Å), 截止距離（Å）]
+    default: 5.0
+    min: 3.0
+    max: 8.0
+    step: 0.5
+mirror:
+  - text: A chromophore made from the protein's own residues is recorded as a modified residue; MODRES names it and the residues it was made from. Selenomethionine is a labelling trick, not a chromophore.
+    code: |-
+      if line.startswith("MODRES") and line[12:15].strip() != "MSE":
+          return line[16], int(line[18:22]), line[12:15].strip()
+  - text: Each SHEET line is one strand, and names the sheet it belongs to; the barrel is simply the largest sheet.
+    code: |-
+      sheets[line[11:14]] = sheets.get(line[11:14], 0) + 1
+  - text: A residue touches the chromophore when any of its atoms is within the cutoff of any chromophore atom (water does not count).
+    code: |-
+      close = (distances <= cutoff).any(axis=0)

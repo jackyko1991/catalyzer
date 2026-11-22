@@ -54,5 +54,19 @@ notes: >
   exactly, but is 100–200 nm short for the others: the rings at the ends of the chain let the electrons spread
   further than the chain alone, and α is the fitted size of that end effect. The same box model fails badly for
   plain polyenes (β-carotene and friends), because their bonds alternate long and short, which the flat-bottomed
-  box ignores. Real dye design also has to care about brightness, photostability and whether the dye stays put in
-  a cell; absorption is only the first of those.
+  box ignores.
+
+
+  **How real dyes are designed now.** Three layers sit above this one-dimensional sketch. First, quantum
+  chemistry: time-dependent density functional theory (TD-DFT) computes the gap between the ground and excited
+  states, and with it the absorption *and* emission maxima, the Stokes shift and the oscillator strength (how
+  strongly the dye absorbs). It is accurate enough to design with, and far too slow to screen a hundred thousand
+  candidates. Second, the part that decides whether a dye is any good in a microscope: brightness and
+  photostability. A dye that twists after absorbing light (twisted intramolecular charge transfer) turns the
+  energy into heat instead of light. The Janelia Fluor dyes came from exactly this reasoning: replacing
+  rhodamine's dimethylamino groups with a four-membered azetidine ring blocks the twist, and brightness and
+  photostability jump (Grimm et al., *Nature Methods* 12, 244 (2015), and 14, 987 (2017)). Third, machine
+  learning as a stand-in for TD-DFT: graph neural networks trained on tens of thousands of measured dye-solvent
+  pairs predict absorption, emission and quantum yield in milliseconds, so the slow calculation is only spent on
+  the survivors (Joung et al., *J. Chem. Inf. Model.* 61, 1053 (2021)). Real projects optimise several things at
+  once: wavelength, quantum yield, how the dye crosses a membrane, and how hard it is to synthesise.

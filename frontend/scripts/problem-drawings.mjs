@@ -229,6 +229,68 @@ const H = (x, y) => circle(x, y, 10, "#fff", "#9ca3af", 1.5) + t(x, y + 4, "H", 
   files["molecules/fluorophore"] = svg("Cy3 and Cy5 drawn as a chain of carbons between two nitrogens: the longer chain of Cy5 absorbs at a longer wavelength", b);
 }
 
+// gfp: the chromophore inside the barrel
+{
+  let b = head("A barrel with its own lamp inside");
+  const cx = 150, cy = 168, R = 72;
+  // eleven strands as arrows around a circle
+  for (let k = 0; k < 11; k++) {
+    const a = (k / 11) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+    const ux = -Math.sin(a) * 15, uy = Math.cos(a) * 15;
+    b += path(`M${(x - ux).toFixed(1)},${(y - uy).toFixed(1)} L${(x + ux).toFixed(1)},${(y + uy).toFixed(1)}`, "#2563eb", 9);
+  }
+  b += t(30, 72, "11 strands", { fill: "#1d4ed8", size: 12.5, bold: true });
+  // the chromophore: two rings joined, in the middle
+  b += hexagon(cx - 15, cy, 17, "#c2410c") + path(`M${cx + 2},${cy} L${cx + 16},${cy}`, "#c2410c", 3);
+  b += `<path d='M${cx + 16},${cy - 13} L${cx + 34},${cy - 8} L${cx + 30},${cy + 11} L${cx + 12},${cy + 11} Z' fill='none' stroke='#c2410c' stroke-width='3'/>`;
+  b += t(cx, cy + 38, "chromophore", { anchor: "middle", fill: "#c2410c", size: 12, bold: true });
+  b += t(cx, 266, "made from Thr65-Tyr66-Gly67, fused into one", { anchor: "middle", fill: "#6b7280", size: 11.5 });
+  // the residues that tune it
+  const tuners = [["Arg96", 68], ["His148", 96], ["Thr203", 124], ["Glu222", 152]];
+  b += t(300, 54, "and the residues that tune it", { fill: "#374151", size: 12.5, bold: true });
+  tuners.forEach(([name, y]) => {
+    b += circle(312, y + 20, 5, "#2563eb");
+    b += t(326, y + 24, name, { size: 12.5, fill: "#1f2937" });
+  });
+  b += t(300, 206, "held rigid, it emits light", { fill: EM, size: 12.5, bold: true });
+  b += t(300, 224, "instead of shaking", { fill: EM, size: 12.5, bold: true });
+  b += t(300, 242, "the energy away", { fill: EM, size: 12.5, bold: true });
+  b += foot("the protein makes its own chromophore: no dye to add", 284);
+  files["biomolecules/gfp"] = svg("Green fluorescent protein: eleven beta strands forming a barrel around the chromophore it made from three of its own residues", b);
+}
+
+// receptor kinetics: dwell time, and the ceiling
+{
+  let b = head("How long it holds on, not how tight it binds");
+  // a receptor on a target, with the two rates
+  b += rect(26, 92, 150, 48, "#f3f4f6", "#9ca3af", { rx: 8 }) + t(101, 121, "target cell", { anchor: "middle", size: 12.5 });
+  b += path("M101,92 L101,80", "#374151", 2);
+  b += `<path d='M86,56 L116,56 L108,80 L94,80 Z' fill='none' stroke='#2563eb' stroke-width='2.5'/>`;
+  b += t(101, 50, "receptor", { anchor: "middle", size: 12, fill: "#1d4ed8" });
+  b += arrow(190, 78, 236, 78, EM) + t(213, 70, "k_on", { anchor: "middle", mono: true, size: 12, fill: EM });
+  b += arrow(236, 118, 190, 118, "#b91c1c") + t(213, 136, "k_off", { anchor: "middle", mono: true, size: 12, fill: "#b91c1c" });
+  b += t(300, 78, "K_D = k_off / k_on", { mono: true, size: 13, bold: true });
+  b += t(300, 102, "t½  = ln2 / k_off", { mono: true, size: 13, bold: true });
+  b += t(300, 124, "dwell time", { size: 12, fill: "#6b7280" });
+  // the bell curve: model rises, measured killing peaks
+  const x0 = 56, x1 = 430, y0 = 254, h = 80;
+  b += line(x0, y0, x1, y0, "#9ca3af", 1.5) + line(x0, y0, x0, y0 - h, "#9ca3af", 1.5);
+  const model = [], bell = [];
+  for (let k = 0; k <= 20; k++) {
+    const u = k / 20, x = x0 + u * (x1 - x0);
+    model.push([x, y0 - h * (0.12 + 0.85 * u)]);
+    bell.push([x, y0 - h * (0.12 + 0.88 * Math.exp(-((u - 0.55) ** 2) / 0.045))]);
+  }
+  b += path(smooth(model), "#2563eb", 3, "none", " stroke-dasharray='6 4'");
+  b += path(smooth(bell), EM, 3.5);
+  b += t(x1 - 4, y0 - h - 2, "the model: tighter is better", { anchor: "end", size: 11.5, fill: "#1d4ed8" });
+  b += t(x0 + 0.55 * (x1 - x0), y0 - h - 16, "what is measured", { anchor: "middle", size: 12, fill: EM, bold: true });
+  b += t(x0, y0 + 16, "weak", { size: 11, fill: "#6b7280" }) + t(x1, y0 + 16, "very tight", { anchor: "end", size: 11, fill: "#6b7280" });
+  b += t((x0 + x1) / 2, y0 + 32, "the best killer sits in the middle", { anchor: "middle", size: 12, fill: "#374151" });
+  files["pro/receptor_kinetics"] = svg("A receptor binding a target with rates k_on and k_off; below, the model predicts ever stronger signalling with tighter binding while the measured killing peaks in the middle", b);
+}
+
 for (const [id, s] of Object.entries(files)) writeFileSync(`${ROOT}/${id}/diagram.svg`, s);
 console.log(Object.keys(files).length, "pictures");
 // silence unused-import lint in editors

@@ -827,8 +827,8 @@
    "顯微鏡染劑是一種會吸收某個顏色、常常再放出另一個顏色的分子。在**菁染料**（Cy3、Cy5 及其同類）中，顏色只取決於一件事： 連接兩個氮原子的碳鏈。把鏈上的電子看成長度為 $L$ 的盒中粒子，吸收峰就跟著出來： $\\lambda = 8mcL^2 / \\left(h(N+1)\\right)$，其中 $P$ 個碳對應 $N = P+3$ 個電子。用 RDKit 數出鏈長、預測顏色， 再和十一個實測染料比較：每多一個 `-CH=CH-`，吸收就往紅移約 100 nm——Cy3 正是這樣變成 Cy5 的。"
   ],
   "notes": [
-   "The model is cruder than it looks and that is the lesson. With α = 0 it fits the quinoline 4,4′ series almost exactly, but is 100–200 nm short for the others: the rings at the ends of the chain let the electrons spread further than the chain alone, and α is the fitted size of that end effect. The same box model fails badly for plain polyenes (β-carotene and friends), because their bonds alternate long and short, which the flat-bottomed box ignores. Real dye design also has to care about brightness, photostability and whether the dye stays put in a cell; absorption is only the first of those.",
-   "這個模型比看起來更粗糙，而這正是重點。取 α = 0 時，它幾乎完美吻合喹啉 4,4′ 系列，卻比其他系列短了 100–200 nm： 鏈兩端的環讓電子能比鏈本身延伸得更遠，而 α 就是這個端點效應的擬合大小。同一個盒子模型用在單純的多烯 （例如 β-胡蘿蔔素）上會嚴重失準，因為它們的鍵長長短交替，而平底的盒子忽略了這一點。真實的染料設計還要顧及亮度、 光穩定性，以及染料會不會留在細胞該在的位置；吸收只是其中第一件事。"
+   "The model is cruder than it looks and that is the lesson. With α = 0 it fits the quinoline 4,4′ series almost exactly, but is 100–200 nm short for the others: the rings at the ends of the chain let the electrons spread further than the chain alone, and α is the fitted size of that end effect. The same box model fails badly for plain polyenes (β-carotene and friends), because their bonds alternate long and short, which the flat-bottomed box ignores.\n\n**How real dyes are designed now.** Three layers sit above this one-dimensional sketch. First, quantum chemistry: time-dependent density functional theory (TD-DFT) computes the gap between the ground and excited states, and with it the absorption *and* emission maxima, the Stokes shift and the oscillator strength (how strongly the dye absorbs). It is accurate enough to design with, and far too slow to screen a hundred thousand candidates. Second, the part that decides whether a dye is any good in a microscope: brightness and photostability. A dye that twists after absorbing light (twisted intramolecular charge transfer) turns the energy into heat instead of light. The Janelia Fluor dyes came from exactly this reasoning: replacing rhodamine's dimethylamino groups with a four-membered azetidine ring blocks the twist, and brightness and photostability jump (Grimm et al., *Nature Methods* 12, 244 (2015), and 14, 987 (2017)). Third, machine learning as a stand-in for TD-DFT: graph neural networks trained on tens of thousands of measured dye-solvent pairs predict absorption, emission and quantum yield in milliseconds, so the slow calculation is only spent on the survivors (Joung et al., *J. Chem. Inf. Model.* 61, 1053 (2021)). Real projects optimise several things at once: wavelength, quantum yield, how the dye crosses a membrane, and how hard it is to synthesise.",
+   "這個模型比看起來更粗糙，而這正是重點。取 α = 0 時，它幾乎完美吻合喹啉 4,4′ 系列，卻比其他系列短了 100–200 nm： 鏈兩端的環讓電子能比鏈本身延伸得更遠，而 α 就是這個端點效應的擬合大小。同一個盒子模型用在單純的多烯 （例如 β-胡蘿蔔素）上會嚴重失準，因為它們的鍵長長短交替，而平底的盒子忽略了這一點。\n\n**真實的染料設計現在怎麼做。** 在這個一維草圖之上還有三層。第一層是量子化學：含時密度泛函理論（TD-DFT） 計算基態與激發態之間的能隙，並由此得到吸收峰**與**發射峰、斯托克斯位移，以及振子強度（染料吸光的強弱）。 它準到可以用來設計，但慢到無法海選十萬個候選分子。第二層決定一支染料在顯微鏡下好不好用：亮度與光穩定性。 吸光之後會扭轉的分子（扭轉分子內電荷轉移，TICT）會把能量變成熱，而不是光。Janelia Fluor 系列染料正是從這個 推理來的：把羅丹明的二甲胺基換成四元的氮雜環丁烷環，鎖死扭轉路徑，亮度與光穩定性因此大幅提升 （Grimm 等，《Nature Methods》12, 244 (2015)；14, 987 (2017)）。第三層是用機器學習代替 TD-DFT： 用數萬筆實測的「染料＋溶劑」資料訓練的圖神經網路，能在毫秒內預測吸收、發射與量子產率， 讓緩慢的計算只花在存活下來的候選分子上（Joung 等，《J. Chem. Inf. Model.》61, 1053 (2021)）。 真實的專案會同時最佳化好幾件事：波長、量子產率、染料能否穿過細胞膜，以及合成有多困難。"
   ],
   "mirror": [
    {
@@ -887,7 +887,7 @@
   ],
   "stub": "import numpy as np\nfrom rdkit import Chem\n\n# Physical constants (SI) and the average bond length along a conjugated chain, 1.39 Å.\nPLANCK = 6.62607015e-34\nM_E = 9.1093837015e-31\nC = 2.99792458e8\nBOND = 1.39e-10\n\n\ndef chain_length(smiles: str) -> int:\n    \"\"\"P: the number of carbons on the shortest path between the dye's two nitrogens.\n\n    Walk the molecule yourself (RDKit's GetShortestPath is not allowed here).\n    chain_length(\"CCN1/C(=C/C2=[N+](C3=CC=CC=C3C=C2)CC)/C=CC4=CC=CC=C41\") == 3\n    Raise ValueError if the string is not valid SMILES or has fewer than two nitrogens.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef lambda_max(p: int, alpha: float = 0.0) -> float:\n    \"\"\"The absorption maximum in nanometres from the free-electron model (Kuhn):\n\n    N = p + 3 electrons in a box of length L = (p + 3 + alpha) × BOND, and\n    lambda = 8 m c L² / (h (N + 1)).\n    \"\"\"\n    raise NotImplementedError\n\n\ndef fit_alpha(chain_lengths: list[int], measured_nm: list[float]) -> float:\n    \"\"\"The end correction alpha that best fits a series: the value (0 ≤ alpha ≤ 3) that makes the predicted\n    wavelengths closest to the measured ones in the least-squares sense.\n\n    Search alpha on a fine grid; 0.001 is close enough.\n    \"\"\"\n    raise NotImplementedError\n",
   "solution": "import numpy as np\nfrom rdkit import Chem\n\n# Physical constants (SI) and the average bond length along a conjugated chain, 1.39 Å.\nPLANCK = 6.62607015e-34\nM_E = 9.1093837015e-31\nC = 2.99792458e8\nBOND = 1.39e-10\n\n\ndef chain_length(smiles: str) -> int:\n    \"\"\"P: the number of carbons on the shortest path between the dye's two nitrogens.\n\n    Walk the molecule yourself (RDKit's GetShortestPath is not allowed here).\n    chain_length(\"CCN1/C(=C/C2=[N+](C3=CC=CC=C3C=C2)CC)/C=CC4=CC=CC=C41\") == 3\n    Raise ValueError if the string is not valid SMILES or has fewer than two nitrogens.\n    \"\"\"\n    mol = Chem.MolFromSmiles(smiles)\n    if mol is None:\n        raise ValueError(f\"not a valid SMILES string: {smiles!r}\")\n    nitrogens = [a.GetIdx() for a in mol.GetAtoms() if a.GetSymbol() == \"N\"]\n    if len(nitrogens) < 2:\n        raise ValueError(\"a cyanine dye has two nitrogens\")\n    best: list[int] | None = None\n    for start in nitrogens:\n        # breadth-first search: the first time another nitrogen is reached is by a shortest path\n        queue = [(start, [start])]\n        seen = {start}\n        while queue:\n            here, path = queue.pop(0)\n            if here != start and mol.GetAtomWithIdx(here).GetSymbol() == \"N\":\n                if best is None or len(path) < len(best):\n                    best = path\n                break\n            for neighbour in mol.GetAtomWithIdx(here).GetNeighbors():\n                if neighbour.GetIdx() not in seen:\n                    seen.add(neighbour.GetIdx())\n                    queue.append((neighbour.GetIdx(), [*path, neighbour.GetIdx()]))\n    if best is None:\n        raise ValueError(\"the two nitrogens are not connected\")\n    return sum(mol.GetAtomWithIdx(i).GetSymbol() == \"C\" for i in best[1:-1])\n\n\ndef lambda_max(p: int, alpha: float = 0.0) -> float:\n    \"\"\"The absorption maximum in nanometres from the free-electron model (Kuhn):\n\n    N = p + 3 electrons in a box of length L = (p + 3 + alpha) × BOND, and\n    lambda = 8 m c L² / (h (N + 1)).\n    \"\"\"\n    n_electrons = p + 3\n    length = (p + 3 + alpha) * BOND\n    lam = 8 * M_E * C * length**2 / (PLANCK * (n_electrons + 1))\n    return lam * 1e9\n\n\ndef fit_alpha(chain_lengths: list[int], measured_nm: list[float]) -> float:\n    \"\"\"The end correction alpha that best fits a series: the value (0 ≤ alpha ≤ 3) that makes the predicted\n    wavelengths closest to the measured ones in the least-squares sense.\n\n    Search alpha on a fine grid; 0.001 is close enough.\n    \"\"\"\n    grid = np.arange(0.0, 3.0005, 0.0005)\n    error = [sum((lambda_max(p, a) - m) ** 2 for p, m in zip(chain_lengths, measured_nm)) for a in grid]\n    return float(grid[int(np.argmin(error))])\n",
-  "main": "\"\"\"Run: predict the colour of a series of cyanine dyes from the length of their chain, and compare with experiment.\"\"\"\n\nimport csv\nfrom pathlib import Path\n\nimport render as r\nfrom answer import chain_length, fit_alpha, lambda_max\nfrom rdkit import Chem\n\nDYES = list(csv.DictReader((Path(__file__).parent / \"data\" / \"dyes.csv\").read_text(encoding=\"utf-8\").splitlines()))\nSERIES = {\n    \"thia\": (\"Thiacyanines\", \"噻唑菁\"),\n    \"quinoline44\": (\"Quinoline 4,4′\", \"喹啉 4,4′\"),\n    \"quinoline22\": (\"Quinoline 2,2′\", \"喹啉 2,2′\"),\n    \"cy\": (\"Cy3 and Cy5\", \"Cy3 與 Cy5\"),\n    \"all\": (\"Every dye\", \"全部染料\"),\n}\n\n\ndef seen_colour(nm: float) -> str:\n    \"\"\"Roughly the colour the eye sees: the complement of the absorbed wavelength, as #rrggbb.\n\n    A dye absorbing green looks red, and one absorbing red looks blue-green. Above 700 nm the absorption is in the\n    near infrared, which the eye does not see at all, so the sample looks faintly coloured; draw it grey-blue.\n    \"\"\"\n    if nm > 700:\n        return \"#64748b\"\n    hue = {400: 60.0, 450: 50.0, 500: 300.0, 550: 270.0, 600: 210.0, 650: 180.0, 700: 170.0}\n    keys = sorted(hue)\n    lo = max([k for k in keys if k <= nm], default=keys[0])\n    hi = min([k for k in keys if k >= nm], default=keys[-1])\n    h = hue[lo] if lo == hi else hue[lo] + (hue[hi] - hue[lo]) * (nm - lo) / (hi - lo)\n    # HSL(h, 70%, 50%) as hex\n    c, x = 0.7, 0.7 * (1 - abs(((h / 60) % 2) - 1))\n    rgb = [(c, x, 0), (x, c, 0), (0, c, x), (0, x, c), (x, 0, c), (c, 0, x)][int(h // 60) % 6]\n    return \"#\" + \"\".join(f\"{round(255 * (v + 0.5 - c / 2)):02x}\" for v in rgb)\n\n\ndef run(p: dict) -> list:\n    rows_in = DYES if p[\"series\"] == \"all\" else [d for d in DYES if d[\"series\"] == p[\"series\"]]\n    alpha = float(p[\"alpha\"])\n    chain = [chain_length(d[\"smiles\"]) for d in rows_in]\n    measured = [float(d[\"lambda_max_nm\"]) for d in rows_in]\n    predicted = [lambda_max(c, alpha) for c in chain]\n    best = fit_alpha(chain, measured)\n    worst = max(abs(a - b) for a, b in zip(predicted, measured))\n    rows = [\n        [d[\"name\"], c, f\"{pred:.0f}\", f\"{m:.0f}\", f\"{pred - m:+.0f}\", d[\"source\"].split(\" via \")[0]]\n        for d, c, pred, m in zip(rows_in, chain, predicted, measured)\n    ]\n    return [\n        r.metric((\"End correction used\", \"使用的端點修正\"), f\"α = {alpha:g}\"),\n        r.metric((\"Best α for this series\", \"此系列最佳 α\"), f\"{best:.2f}\"),\n        r.metric((\"Worst error\", \"最大誤差\"), f\"{worst:.0f}\", \"nm\", good=worst < 40),\n        r.scatter(\n            chain,\n            measured,\n            [d[\"name\"].split(\" (\")[0] for d in rows_in],\n            (\n                f\"Measured absorption against chain length (the line is the model, α = {alpha:g})\",\n                f\"實測吸收峰對鏈長（線是模型，α = {alpha:g}）\",\n            ),\n            (\"Carbons between the two nitrogens, P\", \"兩個氮之間的碳數 P\"),\n            (\"Absorption maximum (nm)\", \"吸收峰（nm）\"),\n        ),\n        r.bars(\n            [f\"{d['name'].split(' (')[0]}  P={c}\" for d, c in zip(rows_in, chain)],\n            measured,\n            (\"Where each dye absorbs, in the colour the eye sees\", \"每個染料的吸收位置，以肉眼看到的顏色表示\"),\n            colours=[seen_colour(m) for m in measured],\n            unit=\"nm\",\n        ),\n        r.table(\n            [(\"Dye\", \"染料\"), (\"P\", \"P\"), (\"Predicted (nm)\", \"預測（nm）\"), (\"Measured (nm)\", \"實測（nm）\"), (\"Error\", \"誤差\"), (\"Source\", \"來源\")],\n            rows,\n            (\"Prediction against experiment\", \"預測與實驗比較\"),\n        ),\n        r.grid(\n            [Chem.MolFromSmiles(d[\"smiles\"]) for d in rows_in[:6]],\n            [f\"{d['name'].split(' (')[0]}  {d['lambda_max_nm']} nm\" for d in rows_in[:6]],\n            (\"The dyes: the chain between the two nitrogens grows by one -CH=CH- each time\", \"這些染料：兩個氮之間的鏈每次增加一個 -CH=CH-\"),\n            per_row=2,\n        ),\n    ]\n",
+  "main": "\"\"\"Run: predict the colour of a series of cyanine dyes from the length of their chain, and compare with experiment.\"\"\"\n\nimport csv\nfrom pathlib import Path\n\nimport render as r\nfrom answer import chain_length, fit_alpha, lambda_max\nfrom rdkit import Chem\n\nDYES = list(csv.DictReader((Path(__file__).parent / \"data\" / \"dyes.csv\").read_text(encoding=\"utf-8\").splitlines()))\nSERIES = {\n    \"thia\": (\"Thiacyanines\", \"噻唑菁\"),\n    \"quinoline44\": (\"Quinoline 4,4′\", \"喹啉 4,4′\"),\n    \"quinoline22\": (\"Quinoline 2,2′\", \"喹啉 2,2′\"),\n    \"cy\": (\"Cy3 and Cy5\", \"Cy3 與 Cy5\"),\n    \"all\": (\"Every dye\", \"全部染料\"),\n}\n\n\ndef seen_colour(nm: float) -> str:\n    \"\"\"Roughly the colour the eye sees: the complement of the absorbed wavelength, as #rrggbb.\n\n    A dye absorbing green looks red, and one absorbing red looks blue-green. Above 700 nm the absorption is in the\n    near infrared, which the eye does not see at all, so the sample looks faintly coloured; draw it grey-blue.\n    \"\"\"\n    if nm > 700:\n        return \"#64748b\"\n    hue = {400: 60.0, 450: 50.0, 500: 300.0, 550: 270.0, 600: 210.0, 650: 180.0, 700: 170.0}\n    keys = sorted(hue)\n    lo = max([k for k in keys if k <= nm], default=keys[0])\n    hi = min([k for k in keys if k >= nm], default=keys[-1])\n    h = hue[lo] if lo == hi else hue[lo] + (hue[hi] - hue[lo]) * (nm - lo) / (hi - lo)\n    # HSL(h, 70%, 50%) as hex\n    c, x = 0.7, 0.7 * (1 - abs(((h / 60) % 2) - 1))\n    rgb = [(c, x, 0), (x, c, 0), (0, c, x), (0, x, c), (x, 0, c), (c, 0, x)][int(h // 60) % 6]\n    return \"#\" + \"\".join(f\"{round(255 * (v + 0.5 - c / 2)):02x}\" for v in rgb)\n\n\ndef run(p: dict) -> list:\n    rows_in = DYES if p[\"series\"] == \"all\" else [d for d in DYES if d[\"series\"] == p[\"series\"]]\n    alpha = float(p[\"alpha\"])\n    chain = [chain_length(d[\"smiles\"]) for d in rows_in]\n    measured = [float(d[\"lambda_max_nm\"]) for d in rows_in]\n    predicted = [lambda_max(c, alpha) for c in chain]\n    best = fit_alpha(chain, measured)\n    worst = max(abs(a - b) for a, b in zip(predicted, measured))\n    rows = [\n        [d[\"name\"], c, f\"{pred:.0f}\", f\"{m:.0f}\", f\"{pred - m:+.0f}\", d[\"source\"].split(\" via \")[0]]\n        for d, c, pred, m in zip(rows_in, chain, predicted, measured)\n    ]\n    return [\n        r.metric((\"End correction used\", \"使用的端點修正\"), f\"α = {alpha:g}\"),\n        r.metric((\"Best α for this series\", \"此系列最佳 α\"), f\"{best:.2f}\"),\n        r.metric((\"Worst error\", \"最大誤差\"), f\"{worst:.0f}\", \"nm\", good=worst < 40),\n        r.scatter(\n            chain,\n            measured,\n            [d[\"name\"].split(\" (\")[0] for d in rows_in],\n            (\n                f\"Measured absorption against chain length (the line is the model, α = {alpha:g})\",\n                f\"實測吸收峰對鏈長（線是模型，α = {alpha:g}）\",\n            ),\n            (\"Carbons between the two nitrogens, P\", \"兩個氮之間的碳數 P\"),\n            (\"Absorption maximum (nm)\", \"吸收峰（nm）\"),\n        ),\n        r.bars(\n            [f\"{d['name'].split(' (')[0]}  P={c}\" for d, c in zip(rows_in, chain)],\n            measured,\n            (\"Where each dye absorbs, in the colour the eye sees\", \"每個染料的吸收位置，以肉眼看到的顏色表示\"),\n            colours=[seen_colour(m) for m in measured],\n            unit=\"nm\",\n        ),\n        r.table(\n            [\n                (\"Dye\", \"染料\"),\n                (\"P\", \"P\"),\n                (\"Predicted (nm)\", \"預測（nm）\"),\n                (\"Measured (nm)\", \"實測（nm）\"),\n                (\"Error\", \"誤差\"),\n                (\"Source\", \"來源\"),\n            ],\n            rows,\n            (\"Prediction against experiment\", \"預測與實驗比較\"),\n        ),\n        r.grid(\n            [Chem.MolFromSmiles(d[\"smiles\"]) for d in rows_in[:6]],\n            [f\"{d['name'].split(' (')[0]}  {d['lambda_max_nm']} nm\" for d in rows_in[:6]],\n            (\n                \"The dyes: the chain between the two nitrogens grows by one -CH=CH- each time\",\n                \"這些染料：兩個氮之間的鏈每次增加一個 -CH=CH-\",\n            ),\n            per_row=2,\n        ),\n    ]\n",
   "params": [
    {
     "id": "series",
@@ -1227,6 +1227,109 @@
   "picture": "problems/biomolecules/pdb_neighbours.svg"
  },
  {
+  "id": "biomolecules/gfp",
+  "category": "biomolecules",
+  "level": "intermediate",
+  "title": [
+   "GFP: the lamp a cell builds for itself",
+   "GFP：細胞自己造的一盞燈"
+  ],
+  "summary": [
+   "Green fluorescent protein makes its own chromophore: three of its own residues join into one fused ring system that glows. That is why a cell given the GFP gene lights up with nothing else added. The chromophore only works because the protein wraps it in an eleven-stranded barrel: held rigid, it emits light instead of shaking the energy away. Find the chromophore in the structure, count the strands around it, and list the residues that touch it — among them Arg96, His148, Thr203 and Glu222, the ones that tune the colour.",
+   "綠色螢光蛋白會自己製造發色團：它用自己的三個殘基接成一組會發光的稠環。所以只要給細胞 GFP 基因，不必再加任何東西， 細胞就會發亮。這個發色團之所以有效，是因為蛋白質把它包在一個十一股的桶狀結構裡：被固定住之後，它把能量以光的形式放出， 而不是靠晃動散掉。在結構中找出發色團、數出圍繞它的股數，並列出接觸它的殘基——其中 Arg96、His148、Thr203 與 Glu222 正是調整顏色的那幾個。"
+  ],
+  "notes": null,
+  "mirror": [
+   {
+    "text": [
+     "A chromophore made from the protein's own residues is recorded as a modified residue; MODRES names it and the residues it was made from. Selenomethionine is a labelling trick, not a chromophore.",
+     "由蛋白質自身殘基形成的發色團，會被記錄成一個修飾殘基；MODRES 行寫出它的名稱，以及它由哪些殘基形成。硒甲硫胺酸只是解結構用的標記手法，不是發色團。"
+    ],
+    "code": "if line.startswith(\"MODRES\") and line[12:15].strip() != \"MSE\":\n    return line[16], int(line[18:22]), line[12:15].strip()"
+   },
+   {
+    "text": [
+     "Each SHEET line is one strand, and names the sheet it belongs to; the barrel is simply the largest sheet.",
+     "每一行 SHEET 代表一股，並標明它屬於哪一個摺板；桶狀結構就是最大的那個摺板。"
+    ],
+    "code": "sheets[line[11:14]] = sheets.get(line[11:14], 0) + 1"
+   },
+   {
+    "text": [
+     "A residue touches the chromophore when any of its atoms is within the cutoff of any chromophore atom (water does not count).",
+     "只要某個殘基有任何原子落在發色團任一原子的截止距離內，就算接觸到它（水不算）。"
+    ],
+    "code": "close = (distances <= cutoff).any(axis=0)"
+   }
+  ],
+  "uses": [
+   {
+    "library": "Protein Data Bank",
+    "api": "1EMA",
+    "url": "https://www.rcsb.org/structure/1EMA"
+   },
+   {
+    "library": "Protein Data Bank",
+    "api": "2H5Q",
+    "url": "https://www.rcsb.org/structure/2H5Q"
+   },
+   {
+    "library": "PDB format: MODRES and SHEET records",
+    "api": "wwPDB format guide",
+    "url": "https://www.wwpdb.org/documentation/file-format-content/format33/sect3.html"
+   }
+  ],
+  "imports": [
+   "numpy"
+  ],
+  "forbidden": [
+   "Bio",
+   "NeighborSearch",
+   "PDBParser"
+  ],
+  "stub": "import numpy as np\n\n\ndef find_chromophore(pdb_text: str) -> tuple[str, int, str]:\n    \"\"\"The chromophore the protein made from its own residues, as (chain, residue number, residue name).\n\n    A PDB file records it as a modified residue (a MODRES line). Selenomethionine (MSE) is a labelling trick\n    used for solving the structure, not a chromophore, so skip it.\n    find_chromophore(gfp) == (\"A\", 66, \"CRO\")\n    Raise ValueError if the file has no such residue.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef barrel_strands(pdb_text: str) -> int:\n    \"\"\"How many strands the file's largest beta sheet has: one SHEET line per strand, grouped by sheet id\n    (columns 12-14). GFP's barrel has 11.\"\"\"\n    raise NotImplementedError\n\n\ndef chromophore_pocket(pdb_text: str, cutoff: float = 5.0) -> list[tuple[int, str]]:\n    \"\"\"The residues of the same chain with any atom within cutoff Å of any chromophore atom, as\n    (residue number, residue name), sorted. Water (HOH) and the chromophore itself are left out.\"\"\"\n    raise NotImplementedError\n",
+  "solution": "import numpy as np\n\n\ndef find_chromophore(pdb_text: str) -> tuple[str, int, str]:\n    \"\"\"The chromophore the protein made from its own residues, as (chain, residue number, residue name).\n\n    A PDB file records it as a modified residue (a MODRES line). Selenomethionine (MSE) is a labelling trick\n    used for solving the structure, not a chromophore, so skip it.\n    find_chromophore(gfp) == (\"A\", 66, \"CRO\")\n    Raise ValueError if the file has no such residue.\n    \"\"\"\n    for line in pdb_text.splitlines():\n        if line.startswith(\"MODRES\") and line[12:15].strip() != \"MSE\":\n            return line[16], int(line[18:22]), line[12:15].strip()\n    raise ValueError(\"no modified residue in this file: it has no chromophore of its own\")\n\n\ndef barrel_strands(pdb_text: str) -> int:\n    \"\"\"How many strands the file's largest beta sheet has: one SHEET line per strand, grouped by sheet id\n    (columns 12-14). GFP's barrel has 11.\"\"\"\n    sheets: dict[str, int] = {}\n    for line in pdb_text.splitlines():\n        if line.startswith(\"SHEET\"):\n            sheets[line[11:14]] = sheets.get(line[11:14], 0) + 1\n    return max(sheets.values(), default=0)\n\n\ndef _atoms(pdb_text: str) -> list[tuple[str, int, str, float, float, float]]:\n    \"\"\"(chain, residue number, residue name, x, y, z) for every atom, ignoring alternate positions after the first\"\"\"\n    return [\n        (line[21], int(line[22:26]), line[17:20].strip(), float(line[30:38]), float(line[38:46]), float(line[46:54]))\n        for line in pdb_text.splitlines()\n        if line.startswith((\"ATOM  \", \"HETATM\")) and line[16] in \" A\"\n    ]\n\n\ndef chromophore_pocket(pdb_text: str, cutoff: float = 5.0) -> list[tuple[int, str]]:\n    \"\"\"The residues of the same chain with any atom within cutoff Å of any chromophore atom, as\n    (residue number, residue name), sorted. Water (HOH) and the chromophore itself are left out.\"\"\"\n    chain, resnum, resname = find_chromophore(pdb_text)\n    atoms = _atoms(pdb_text)\n    xyz = np.array([a[3:] for a in atoms])\n    is_chromophore = np.array([a[0] == chain and a[1] == resnum and a[2] == resname for a in atoms])\n    distances = np.linalg.norm(xyz[is_chromophore][:, None, :] - xyz[None, :, :], axis=-1)\n    close = (distances <= cutoff).any(axis=0)\n    found = {(a[1], a[2]) for a, near in zip(atoms, close) if near and a[0] == chain and a[2] not in (resname, \"HOH\")}\n    return sorted(found)\n",
+  "main": "\"\"\"Run: find the chromophore inside the barrel and show what holds it.\"\"\"\n\nfrom pathlib import Path\n\nimport render as r\nfrom answer import barrel_strands, chromophore_pocket, find_chromophore\n\nDATA = Path(__file__).parent / \"data\"\nFAMOUS = {\n    96: (\"Arg96: holds the chromophore's charge\", \"Arg96：穩住發色團的電荷\"),\n    148: (\"His148: hydrogen bond to the ring\", \"His148：與環形成氫鍵\"),\n    203: (\"Thr203: sets the colour (T203Y makes YFP)\", \"Thr203：決定顏色（T203Y 變成 YFP）\"),\n    222: (\"Glu222: the proton it takes decides which colour is absorbed\", \"Glu222：它接走的質子決定吸收哪種顏色\"),\n}\n\n\ndef run(p: dict) -> list:\n    text = (DATA / f\"{p['protein']}.pdb\").read_text()\n    chain, resnum, resname = find_chromophore(text)\n    cutoff = float(p[\"cutoff\"])\n    pocket = chromophore_pocket(text, cutoff)\n    parents = sorted(\n        {ln[24:27].strip() for ln in text.splitlines() if ln.startswith(\"MODRES\") and ln[12:15].strip() == resname}\n    )\n    notes = [r.text(FAMOUS[n], mono=False) for n, _ in pocket if n in FAMOUS]\n    return [\n        r.metric((\"Chromophore\", \"發色團\"), f\"{resname} {resnum}\"),\n        r.metric((\"Made from\", \"由哪些殘基形成\"), \", \".join(parents)),\n        r.metric((\"Strands in the barrel\", \"桶狀結構的股數\"), barrel_strands(text)),\n        r.metric((f\"Residues within {cutoff:g} Å\", f\"{cutoff:g} Å 以內的殘基\"), len(pocket)),\n        r.pdb3d(\n            [{\"pdb\": text, \"colour\": \"#9ca3af\"}],\n            (\n                \"The barrel (grey) with the chromophore inside it (orange) and the residues that touch it (blue)\",\n                \"桶狀結構（灰）內的發色團（橘），以及接觸它的殘基（藍）\",\n            ),\n            highlight=[\n                {\"resi\": [n for n, _ in pocket], \"colour\": \"#2563eb\"},\n                {\"resi\": [resnum], \"colour\": \"#c2410c\"},\n            ],\n        ),\n        r.table(\n            [(\"Residue\", \"殘基\"), (\"Name\", \"名稱\")],\n            [[n, name] for n, name in pocket],\n            (\"Everything that touches the chromophore\", \"所有接觸發色團的殘基\"),\n        ),\n        *notes,\n    ]\n",
+  "params": [
+   {
+    "id": "protein",
+    "type": "select",
+    "label": [
+     "Protein",
+     "蛋白質"
+    ],
+    "default": "1ema",
+    "options": [
+     [
+      "GFP (1EMA)",
+      "綠色螢光蛋白（1EMA）",
+      "1ema"
+     ],
+     [
+      "mCherry (2H5Q)",
+      "mCherry（2H5Q）",
+      "2h5q"
+     ]
+    ]
+   },
+   {
+    "id": "cutoff",
+    "type": "float",
+    "label": [
+     "Cutoff (Å)",
+     "截止距離（Å）"
+    ],
+    "default": 5.0,
+    "min": 3.0,
+    "max": 8.0,
+    "step": 0.5
+   }
+  ],
+  "results": "results/gfp.json",
+  "test": "\"\"\"The contract for gfp. Read-only: your answer.py must make these pass.\"\"\"\n\nfrom pathlib import Path\n\nimport pytest\n\nfrom answer import barrel_strands, chromophore_pocket, find_chromophore\n\nDATA = Path(__file__).parent / \"data\"\nGFP = (DATA / \"1ema.pdb\").read_text()\nMCHERRY = (DATA / \"2h5q.pdb\").read_text()\n\n\ndef test_the_chromophore_of_gfp():\n    \"\"\"GFP's chromophore is one fused residue, CRO 66, made from three of the protein's own residues.\"\"\"\n    assert find_chromophore(GFP) == (\"A\", 66, \"CRO\")\n\n\ndef test_the_chromophore_of_mcherry():\n    \"\"\"mCherry makes a different one, CH6, at the same place in the chain.\"\"\"\n    assert find_chromophore(MCHERRY) == (\"A\", 66, \"CH6\")\n\n\ndef test_selenomethionine_is_not_a_chromophore():\n    \"\"\"1EMA also has MSE residues (a trick for solving the structure); they must not be mistaken for it.\"\"\"\n    assert \"MODRES 1EMA MSE\" in GFP\n    assert find_chromophore(GFP)[2] != \"MSE\"\n\n\ndef test_a_file_without_one_raises():\n    with pytest.raises(ValueError):\n        find_chromophore(\"ATOM      1  N   MET A   1      11.104   6.134  -6.504  1.00  0.00           N\\n\")\n\n\ndef test_the_barrel_has_eleven_strands():\n    assert barrel_strands(GFP) == 11\n    assert barrel_strands(MCHERRY) >= 11  # the same fold; this file lists a few more strands in its sheet\n    assert barrel_strands(\"\") == 0\n\n\ndef test_the_pocket_holds_the_residues_that_tune_the_colour():\n    pocket = chromophore_pocket(GFP)\n    assert (96, \"ARG\") in pocket and (222, \"GLU\") in pocket  # the pair that keeps the chromophore charged\n    assert (148, \"HIS\") in pocket and (203, \"THR\") in pocket  # S65T's neighbours, which set the colour\n    assert len(pocket) == 26\n\n\ndef test_the_chromophore_itself_and_water_are_left_out():\n    pocket = chromophore_pocket(GFP)\n    assert not any(name in (\"CRO\", \"HOH\") for _, name in pocket)\n    assert (66, \"CRO\") not in pocket\n\n\ndef test_a_wider_cutoff_finds_more():\n    small = chromophore_pocket(GFP, 4.0)\n    big = chromophore_pocket(GFP, 6.0)\n    assert set(small) < set(big)\n    assert len(chromophore_pocket(MCHERRY, 5.0)) > 10\n\n\ndef test_the_chromophore_is_buried():\n    \"\"\"Every side of it touches the protein: the barrel wraps it, which is why it glows.\"\"\"\n    pocket = chromophore_pocket(GFP, 6.0)\n    assert len(pocket) >= 30\n    assert max(n for n, _ in pocket) - min(n for n, _ in pocket) > 150  # residues from all along the chain\n",
+  "picture": "problems/biomolecules/gfp.svg"
+ },
+ {
   "id": "pro/alphafold_plddt",
   "category": "pro",
   "level": "pro",
@@ -1392,5 +1495,98 @@
   "results": "results/rmsd.json",
   "test": "\"\"\"The contract for rmsd. Read-only: your answer.py must make these pass.\"\"\"\n\nfrom pathlib import Path\n\nimport numpy as np\nimport pytest\nfrom Bio.PDB import PDBParser\nfrom Bio.SVDSuperimposer import SVDSuperimposer\n\nfrom answer import ca_rmsd, kabsch_rmsd\n\nDATA = Path(__file__).parent / \"data\"\nMODEL = (DATA / \"AF-P01542-F1-model_v6.pdb\").read_text()\nCRYSTAL = (DATA / \"1crn.pdb\").read_text()\n\n\ndef _rotation(rng):\n    q = rng.normal(size=4)\n    a, b, c, d = q / np.linalg.norm(q)\n    return np.array(\n        [\n            [a * a + b * b - c * c - d * d, 2 * (b * c - a * d), 2 * (b * d + a * c)],\n            [2 * (b * c + a * d), a * a - b * b + c * c - d * d, 2 * (c * d - a * b)],\n            [2 * (b * d - a * c), 2 * (c * d + a * b), a * a - b * b - c * c + d * d],\n        ]\n    )\n\n\ndef test_same_points_moved_and_turned_have_zero_rmsd():\n    rng = np.random.default_rng(0)\n    P = rng.normal(size=(20, 3)) * 5\n    Q = P @ _rotation(rng).T + np.array([3.0, -7.0, 12.0])\n    assert kabsch_rmsd(P, Q) == pytest.approx(0.0, abs=1e-9)\n\n\ndef test_a_mirror_image_is_not_the_same():\n    # a chiral set of points and its mirror image cannot be superposed by a rotation\n    P = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 1.5]], dtype=float)\n    assert kabsch_rmsd(P, P * np.array([1, 1, -1])) > 0.1\n\n\n@pytest.mark.parametrize(\"seed\", range(4))\ndef test_agrees_with_biopython(seed):\n    rng = np.random.default_rng(seed)\n    P = rng.normal(size=(15, 3)) * 4\n    Q = P @ _rotation(rng).T + rng.normal(size=(15, 3))\n    sup = SVDSuperimposer()\n    sup.set(Q, P)\n    sup.run()\n    assert kabsch_rmsd(P, Q) == pytest.approx(sup.get_rms(), abs=1e-9)\n\n\ndef test_shapes_checked():\n    with pytest.raises(ValueError):\n        kabsch_rmsd(np.zeros((4, 3)), np.zeros((5, 3)))\n    with pytest.raises(ValueError):\n        kabsch_rmsd(np.zeros((4, 2)), np.zeros((4, 2)))\n\n\ndef test_alphafold_vs_crystal():\n    parser = PDBParser(QUIET=True)\n    m = parser.get_structure(\"m\", DATA / \"AF-P01542-F1-model_v6.pdb\")[0][\"A\"]\n    x = parser.get_structure(\"x\", DATA / \"1crn.pdb\")[0][\"A\"]\n    common = sorted({r.id[1] for r in m} & {r.id[1] for r in x})\n    sup = SVDSuperimposer()\n    sup.set(np.array([x[i][\"CA\"].coord for i in common], float), np.array([m[i][\"CA\"].coord for i in common], float))\n    sup.run()\n    got = ca_rmsd(MODEL, CRYSTAL)\n    assert got == pytest.approx(sup.get_rms(), abs=1e-3)\n    assert got < 1.0  # crambin is predicted to well under an ångström\n",
   "picture": "problems/pro/rmsd.svg"
+ },
+ {
+  "id": "pro/receptor_kinetics",
+  "category": "pro",
+  "level": "pro",
+  "title": [
+   "Designing a receptor: how tight is tight enough?",
+   "設計受體：要多緊才夠緊？"
+  ],
+  "summary": [
+   "A T cell decides what to kill by how long its receptor **stays** on a target, not by how often it touches one. Two numbers say it: $k_{on}$, how fast the receptor binds, and $k_{off}$, how fast it lets go, with $K_D = k_{off}/k_{on}$ and a dwell time $t_{1/2} = \\ln 2 / k_{off}$. Engineers of TCR-T and CAR-T cells tune exactly these. Compute them for a published ladder of eight receptors against one cancer target, feed them to the kinetic-proofreading model, and meet the catch: the model says tighter is always better, and the measurements say the best killer sits in the middle.",
+   "T 細胞判斷要殺死什麼，看的是受體**停留**在目標上多久，而不是多常碰到目標。這由兩個數字決定：$k_{on}$（結合得多快） 與 $k_{off}$（放開得多快）；其中 $K_D = k_{off}/k_{on}$，停留時間 $t_{1/2} = \\ln 2 / k_{off}$。 設計 TCR-T 與 CAR-T 細胞的人，調的正是這兩個數字。對八個針對同一個癌症標靶、已發表的受體算出這些量， 再餵進動力學校對模型，然後面對一個難題：模型說越緊越好，實驗卻說最會殺的那一個落在中間。"
+  ],
+  "notes": [
+   "The proofreading model earns its keep by explaining discrimination: a receptor that lets go ten times slower signals far more than ten times as strongly, because it must survive several steps in a row. What it does not explain is the ceiling. Measured killing by these same receptors peaks at the middle of the ladder (the DMβ and TMβ variants, about 1-2 µM) and falls again for the tightest: a receptor that holds on for nine minutes is triggered by the target cell's own harmless peptides too, and the T cell shuts itself down. Affinity engineering has killed patients for a related reason: an affinity-enhanced receptor against MAGE-A3 also recognised a peptide from titin in heart muscle, and two patients died (Linette et al., Blood 122, 863 (2013); Cameron et al., Sci. Transl. Med. 5, 197ra103 (2013)). CAR-T binders such as FMC63 against CD19 face the same trade-off; the structure of that pair is in the Library.",
+   "校對模型的價值在於解釋辨識力：放開慢十倍的受體，訊號會強上不只十倍，因為它必須連續撐過好幾步。 但它解釋不了上限。同一組受體實際測到的殺傷力，在這道階梯的中段達到最高（DMβ 與 TMβ 變體，約 1–2 µM）， 到最緊的那一個反而下降：一個會抓住目標九分鐘的受體，連目標細胞自身無害的胜肽也會觸發它，於是 T 細胞把自己關掉。 親和力工程也曾因類似的原因致命：一個針對 MAGE-A3 的增強型受體，同時認得心肌中肌聯蛋白（titin）的一段胜肽， 導致兩名病人死亡（Linette 等，Blood 122, 863 (2013)；Cameron 等，Sci. Transl. Med. 5, 197ra103 (2013)）。 CAR-T 所用的結合域（例如針對 CD19 的 FMC63）面臨同樣的取捨；那組結構就在資料庫中。"
+  ],
+  "mirror": [
+   {
+    "text": [
+     "A dwell time is a half-life, so the rate of letting go is ln 2 over it.",
+     "停留時間就是半衰期，所以放開的速率是 ln 2 除以它。"
+    ],
+    "code": "return math.log(2) / half_life_s"
+   },
+   {
+    "text": [
+     "The affinity is the ratio of the two rates, so the on-rate follows from the off-rate. K_D arrives in micromolar; the rates are per molar.",
+     "親和力是兩個速率的比值，所以由 $k_{off}$ 就能得到 $k_{on}$。K_D 以微莫耳給出，而速率以每莫耳計算。"
+    ],
+    "code": "return k_off / (kd_micromolar * 1e-6)"
+   },
+   {
+    "text": [
+     "Kinetic proofreading: the receptor must survive N slow steps before it signals, and at each step it may let go.",
+     "動力學校對：受體必須撐過 N 個慢步驟才會發出訊號，而每一步它都可能放開。"
+    ],
+    "code": "return (1 + k_off / k_p) ** (-steps)"
+   }
+  ],
+  "uses": [
+   {
+    "library": "Irving et al., J. Biol. Chem. 287, 23068 (2012)",
+    "api": "the measured affinity ladder",
+    "url": "https://doi.org/10.1074/jbc.M112.357673"
+   },
+   {
+    "library": "Pettmann et al., eLife 10:e67092 (2021)",
+    "api": "kinetic proofreading, steady state",
+    "url": "https://doi.org/10.7554/eLife.67092"
+   },
+   {
+    "library": "Protein Data Bank",
+    "api": "2BNR",
+    "url": "https://www.rcsb.org/structure/2BNR"
+   }
+  ],
+  "imports": [
+   "numpy"
+  ],
+  "forbidden": [],
+  "stub": "import math\n\n\ndef off_rate(half_life_s: float) -> float:\n    \"\"\"k_off (per second) from the dwell time: the complex falls apart with a half-life.\n\n    off_rate(3.0) ≈ 0.231\n    Raise ValueError if the half-life is not positive.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef on_rate(k_off: float, kd_micromolar: float) -> float:\n    \"\"\"k_on (per molar per second) from k_off and K_D, with K_D given in micromolar.\n\n    The published G50A receptor has k_off = 0.069 s⁻¹ and K_D = 4.62 µM, so k_on ≈ 1.49e4.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef signal_fraction(k_off: float, k_p: float = 1.0, steps: int = 3) -> float:\n    \"\"\"Kinetic proofreading: the share of bound receptors that survive N steps of rate k_p before signalling,\n\n        fraction = (1 + k_off / k_p) ** (-steps)\n\n    With steps = 0 every bound receptor signals at once (fraction 1).\n    \"\"\"\n    raise NotImplementedError\n",
+  "solution": "import math\n\n\ndef off_rate(half_life_s: float) -> float:\n    \"\"\"k_off (per second) from the dwell time: the complex falls apart with a half-life.\n\n    off_rate(3.0) ≈ 0.231\n    Raise ValueError if the half-life is not positive.\n    \"\"\"\n    if half_life_s <= 0:\n        raise ValueError(\"a dwell time is a positive number of seconds\")\n    return math.log(2) / half_life_s\n\n\ndef on_rate(k_off: float, kd_micromolar: float) -> float:\n    \"\"\"k_on (per molar per second) from k_off and K_D, with K_D given in micromolar.\n\n    The published G50A receptor has k_off = 0.069 s⁻¹ and K_D = 4.62 µM, so k_on ≈ 1.49e4.\n    \"\"\"\n    if kd_micromolar <= 0:\n        raise ValueError(\"K_D is a positive concentration\")\n    return k_off / (kd_micromolar * 1e-6)\n\n\ndef signal_fraction(k_off: float, k_p: float = 1.0, steps: int = 3) -> float:\n    \"\"\"Kinetic proofreading: the share of bound receptors that survive N steps of rate k_p before signalling,\n\n        fraction = (1 + k_off / k_p) ** (-steps)\n\n    With steps = 0 every bound receptor signals at once (fraction 1).\n    \"\"\"\n    if k_p <= 0 or steps < 0:\n        raise ValueError(\"k_p is positive and the number of steps is not negative\")\n    return (1 + k_off / k_p) ** (-steps)\n",
+  "main": "\"\"\"Run: work out k_off and k_on for a published ladder of engineered receptors, and see what the model predicts.\"\"\"\n\nimport csv\nfrom pathlib import Path\n\nimport render as r\nfrom answer import off_rate, on_rate, signal_fraction\n\nDATA = Path(__file__).parent / \"data\"\nVARIANTS = list(csv.DictReader((DATA / \"variants.csv\").read_text(encoding=\"utf-8\").splitlines()))\nSTRUCTURE = (DATA / \"2bnr.pdb\").read_text(encoding=\"utf-8\")\n# the two variants whose measured killing is the strongest (Hebeisen et al., Front Immunol 2022)\nBEST_MEASURED = {\"DMb\", \"TMb\"}\n\n\ndef run(p: dict) -> list:\n    steps, k_p = int(p[\"steps\"]), float(p[\"k_p\"])\n    rows, names, kds, signals = [], [], [], []\n    for v in VARIANTS:\n        kd = float(v[\"kd_um\"])\n        if v[\"half_life_s\"]:\n            k_off = off_rate(float(v[\"half_life_s\"]))\n            how = \"from t½\"\n        elif v[\"k_off_published\"]:\n            k_off = float(v[\"k_off_published\"])\n            how = \"published\"\n        else:\n            k_off = None\n            how = \"—\"\n        k_on = on_rate(k_off, kd) if k_off else None\n        signal = signal_fraction(k_off, k_p, steps) if k_off else None\n        rows.append(\n            [\n                v[\"name\"] + (\" ★\" if v[\"name\"] in BEST_MEASURED else \"\"),\n                f\"{kd:g}\",\n                v[\"half_life_s\"] or \"—\",\n                \"—\" if k_off is None else f\"{k_off:.4f}\",\n                \"—\" if k_on is None else f\"{k_on:.2e}\",\n                how,\n                \"—\" if signal is None else f\"{signal:.3f}\",\n            ]\n        )\n        if signal is not None:\n            names.append(v[\"name\"])\n            kds.append(kd)\n            signals.append(signal)\n    return [\n        r.metric((\"Receptors\", \"受體數\"), len(VARIANTS)),\n        r.metric(\n            (\"Affinity range\", \"親和力範圍\"),\n            f\"{max(float(v['kd_um']) for v in VARIANTS):g} → {min(float(v['kd_um']) for v in VARIANTS):g}\",\n            \"µM\",\n        ),\n        r.metric((\"Strongest killer measured\", \"實測最強的殺手\"), \"DMβ, TMβ (1–2 µM)\"),\n        r.table(\n            [\n                (\"Receptor\", \"受體\"),\n                (\"K_D (µM)\", \"K_D（µM）\"),\n                (\"t½ (s)\", \"t½（秒）\"),\n                (\"k_off (1/s)\", \"k_off（1/秒）\"),\n                (\"k_on (1/M/s)\", \"k_on（1/M/秒）\"),\n                (\"k_off from\", \"k_off 來源\"),\n                (\"Model signal\", \"模型訊號\"),\n            ],\n            rows,\n            (\"★ = the strongest killers measured, in the middle of the ladder\", \"★ = 實測殺傷力最強者，位於階梯中段\"),\n        ),\n        r.scatter(\n            kds,\n            signals,\n            names,\n            (\n                f\"What the model predicts: tighter is always better (N = {steps}, k_p = {k_p:g} /s)\",\n                f\"模型的預測：越緊越好（N = {steps}，k_p = {k_p:g} /秒）\",\n            ),\n            (\"K_D (µM) — tighter to the left\", \"K_D（µM）—— 越左越緊\"),\n            (\"Share of bound receptors that signal\", \"會發出訊號的已結合受體比例\"),\n        ),\n        r.bars(\n            [v[\"name\"] for v in VARIANTS if v[\"half_life_s\"]],\n            [float(v[\"half_life_s\"]) for v in VARIANTS if v[\"half_life_s\"]],\n            (\"How long each one holds on (published dwell times)\", \"各自抓住目標多久（已發表的停留時間）\"),\n            unit=\"s\",\n        ),\n        r.pdb3d(\n            [{\"pdb\": STRUCTURE, \"colour\": \"#9ca3af\"}],\n            (\n                \"The receptor on its target (PDB 2BNR): the peptide it reads is in orange\",\n                \"受體與其標靶（PDB 2BNR）：它所讀取的胜肽為橘色\",\n            ),\n            highlight=[{\"resi\": list(range(1, 10)), \"chain\": \"C\", \"colour\": \"#c2410c\"}],\n        ),\n        r.text(\n            (\n                \"The model rises all the way to the tightest receptor; the measured killing does not. See the notes.\",\n                \"模型一路上升到最緊的受體；實測的殺傷力卻不是如此。請看延伸知識。\",\n            )\n        ),\n    ]\n",
+  "params": [
+   {
+    "id": "steps",
+    "type": "int",
+    "label": [
+     "Proofreading steps N",
+     "校對步驟數 N"
+    ],
+    "default": 3,
+    "min": 0,
+    "max": 8,
+    "step": 1
+   },
+   {
+    "id": "k_p",
+    "type": "float",
+    "label": [
+     "Step rate k_p (1/s)",
+     "每步速率 k_p（1/s）"
+    ],
+    "default": 1.0,
+    "min": 0.1,
+    "max": 5.0,
+    "step": 0.1
+   }
+  ],
+  "results": "results/receptor_kinetics.json",
+  "test": "\"\"\"The contract for receptor_kinetics. Read-only: your answer.py must make these pass.\n\nEvery measured number comes from data/variants.csv, cited in data/SOURCE.md.\n\"\"\"\n\nimport csv\nfrom pathlib import Path\n\nimport pytest\n\nfrom answer import off_rate, on_rate, signal_fraction\n\nVARIANTS = {\n    row[\"name\"]: row\n    for row in csv.DictReader(\n        (Path(__file__).parent / \"data\" / \"variants.csv\").read_text(encoding=\"utf-8\").splitlines()\n    )\n}\n\n\ndef test_dwell_time_to_off_rate():\n    assert off_rate(3.0) == pytest.approx(0.2310, abs=1e-4)\n    assert off_rate(553.0) == pytest.approx(0.001254, abs=1e-6)\n    # ten times the dwell time is a tenth of the off-rate\n    assert off_rate(30.0) == pytest.approx(off_rate(3.0) / 10)\n\n\ndef test_a_dwell_time_must_be_positive():\n    with pytest.raises(ValueError):\n        off_rate(0)\n    with pytest.raises(ValueError):\n        off_rate(-1)\n\n\ndef test_on_rate_reproduces_the_published_value():\n    \"\"\"G50A is the variant whose k_on and k_off were both published: 1.49e4 M⁻¹s⁻¹.\"\"\"\n    g50a = VARIANTS[\"G50A\"]\n    k_off, kd = float(g50a[\"k_off_published\"]), float(g50a[\"kd_um\"])\n    assert on_rate(k_off, kd) == pytest.approx(float(g50a[\"k_on_published\"]), rel=0.01)\n\n\ndef test_on_rates_of_this_family_are_all_about_the_same():\n    \"\"\"Engineering changed how long these receptors hold on, far more than how fast they find the target.\"\"\"\n    rates = [\n        on_rate(off_rate(float(v[\"half_life_s\"])), float(v[\"kd_um\"])) for v in VARIANTS.values() if v[\"half_life_s\"]\n    ]\n    assert len(rates) == 3\n    assert all(8e3 < r < 1e5 for r in rates)\n    assert max(rates) / min(rates) < 10  # within one order of magnitude …\n    slowest = off_rate(float(VARIANTS[\"wild type\"][\"half_life_s\"]))\n    fastest = off_rate(float(VARIANTS[\"wtc51m\"][\"half_life_s\"]))\n    assert slowest / fastest > 100  # … while the off-rates differ by more than a hundredfold\n\n\ndef test_proofreading_rewards_holding_on():\n    \"\"\"Ten times slower release gives much more than ten times the signal: that is the discrimination.\"\"\"\n    slow, fast = signal_fraction(0.02), signal_fraction(0.2)\n    assert slow / fast > 1.5\n    assert signal_fraction(0.0) == 1.0\n    assert signal_fraction(1.0, steps=0) == 1.0\n    assert 0 < signal_fraction(10.0) < 0.01\n\n\ndef test_more_steps_discriminate_more_sharply():\n    ratios = [signal_fraction(0.02, steps=n) / signal_fraction(0.2, steps=n) for n in (1, 3, 6)]\n    assert ratios == sorted(ratios)\n\n\ndef test_the_model_says_tighter_is_always_better():\n    \"\"\"It is monotonic in affinity — and that is exactly where it stops agreeing with the experiment.\n\n    Measured killing by these receptors peaks at the middle of the ladder (DMβ, TMβ; Hebeisen 2022), while the\n    model below keeps rising all the way to the tightest receptor. The notes say why.\n    \"\"\"\n    ladder = [\"wild type\", \"DMb\", \"wtc51m\"]\n    k_offs = [off_rate(float(VARIANTS[name][\"half_life_s\"])) for name in ladder]\n    predicted = [signal_fraction(k) for k in k_offs]\n    assert predicted == sorted(predicted)\n    assert predicted[-1] > 0.99  # the supraphysiologic receptor: every bound receptor signals\n",
+  "picture": "problems/pro/receptor_kinetics.svg"
  }
 ]

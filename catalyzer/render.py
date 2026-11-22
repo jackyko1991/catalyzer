@@ -102,7 +102,8 @@ def pdb3d(
     highlight: list[dict] | None = None,
 ) -> dict:
     """A structure (or several superposed). models: [{"pdb": text, "colour": "plddt" | "element" | "#rrggbb"}];
-    highlight: [{"resi": [numbers], "colour": "#rrggbb"}] drawn as sticks over the ribbon."""
+    highlight: [{"resi": [numbers], "colour": "#rrggbb", "chain": "C"}] drawn as sticks over the ribbon
+    ("chain" is optional; without it the numbers mean every chain)."""
     return {"kind": "pdb3d", "title": _label(title), "models": models, "highlight": highlight or []}
 
 

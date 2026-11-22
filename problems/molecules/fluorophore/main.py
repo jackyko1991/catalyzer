@@ -71,14 +71,24 @@ def run(p: dict) -> list:
             unit="nm",
         ),
         r.table(
-            [("Dye", "染料"), ("P", "P"), ("Predicted (nm)", "預測（nm）"), ("Measured (nm)", "實測（nm）"), ("Error", "誤差"), ("Source", "來源")],
+            [
+                ("Dye", "染料"),
+                ("P", "P"),
+                ("Predicted (nm)", "預測（nm）"),
+                ("Measured (nm)", "實測（nm）"),
+                ("Error", "誤差"),
+                ("Source", "來源"),
+            ],
             rows,
             ("Prediction against experiment", "預測與實驗比較"),
         ),
         r.grid(
             [Chem.MolFromSmiles(d["smiles"]) for d in rows_in[:6]],
             [f"{d['name'].split(' (')[0]}  {d['lambda_max_nm']} nm" for d in rows_in[:6]],
-            ("The dyes: the chain between the two nitrogens grows by one -CH=CH- each time", "這些染料：兩個氮之間的鏈每次增加一個 -CH=CH-"),
+            (
+                "The dyes: the chain between the two nitrogens grows by one -CH=CH- each time",
+                "這些染料：兩個氮之間的鏈每次增加一個 -CH=CH-",
+            ),
             per_row=2,
         ),
     ]
