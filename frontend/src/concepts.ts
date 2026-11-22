@@ -24,6 +24,8 @@ export interface ConceptPage {
   title: L;
   oneSentence: L;
   sections: ConceptSection[];
+  /** a small folded note under the sections (details for those who want them) */
+  note?: { title: L; text: L };
 }
 
 
@@ -32,49 +34,41 @@ export const CONCEPTS: ConceptPage[] = [
     id: "about",
     title: ["What Catalyzer does", "Catalyzer 能做什麼"],
     oneSentence: [
-      "Catalyzer is a place to compute with molecules in Python: ready-made problems to run and change, a workspace for your own molecules, and the public databases one search away, every result drawn in 2D and 3D.",
-      "Catalyzer 是用 Python 計算分子的地方：現成的題目可以執行與修改，工作區可以放你自己的分子，公開資料庫只差一次搜尋，每個結果都畫成 2D 與 3D。",
+      "A toolbox for reading, searching and computing real molecules with Python, from your browser.",
+      "在瀏覽器裡用 Python 讀懂、搜尋並計算真實分子的工具箱。",
     ],
     sections: [
       {
-        id: "problems",
-        title: ["Problems: a library of runnable molecular questions", "題庫：一座可以執行的分子問題庫"],
+        id: "practise",
+        title: ["Practise first (Problems)", "先照著練（題庫）"],
         paragraphs: [
           [
-            "Each problem is a small, complete program about one idea: read a SMILES string, count rings, apply Lipinski's rule, align two proteins, measure an AlphaFold model against a crystal structure. Choose the inputs (a molecule, a residue, a cutoff), press **Run**, and the results appear as structures, 3D views, charts and tables.",
-            "每道題目都是一個關於單一想法的完整小程式：讀懂 SMILES 字串、數環、套用利平斯基規則、比對兩個蛋白質、拿 AlphaFold 模型和晶體結構比較。選好輸入（一個分子、一個殘基、一個截止距離），按下**執行**，結果就以結構、3D 圖、圖表與表格呈現。",
+            "Not sure how to handle molecules in code? Start with the small, ready-made problems: from reading a molecule written as a line of text, to measuring how far an AlphaFold prediction is from the real experimental structure.",
+            "不知道怎麼用程式處理分子？這裡有現成的小題目：從讀懂寫成一行文字的分子，到量出 AlphaFold 預測的結構和真實實驗結構差多少。",
           ],
           [
-            "The code is open in the editor: change it and run again. Each problem also has **tests**, written first, that say what a correct answer must do; they check your changes, and \"Start from blank\" lets you write the functions yourself.",
-            "程式碼就在編輯器裡：改一改再執行。每道題目也有先寫好的**測試**，說明正確答案必須做到什麼；它們會檢查你的修改，而「從空白開始」讓你自己寫出這些函式。",
+            "Open one, change the code, press **Run** and see the result in 2D and 3D. Built-in tests tell you whether your change is still right.",
+            "打開就能改程式碼，按下**執行**看 2D 與 3D 的結果，還有內建的測試幫你檢查對錯。",
           ],
         ],
-        figures: [{ src: "problems/pro/rmsd.svg", caption: ["One of the problems: lay an AlphaFold model on the crystal structure and measure the RMSD.", "其中一道題目：把 AlphaFold 模型疊到晶體結構上，量出 RMSD。"] }],
+        figures: [{ src: "problems/molecules/read_smiles.svg", caption: ["The first problem: a molecule written as text, and the same molecule drawn.", "第一道題：寫成文字的分子，和同一個分子畫出來的樣子。"] }],
         problems: ["read_smiles", "rmsd"],
-        sources: [{ label: "RDKit documentation", url: "https://www.rdkit.org/docs/" }, { label: "Biopython tutorial", url: "https://biopython.org/docs/latest/Tutorial/" }],
+        sources: [{ label: "RDKit, the chemistry library behind the problems", url: "https://www.rdkit.org/docs/" }],
       },
       {
-        id: "workspace",
-        title: ["Workspace: a calculator for your own molecules", "工作區：你自己分子的計算機"],
+        id: "data",
+        title: ["Get real data (Library)", "抓真實資料（資料庫）"],
         paragraphs: [
           [
-            "Paste SMILES strings, drop .smi, .csv or .sdf files, or add molecules from the Library; then run a script over all of them. The starting **molecule calculator** tabulates formula, mass, logP, hydrogen-bond donors and acceptors, polar surface area and the rule of five, and plots mass against logP; the **similarity matrix** compares every pair. Change the script to compute anything RDKit, Biopython or NumPy can.",
-            "貼上 SMILES 字串，拖放 .smi、.csv 或 .sdf 檔，或從資料庫加入分子；接著對它們全部執行一段程式。內建的**分子計算機**列出分子式、分子量、logP、氫鍵供體與受體、極性表面積與五規則，並畫出分子量對 logP 的散佈圖；**相似度矩陣**比較每一對分子。改寫程式，就能計算 RDKit、Biopython 或 NumPy 能算的任何東西。",
+            "Want to look at real drugs or proteins? Search PubChem, the Protein Data Bank or the AlphaFold database right here, and turn any 3D structure in the page; nothing to install.",
+            "想看真實世界裡的藥物或蛋白質？直接在這裡搜尋 PubChem、蛋白質資料庫（PDB）或 AlphaFold 資料庫，在網頁上就能轉動 3D 結構，不用安裝任何軟體。",
           ],
-        ],
-        figures: [{ src: "concepts/adjacency.svg", caption: ["Inside every calculation: a molecule as a graph, and the graph as numbers.", "每個計算的核心：把分子看成圖，再把圖變成數字。"] }],
-        sources: [{ label: "RDKit: descriptors", url: "https://www.rdkit.org/docs/GettingStartedInPython.html#list-of-available-descriptors" }],
-      },
-      {
-        id: "library",
-        title: ["Library: the public databases, live", "資料庫：即時連到公開資料庫"],
-        paragraphs: [
           [
-            "Search **PubChem** (over a hundred million compounds), the **Protein Data Bank** (every experimental structure) and the **AlphaFold DB** (over two hundred million predictions) by name, SMILES or id. Look at any result in 2D and 3D, add molecules to your workspace, or open a structure there as a script.",
-            "以名稱、SMILES 或編號搜尋 **PubChem**（超過一億個化合物）、**蛋白質資料庫**（所有實驗結構）與 **AlphaFold DB**（超過兩億個預測）。任何結果都能看 2D 與 3D，可以把分子加入工作區，或把結構當成程式在那裡開啟。",
+            "Found one you like? Send it to your Workspace with one click.",
+            "看中哪一個，一鍵送進工作區。",
           ],
         ],
-        figures: [{ viewer: "crambin-plddt", caption: ["An AlphaFold DB model, coloured by the model's own confidence (pLDDT).", "AlphaFold DB 的模型，依模型自己的信心分數（pLDDT）上色。"] }],
+        figures: [{ viewer: "crambin-plddt", caption: ["A protein from the AlphaFold database, in 3D.", "AlphaFold 資料庫中的一個蛋白質，以 3D 呈現。"] }],
         sources: [
           { label: "PubChem", url: "https://pubchem.ncbi.nlm.nih.gov/" },
           { label: "RCSB Protein Data Bank", url: "https://www.rcsb.org/" },
@@ -82,18 +76,25 @@ export const CONCEPTS: ConceptPage[] = [
         ],
       },
       {
-        id: "runner",
-        title: ["Where the code runs", "程式碼在哪裡執行"],
+        id: "compute",
+        title: ["Compute your own (Workspace)", "算你自己的（工作區）"],
         paragraphs: [
           [
-            "The website only shows things; code runs in a **runner**, and the page always says which one it is using. The **local runner** is a small program you start on your own computer with `pixi run runner`: with it, your molecules and code stay on your machine. A runner hosted on a server would run them there instead. Before a problem runs, the runner checks that the code keeps the problem's functions and imports only the libraries it allows (a learning aid, not a security sandbox); workspace scripts are your own code, so a runner runs them only for a page you have **paired** with it.",
-            "網站只負責顯示；程式碼在**執行器**中執行，頁面也總會標明它正在使用哪一個執行器。**本機執行器**是你用 `pixi run runner` 在自己電腦上啟動的小程式：使用它時，你的分子與程式碼都留在你的電腦上。架設在伺服器上的執行器，則會在那台伺服器上執行。題目執行之前，執行器會檢查程式碼保留了題目的函式，而且只匯入題目允許的函式庫（這是學習輔助，不是安全沙箱）；工作區的程式是你自己的程式碼，所以執行器只替你配對過的頁面執行。",
+            "Drop in your own list of molecules (as text or as files) and run a ready-made Python script over all of them at once: their basic chemical properties, and how similar they are to each other. Change the script to compute anything else.",
+            "把你自己的分子清單（文字或檔案）丟進來，直接用內建的 Python 腳本一次算完全部：基本的化學性質，以及它們彼此有多相似。也能自己改寫腳本，擴充分析。",
           ],
         ],
-        figures: [{ src: "history/rdkit.svg", caption: ["The same open-source code runs for a student and for a pharmaceutical company.", "同一份開放原始碼，學生和藥廠都能執行。"] }],
-        sources: [{ label: "pixi: the package manager that installs the runner", url: "https://pixi.sh/" }],
+        figures: [{ src: "concepts/adjacency.svg", caption: ["Under the hood: a molecule as a picture, and the same molecule as numbers.", "背後的原理：分子是一張圖，也是一組數字。"] }],
+        sources: [{ label: "RDKit: the properties it can compute", url: "https://www.rdkit.org/docs/GettingStartedInPython.html#list-of-available-descriptors" }],
       },
     ],
+    note: {
+      title: ["Want to run the code on your own computer? The local runner and privacy", "想在自己電腦上執行？本機執行器與隱私說明"],
+      text: [
+        "Reading needs nothing: problems show results computed when the site was built. To run and change code, start the **runner** once with `pixi run runner` (install [pixi](https://pixi.sh) first); with this local runner your molecules and code stay on your computer. Problem code is checked before it runs (it may import only the libraries the problem allows); your own Workspace scripts run only for a page you have paired with the runner, using the code it prints.",
+        "只是閱讀不需要任何準備：題目會顯示建置網站時算好的結果。想執行與修改程式碼，只要用 `pixi run runner` 啟動一次**執行器**（先安裝 [pixi](https://pixi.sh)）；使用本機執行器時，你的分子與程式碼都留在你的電腦上。題目的程式碼在執行前會先被檢查（只能匯入題目允許的函式庫）；工作區中你自己的程式，只替用執行器印出的配對碼配對過的頁面執行。",
+      ],
+    },
   },
   {
     id: "molecule",

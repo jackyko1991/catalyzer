@@ -16,6 +16,7 @@ export default function ConceptPage({ page, focus, scrollRoot }: { page: Concept
           <Body s={s} />
         </Section>
       ))}
+      {page.note && <Note note={page.note} />}
     </Page>
   );
 }
@@ -83,5 +84,17 @@ function Body({ s }: { s: ConceptSection }) {
         </p>
       )}
     </>
+  );
+}
+
+function Note({ note }: { note: { title: readonly [string, string]; text: readonly [string, string] } }) {
+  const { pick } = useLang();
+  return (
+    <details className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-gray-600" data-testid="concept-note">
+      <summary className="cursor-pointer text-gray-700">{pick(note.title)} ↓</summary>
+      <p className="mt-2 leading-relaxed">
+        <RichText text={pick(note.text)} />
+      </p>
+    </details>
   );
 }
