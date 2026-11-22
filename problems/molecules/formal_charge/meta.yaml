@@ -10,6 +10,18 @@ summary: >
 imports: []
 forbidden: []
 uses: []
+params:
+  - id: molecule
+    type: select
+    label: [Molecule, 分子]
+    default: nitromethane
+    options:
+      - [ammonium, 銨離子 NH₄⁺, ammonium]
+      - [hydroxide, 氫氧根 OH⁻, hydroxide]
+      - [water, 水 H₂O, water]
+      - [carbon monoxide, 一氧化碳 CO, carbon_monoxide]
+      - [nitromethane, 硝基甲烷, nitromethane]
+      - [nitrate, 硝酸根 NO₃⁻, nitrate]
 mirror:
   - text: A bond holds two electrons, shared, so bonding electrons always come in even numbers.
     code: |-

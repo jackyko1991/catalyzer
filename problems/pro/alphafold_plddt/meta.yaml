@@ -12,6 +12,11 @@ forbidden: [Bio]
 uses:
   - {library: AlphaFold DB, api: AF-P01542-F1, url: "https://alphafold.ebi.ac.uk/entry/P01542"}
   - {library: AlphaFold DB, api: "pLDDT and PAE (FAQ)", url: "https://alphafold.ebi.ac.uk/faq"}
+params:
+  - id: uniprot
+    type: text
+    label: [UniProt accession, UniProt 編號]
+    default: "P01542"
 mirror:
   - text: Every AlphaFold DB model file has the same address pattern - accession, fragment F1, model version.
     code: |-

@@ -8,6 +8,7 @@ its name, passed or failed, and the first lines of the failure.
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -35,12 +36,14 @@ class TestResult:
 
 @dataclass
 class RunResult:
-    """status: passed (every test), failed (some test), rejected (the static check), error (timeout, crash)"""
+    """status: passed (every test), failed (some test), done (a run of main.py, with results), rejected (the static
+    check), error (timeout, crash)"""
 
     status: str
     tests: list[TestResult] = field(default_factory=list)
     problems: list[str] = field(default_factory=list)
     output: str = ""
+    results: list[dict] = field(default_factory=list)
 
     def to_json(self) -> dict:
         return asdict(self)
@@ -69,35 +72,54 @@ def _parse_junit(path: Path) -> list[TestResult]:
     return results
 
 
+def _env() -> dict[str, str]:
+    return {k: v for k, v in os.environ.items() if k in ("PATH", "SYSTEMROOT", "TEMP", "TMP", "HOME", "LANG")}
+
+
+def _exec(cmd: list[str], work: Path, timeout: float) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        cmd,
+        cwd=work,
+        env=_env(),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=timeout,
+        preexec_fn=_limits if os.name == "posix" else None,
+    )
+
+
+def _prepare(work: Path, problem: Problem, source: str) -> None:
+    (work / "answer.py").write_text(source, encoding="utf-8")
+    shutil.copy(problem.path / "test.py", work / "test.py")
+    if (problem.path / "main.py").is_file():
+        shutil.copy(problem.path / "main.py", work / "main.py")
+        shutil.copy(Path(__file__).parent / "render.py", work / "render.py")
+    if (problem.path / "data").is_dir():
+        shutil.copytree(problem.path / "data", work / "data")
+
+
+def _lock(problem: Problem, source: str):
+    """the answer keeps the stub's functions, imports only what the problem allows, and uses no back doors"""
+    return check_answer(source, problem.stub, problem.allowed_imports)
+
+
 def run(problem: Problem, source: str, timeout: float = TIMEOUT_S) -> RunResult:
-    check = check_answer(source, problem.stub, problem.allowed_imports, problem.forbidden_names)
+    """the problem's tests against the answer"""
+    check = _lock(problem, source)
     if not check.ok:
         return RunResult("rejected", problems=check.problems)
 
     with tempfile.TemporaryDirectory(prefix="catalyzer-") as tmp:
         work = Path(tmp)
-        (work / "answer.py").write_text(source, encoding="utf-8")
-        shutil.copy(problem.path / "test.py", work / "test.py")
-        if (problem.path / "data").is_dir():
-            shutil.copytree(problem.path / "data", work / "data")
+        _prepare(work, problem, source)
         # -I (isolated) ignores PYTHON* variables and the user's site-packages, and leaves the current folder off
         # sys.path; the boot line puts the work folder (answer.py) back first.
         boot = "import sys; sys.path.insert(0, '.'); import pytest; sys.exit(pytest.main(sys.argv[1:]))"
         args = ["-q", "-p", "no:cacheprovider", "--junitxml=report.xml", "-o", "junit_family=xunit1", "test.py"]
-        cmd = [sys.executable, "-I", "-c", boot, *args]
-        env = {k: v for k, v in os.environ.items() if k in ("PATH", "SYSTEMROOT", "TEMP", "TMP", "HOME", "LANG")}
         try:
-            proc = subprocess.run(
-                cmd,
-                cwd=work,
-                env=env,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                timeout=timeout,
-                preexec_fn=_limits if os.name == "posix" else None,
-            )
+            proc = _exec([sys.executable, "-I", "-c", boot, *args], work, timeout)
         except subprocess.TimeoutExpired:
             return RunResult("error", problems=[f"the tests took longer than {timeout:.0f} s and were stopped"])
         output = (proc.stdout + proc.stderr)[-8000:]
@@ -109,3 +131,35 @@ def run(problem: Problem, source: str, timeout: float = TIMEOUT_S) -> RunResult:
             return RunResult("error", problems=["no tests were collected (does answer.py import?)"], output=output)
         status = "passed" if all(t.passed for t in tests) else "failed"
         return RunResult(status, tests, output=output)
+
+
+def default_params(problem: Problem) -> dict:
+    return {p["id"]: p["default"] for p in problem.meta.get("params") or []}
+
+
+def run_main(problem: Problem, source: str, params: dict | None = None, timeout: float = TIMEOUT_S) -> RunResult:
+    """Run the problem's main.py with the answer and the parameters: status "done" with `results` (what the site
+    draws: 2D and 3D structures, charts, tables), or "rejected" / "error" with the reason and the console."""
+    check = _lock(problem, source)
+    if not check.ok:
+        return RunResult("rejected", problems=check.problems)
+    values = {**default_params(problem), **(params or {})}
+    with tempfile.TemporaryDirectory(prefix="catalyzer-") as tmp:
+        work = Path(tmp)
+        _prepare(work, problem, source)
+        (work / "params.json").write_text(json.dumps(values), encoding="utf-8")
+        boot = (
+            "import sys, json; sys.path.insert(0, '.'); import main; "
+            "out = main.run(json.load(open('params.json', encoding='utf-8'))); "
+            "json.dump(out, open('results.json', 'w', encoding='utf-8'))"
+        )
+        try:
+            proc = _exec([sys.executable, "-I", "-c", boot], work, timeout)
+        except subprocess.TimeoutExpired:
+            return RunResult("error", problems=[f"the run took longer than {timeout:.0f} s and was stopped"])
+        output = (proc.stdout + proc.stderr)[-8000:]
+        if proc.returncode != 0 or not (work / "results.json").is_file():
+            last = [ln for ln in output.strip().splitlines() if ln.strip()][-1:] or ["the run failed"]
+            return RunResult("error", problems=last, output=output)
+        results = json.loads((work / "results.json").read_text(encoding="utf-8"))
+        return RunResult("done", output=output, results=results)

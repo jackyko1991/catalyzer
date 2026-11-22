@@ -14,6 +14,7 @@ def test_exported_json_is_current():
     assert export.OUT.read_text(encoding="utf-8") == export.render(), "problems changed; run: pixi run export"
     for p in export.problems_data():
         assert (export.FRONTEND / "public" / p["picture"]).is_file(), p["picture"]
+        assert (export.FRONTEND / "public" / p["results"]).is_file(), p["results"]
 
 
 def test_viewer_structures():
@@ -46,6 +47,11 @@ def test_runner_api():
     assert good["status"] == "passed" and good["tests"]
     bad = client.post("/api/run", json={"problem": problem.id, "code": "import os\n" + problem.solution}).json()
     assert bad["status"] == "rejected"
+    ran = client.post(
+        "/api/run",
+        json={"problem": problem.id, "code": problem.solution, "mode": "run", "params": {"molecule": "ammonium"}},
+    ).json()
+    assert ran["status"] == "done" and ran["results"][0]["value"] == "+1"
     assert client.post("/api/run", json={"problem": "../../etc", "code": ""}).status_code == 404
 
 

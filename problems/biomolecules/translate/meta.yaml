@@ -11,6 +11,14 @@ imports: []
 forbidden: [Bio]
 uses:
   - {library: Biopython, api: Seq.translate, url: "https://biopython.org/docs/latest/api/Bio.Seq.html#Bio.Seq.Seq.translate"}
+params:
+  - id: dna
+    type: text
+    label: [DNA, DNA]
+    default: "ATGGCCCTGTGGATGCGCCTCCTGCCCCTGCTGGCGCTGCTGGCCCTCTGGGGACCTGACCCAGCCGCAGCC"
+    presets:
+      - [insulin (start), 胰島素（開頭）, "ATGGCCCTGTGGATGCGCCTCCTGCCCCTGCTGGCGCTGCTGGCCCTCTGGGGACCTGACCCAGCCGCAGCC"]
+      - [short with a stop, 含終止的短序列, "ATGGCCTAAGGG"]
 mirror:
   - text: Pair each base with its partner, then read the strand from the other end.
     code: |-

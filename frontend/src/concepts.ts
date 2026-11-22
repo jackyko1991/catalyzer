@@ -1,16 +1,8 @@
 /**
- * Concept ▸ learning from scratch: four short pages in Feynman order (one sentence, a picture, then the details),
- * with jargon explained where it first appears. Each page ends with its ideas in two languages, natural language
- * and Python; every line of that code is quoted from a tested file (tests/concepts.test.ts checks it).
+ * Concept ▸ learning from scratch: four short reference pages, each opening with one sentence, then illustrated
+ * sections, with jargon explained where it first appears.
  */
 import type { L } from "@learnkit/web";
-
-export interface MirrorRow {
-  text: L;
-  code: string;
-  /** the tested file the code is quoted from (frontend-relative) */
-  from: string;
-}
 
 export interface ConceptSection {
   id: string;
@@ -30,13 +22,9 @@ export interface ConceptPage {
   title: L;
   oneSentence: L;
   sections: ConceptSection[];
-  mirror: MirrorRow[];
   sources: { label: string; url: string }[];
 }
 
-const RDKIT = "src/skills/rdkit_basics.py";
-const BIO = "src/skills/biopython_basics.py";
-const STRUCT = "src/skills/structures_basics.py";
 
 export const CONCEPTS: ConceptPage[] = [
   {
@@ -106,11 +94,6 @@ export const CONCEPTS: ConceptPage[] = [
         problems: ["rings"],
       },
     ],
-    mirror: [
-      { text: ["Write the molecule as text and read it into a molecule.", "把分子寫成文字，再讀成分子。"], code: 'aspirin = Chem.MolFromSmiles("CC(=O)Oc1ccccc1C(=O)O")', from: RDKIT },
-      { text: ["Walk the atoms: each has an element, hidden hydrogens and maybe a ring.", "走過每個原子：每個都有元素、隱藏的氫，也許還在環上。"], code: 'print(atom.GetIdx(), atom.GetSymbol(), "hydrogens:", atom.GetTotalNumHs(), "aromatic:", atom.GetIsAromatic())', from: RDKIT },
-      { text: ["Give it a shape in space: add the hydrogens, then place every atom.", "給它一個空間中的形狀：加上氫，再擺放每個原子。"], code: "mol3d = Chem.AddHs(aspirin)\nparams = AllChem.ETKDGv3()", from: RDKIT },
-    ],
     sources: [
       { label: "OpenStax Chemistry 2e, ch. 7: Chemical Bonding and Molecular Geometry", url: "https://openstax.org/books/chemistry-2e/pages/7-introduction" },
       { label: "G. N. Lewis, The Atom and the Molecule (1916)", url: "https://doi.org/10.1021/ja02261a002" },
@@ -177,12 +160,6 @@ export const CONCEPTS: ConceptPage[] = [
         problems: ["pdb_neighbours"],
       },
     ],
-    mirror: [
-      { text: ["Text to molecule, and back to one standard spelling.", "從文字到分子，再回到一種標準寫法。"], code: 'print(Chem.MolToSmiles(Chem.MolFromSmiles("OC(=O)c1ccccc1OC(C)=O")))', from: RDKIT },
-      { text: ["The graph's neighbourhoods become a set of numbers: the fingerprint.", "圖中的鄰近環境變成一組數字：分子指紋。"], code: "gen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)", from: RDKIT },
-      { text: ["Similarity: shared numbers divided by all numbers in either.", "相似度：共有的數字除以雙方所有的數字。"], code: 'print("Tanimoto:", round(len(a & b) / len(a | b), 3))', from: RDKIT },
-      { text: ["Coordinates: read a structure file and measure a distance in ångströms.", "座標：讀入結構檔，量出以埃為單位的距離。"], code: 'print(f"S-S distance Cys16-Cys26: {np.linalg.norm(sg16 - sg26):.2f} Å")', from: STRUCT },
-    ],
     sources: [
       { label: "D. Weininger, SMILES (1988)", url: "https://doi.org/10.1021/ci00057a005" },
       { label: "RDKit: Getting Started in Python", url: "https://www.rdkit.org/docs/GettingStartedInPython.html" },
@@ -237,12 +214,6 @@ export const CONCEPTS: ConceptPage[] = [
         callout: { kind: "tip", title: ["Residue", "殘基"], text: ["One amino acid inside a chain is called a **residue**: what remains of it after joining the chain.", "鏈中的一個胺基酸稱為**殘基**：它加入鏈之後剩下的部分。"] },
         figures: [{ src: "problems/biomolecules/pdb_neighbours.svg", caption: ["The residues within 4 Å of Cys16, including its disulphide partner Cys26.", "距 Cys16 4 Å 以內的殘基，包括它的雙硫鍵夥伴 Cys26。"] }],
       },
-    ],
-    mirror: [
-      { text: ["Read the gene three letters at a time into a protein.", "每次讀三個字母，把基因讀成蛋白質。"], code: "print(gene.translate())", from: BIO },
-      { text: ["Compare two proteins by lining them up.", "把兩個蛋白質排齊來比較。"], code: "best = aligner.align(human.seq, horse.seq)[0]", from: BIO },
-      { text: ["A structure is a tree: model, chain, residue, atom.", "結構是一棵樹：模型、鏈、殘基、原子。"], code: 'chain = crystal[0]["A"]', from: STRUCT },
-      { text: ["Which residues are close in space to residue 16?", "哪些殘基在空間中靠近第 16 個殘基？"], code: "near = {a.get_parent().id[1] for atom in res for a in search.search(atom.coord, 4.0)} - {16}", from: STRUCT },
     ],
     sources: [
       { label: "OpenStax Biology 2e, ch. 3.4: Proteins", url: "https://openstax.org/books/biology-2e/pages/3-4-proteins" },
@@ -300,10 +271,6 @@ export const CONCEPTS: ConceptPage[] = [
         },
         problems: ["alphafold_plddt", "rmsd"],
       },
-    ],
-    mirror: [
-      { text: ["An AlphaFold model stores its confidence where a crystal structure stores its B-factor.", "AlphaFold 模型把信心分數存在晶體結構存放 B 因子的位置。"], code: 'plddt = [r["CA"].get_bfactor() for r in model.get_residues()]', from: STRUCT },
-      { text: ["Lay the prediction on the experiment and measure how far apart they are.", "把預測疊到實驗上，量出兩者相距多遠。"], code: 'print(f"CA RMSD model vs crystal: {sup.get_rms():.2f} Å")', from: STRUCT },
     ],
     sources: [
       { label: "Jumper et al., AlphaFold (Nature 2021)", url: "https://doi.org/10.1038/s41586-021-03819-2" },

@@ -12,6 +12,20 @@ forbidden: [GetDegree, GetAdjacencyMatrix, GetNeighbors]
 uses:
   - {library: RDKit, api: Mol.GetBonds, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Mol.GetBonds"}
   - {library: RDKit, api: Bond.GetBondType, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Bond.GetBondType"}
+params:
+  - id: smiles
+    type: smiles
+    label: [SMILES, SMILES]
+    default: "CC(=O)O"
+    presets:
+      - [caffeine, 咖啡因, "Cn1cnc2c1c(=O)n(C)c(=O)n2C"]
+      - [aspirin, 阿斯匹靈, "CC(=O)Oc1ccccc1C(=O)O"]
+      - [ibuprofen, 布洛芬, "CC(C)Cc1ccc(cc1)C(C)C(=O)O"]
+      - [ethanol, 乙醇, "CCO"]
+      - [benzene, 苯, "c1ccccc1"]
+      - [paracetamol, 乙醯胺酚, "CC(=O)Nc1ccc(O)cc1"]
+      - [nicotine, 尼古丁, "CN1CCCC1c1cccnc1"]
+      - [acetic acid, 乙酸, "CC(=O)O"]
 mirror:
   - text: Read the molecule; hydrogens stay implicit, so only the written atoms are points of the graph.
     code: |-

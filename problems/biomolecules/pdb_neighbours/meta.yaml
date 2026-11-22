@@ -13,6 +13,21 @@ uses:
   - {library: Biopython, api: PDB.PDBParser, url: "https://biopython.org/docs/latest/Tutorial/chapter_pdb.html"}
   - {library: Biopython, api: PDB.NeighborSearch, url: "https://biopython.org/docs/latest/api/Bio.PDB.NeighborSearch.html"}
   - {library: Protein Data Bank, api: 1CRN, url: "https://www.rcsb.org/structure/1CRN"}
+params:
+  - id: residue
+    type: int
+    label: [Residue, 殘基]
+    default: 16
+    min: 1
+    max: 46
+    step: 1
+  - id: cutoff
+    type: float
+    label: [Cutoff (Å), 截止距離（Å）]
+    default: 4.0
+    min: 2.0
+    max: 8.0
+    step: 0.5
 mirror:
   - text: Only ATOM and HETATM lines hold atoms; every field sits at fixed columns (the PDB format's rule).
     code: |-

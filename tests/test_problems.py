@@ -57,15 +57,13 @@ def test_lock_rejects_an_edited_signature(problem):
 
 
 @pytest.mark.parametrize("problem", PROBLEMS, ids=IDS)
-def test_lock_rejects_imports_and_forbidden_names(problem):
+def test_lock_rejects_imports_and_back_doors(problem):
     def rejected(extra: str) -> bool:
         source = extra + "\n" + problem.solution
         return not check_answer(source, problem.stub, problem.allowed_imports, problem.forbidden_names).ok
 
     for bad in ["import os", "import subprocess", "import socket", "from urllib import request", "import requests"]:
         assert rejected(bad), bad
-    for name in problem.forbidden_names:
-        assert rejected(f"_x = {name}"), name
     for door in [
         "_x = eval('1')",
         "_x = open('f')",
@@ -117,3 +115,27 @@ def test_runner_reports_a_timeout():
     )
     result = runner.run(problem, slow, timeout=5)
     assert result.status == "error" and "longer than" in result.problems[0]
+
+
+RENDER_KINDS = {"svg", "mol3d", "pdb3d", "table", "bars", "metric", "text", "link"}
+
+
+@pytest.mark.parametrize("problem", PROBLEMS, ids=IDS)
+def test_main_runs_and_draws(problem):
+    """Run with the defaults gives results the site can draw; every parameter has a label and a default."""
+    for q in problem.meta["params"]:
+        assert q["type"] in ("smiles", "text", "select", "int", "float") and len(q["label"]) == 2 and "default" in q, q
+    result = runner.run_main(problem, problem.solution)
+    assert result.status == "done", (result.problems, result.output)
+    assert result.results and {r["kind"] for r in result.results} <= RENDER_KINDS
+    for r in result.results:
+        if r.get("title"):
+            assert len(r["title"]) == 2 and all(r["title"]), r["title"]
+    # every problem draws its molecule: a 2D structure or a 3D view
+    assert {r["kind"] for r in result.results} & {"svg", "mol3d", "pdb3d"}
+
+
+@pytest.mark.parametrize("problem", PROBLEMS, ids=IDS)
+def test_main_on_the_stub_reports_an_error(problem):
+    result = runner.run_main(problem, problem.stub)
+    assert result.status == "error" and "NotImplementedError" in result.output

@@ -11,6 +11,26 @@ imports: [rdkit.Chem]
 forbidden: [DataStructs, TanimotoSimilarity, BulkTanimotoSimilarity, FingerprintSimilarity]
 uses:
   - {library: RDKit, api: rdFingerprintGenerator.GetMorganGenerator, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdFingerprintGenerator.html"}
+params:
+  - id: query
+    type: smiles
+    label: [Query molecule, 查詢分子]
+    default: "Cn1cnc2c1c(=O)n(C)c(=O)n2C"
+    presets:
+      - [caffeine, 咖啡因, "Cn1cnc2c1c(=O)n(C)c(=O)n2C"]
+      - [aspirin, 阿斯匹靈, "CC(=O)Oc1ccccc1C(=O)O"]
+      - [ibuprofen, 布洛芬, "CC(C)Cc1ccc(cc1)C(C)C(=O)O"]
+      - [ethanol, 乙醇, "CCO"]
+      - [benzene, 苯, "c1ccccc1"]
+      - [paracetamol, 乙醯胺酚, "CC(=O)Nc1ccc(O)cc1"]
+      - [nicotine, 尼古丁, "CN1CCCC1c1cccnc1"]
+  - id: radius
+    type: int
+    label: [Fingerprint radius, 指紋半徑]
+    default: 2
+    min: 0
+    max: 4
+    step: 1
 mirror:
   - text: A Morgan generator with radius 2 looks at each atom's neighbourhood up to two bonds away, folded into n_bits positions.
     code: |-

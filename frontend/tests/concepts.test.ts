@@ -1,13 +1,12 @@
 // The Concept pages, the problem data and the open-library map hold together. Run: npm test
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { test } from "node:test";
 import { CONCEPTS } from "../src/concepts.ts";
 import problems from "../src/generated/problems.json" with { type: "json" };
 
 const here = (p: string) => new URL(`../${p}`, import.meta.url);
 const filled = (row: readonly string[]) => row.length === 2 && row.every((s) => s.trim().length > 0);
-const lines = (s: string) => s.split("\n").map((l) => l.trim()).filter(Boolean);
 
 test("every concept text is in English and Traditional Chinese", () => {
   for (const c of CONCEPTS) {
@@ -19,19 +18,8 @@ test("every concept text is in English and Traditional Chinese", () => {
       if (s.table) for (const r of [s.table.head, ...s.table.rows]) assert.ok(r.every(filled), `${c.id}/${s.id} table`);
       if (s.callout) assert.ok(filled(s.callout.title) && filled(s.callout.text));
     }
-    for (const m of c.mirror) assert.ok(filled(m.text), `${c.id} mirror`);
     assert.ok(c.sources.length && c.sources.every((s) => s.url.startsWith("https://")), `${c.id} sources`);
   }
-});
-
-test("the natural-language ↔ code rows quote tested code exactly", () => {
-  for (const c of CONCEPTS)
-    for (const m of c.mirror) {
-      const source = lines(readFileSync(here(m.from), "utf8"));
-      const code = lines(m.code);
-      const found = source.some((_, i) => code.every((l, k) => source[i + k] === l));
-      assert.ok(found, `${c.id}: not in ${m.from}:\n${m.code}`);
-    }
 });
 
 test("pictures exist and linked problems are real", () => {
@@ -48,7 +36,20 @@ test("problem data is complete in both languages", () => {
   assert.ok(problems.length >= 12);
   for (const p of problems) {
     assert.ok(filled(p.title) && filled(p.summary), p.id);
-    assert.ok(p.mirror.length > 0 && p.mirror.every((m) => filled(m.text) && m.code.trim()), p.id);
+    assert.ok(p.solution.trim() && p.main.trim() && p.params.length > 0, `${p.id}: runnable`);
+    assert.ok(existsSync(here(`public/${p.results}`)), p.results);
     assert.ok(existsSync(here(`public/${p.picture}`)), p.picture);
+  }
+});
+
+test("every Catalyzer problem in learnkit's interlinks exists, under its title", async () => {
+  const { INTERLINKS } = await import("../../vendor/learnkit/web/src/interlinks.ts");
+  const byName = new Map(problems.map((p) => [p.id.split("/")[1], p]));
+  const refs = INTERLINKS.flatMap((l) => [l.a, l.b]).filter((r) => r.site === "catalyzer");
+  assert.ok(refs.length > 0);
+  for (const r of refs) {
+    const p = byName.get(r.id);
+    assert.ok(p, `no Catalyzer problem ${r.id}`);
+    assert.deepEqual([r.title.en, r.title["zh-Hant"]], p.title, `${r.id}: title out of date in interlinks.ts`);
   }
 });

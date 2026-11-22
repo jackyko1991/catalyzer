@@ -12,6 +12,23 @@ forbidden: [CalcNumAromaticRings, CalcNumRings, rdMolDescriptors, Descriptors, L
 uses:
   - {library: RDKit, api: Mol.GetRingInfo, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.RingInfo"}
   - {library: RDKit, api: Bond.GetIsAromatic, url: "https://www.rdkit.org/docs/source/rdkit.Chem.rdchem.html#rdkit.Chem.rdchem.Bond.GetIsAromatic"}
+params:
+  - id: smiles
+    type: smiles
+    label: [SMILES, SMILES]
+    default: "c1ccc2[nH]ccc2c1"
+    presets:
+      - [caffeine, 咖啡因, "Cn1cnc2c1c(=O)n(C)c(=O)n2C"]
+      - [aspirin, 阿斯匹靈, "CC(=O)Oc1ccccc1C(=O)O"]
+      - [ibuprofen, 布洛芬, "CC(C)Cc1ccc(cc1)C(C)C(=O)O"]
+      - [ethanol, 乙醇, "CCO"]
+      - [benzene, 苯, "c1ccccc1"]
+      - [paracetamol, 乙醯胺酚, "CC(=O)Nc1ccc(O)cc1"]
+      - [nicotine, 尼古丁, "CN1CCCC1c1cccnc1"]
+      - [indole, 吲哚, "c1ccc2[nH]ccc2c1"]
+      - [naphthalene, 萘, "c1ccc2ccccc2c1"]
+      - [cyclohexane, 環己烷, "C1CCCCC1"]
+      - [cyclooctatetraene, 環辛四烯, "C1=CC=CC=CC=C1"]
 mirror:
   - text: RDKit finds the smallest set of smallest rings when it reads the molecule; each ring is a tuple of bond indices.
     code: |-

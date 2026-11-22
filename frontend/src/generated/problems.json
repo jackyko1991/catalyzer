@@ -60,6 +60,57 @@
    "AddHs"
   ],
   "stub": "from rdkit import Chem\n\n\ndef molecular_formula(smiles: str) -> dict[str, int]:\n    \"\"\"Count the atoms of each element in the molecule, hydrogens included.\n\n    molecular_formula(\"CCO\") == {\"C\": 2, \"H\": 6, \"O\": 1}\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    raise NotImplementedError\n",
+  "solution": "from rdkit import Chem\n\n\ndef molecular_formula(smiles: str) -> dict[str, int]:\n    \"\"\"Count the atoms of each element in the molecule, hydrogens included.\n\n    molecular_formula(\"CCO\") == {\"C\": 2, \"H\": 6, \"O\": 1}\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    mol = Chem.MolFromSmiles(smiles)\n    if mol is None:\n        raise ValueError(f\"not a valid SMILES string: {smiles!r}\")\n    counts: dict[str, int] = {}\n    for atom in mol.GetAtoms():\n        counts[atom.GetSymbol()] = counts.get(atom.GetSymbol(), 0) + 1\n        h = atom.GetTotalNumHs()\n        if h:\n            counts[\"H\"] = counts.get(\"H\", 0) + h\n    return counts\n",
+  "main": "\"\"\"Run: read a SMILES string with your molecular_formula, draw the molecule in 2D and 3D.\"\"\"\n\nimport render as r\nfrom answer import molecular_formula\nfrom rdkit import Chem\n\n\ndef hill(counts: dict[str, int]) -> list[str]:\n    \"\"\"Hill order: carbon, then hydrogen, then the rest alphabetically (alphabetical if there is no carbon).\"\"\"\n    if \"C\" in counts:\n        return [\"C\"] + ([\"H\"] if \"H\" in counts else []) + sorted(e for e in counts if e not in (\"C\", \"H\"))\n    return sorted(counts)\n\n\ndef run(p: dict) -> list:\n    counts = molecular_formula(p[\"smiles\"])\n    order = hill(counts)\n    formula = \"\".join(f\"{e}{counts[e] if counts[e] > 1 else ''}\" for e in order)\n    mol = Chem.MolFromSmiles(p[\"smiles\"])\n    return [\n        r.metric((\"Molecular formula\", \"分子式\"), formula),\n        r.svg(mol, (\"The molecule in 2D (hydrogens on carbon not drawn)\", \"2D 結構（碳上的氫不畫出）\")),\n        r.table(\n            [(\"Element\", \"元素\"), (\"Atoms\", \"原子數\")],\n            [[e, counts[e]] for e in order],\n            (\"Atoms of each element\", \"各元素的原子數\"),\n        ),\n        r.mol3d(mol, (\"In 3D, every hydrogen added\", \"3D 結構，加上所有的氫\")),\n    ]\n",
+  "params": [
+   {
+    "id": "smiles",
+    "type": "smiles",
+    "label": [
+     "SMILES",
+     "SMILES"
+    ],
+    "default": "Cn1cnc2c1c(=O)n(C)c(=O)n2C",
+    "presets": [
+     [
+      "caffeine",
+      "咖啡因",
+      "Cn1cnc2c1c(=O)n(C)c(=O)n2C"
+     ],
+     [
+      "aspirin",
+      "阿斯匹靈",
+      "CC(=O)Oc1ccccc1C(=O)O"
+     ],
+     [
+      "ibuprofen",
+      "布洛芬",
+      "CC(C)Cc1ccc(cc1)C(C)C(=O)O"
+     ],
+     [
+      "ethanol",
+      "乙醇",
+      "CCO"
+     ],
+     [
+      "benzene",
+      "苯",
+      "c1ccccc1"
+     ],
+     [
+      "paracetamol",
+      "乙醯胺酚",
+      "CC(=O)Nc1ccc(O)cc1"
+     ],
+     [
+      "nicotine",
+      "尼古丁",
+      "CN1CCCC1c1cccnc1"
+     ]
+    ]
+   }
+  ],
+  "results": "results/read_smiles.json",
   "test": "\"\"\"The contract for read_smiles. Read-only: your answer.py must make these pass.\"\"\"\n\nimport pytest\nfrom rdkit import Chem, RDLogger\nfrom rdkit.Chem import rdMolDescriptors\n\nfrom answer import molecular_formula\n\nRDLogger.DisableLog(\"rdApp.*\")  # invalid SMILES below would otherwise print warnings\n\n\ndef test_ethanol():\n    assert molecular_formula(\"CCO\") == {\"C\": 2, \"H\": 6, \"O\": 1}\n\n\ndef test_benzene_aromatic_lower_case():\n    assert molecular_formula(\"c1ccccc1\") == {\"C\": 6, \"H\": 6}\n\n\ndef test_hydrogens_in_brackets_count_too():\n    assert molecular_formula(\"[NH4+]\") == {\"N\": 1, \"H\": 4}\n\n\ndef test_no_hydrogens():\n    assert molecular_formula(\"O=C=O\") == {\"C\": 1, \"O\": 2}\n\n\ndef test_invalid_smiles_raises():\n    with pytest.raises(ValueError):\n        molecular_formula(\"C1CC\")  # ring 1 is opened but never closed\n\n\n@pytest.mark.parametrize(\n    \"smiles\",\n    [\n        \"Cn1cnc2c1c(=O)n(C)c(=O)n2C\",  # caffeine\n        \"CC(=O)Oc1ccccc1C(=O)O\",  # aspirin\n        \"CC(C)Cc1ccc(cc1)C(C)C(=O)O\",  # ibuprofen\n        \"C[C@@H](C(=O)O)N\",  # alanine\n        \"ClC(Cl)(Cl)Cl\",  # carbon tetrachloride\n    ],\n)\ndef test_agrees_with_rdkit_formula(smiles):\n    want: dict[str, int] = {}\n    import re\n\n    for el, n in re.findall(r\"([A-Z][a-z]?)(\\d*)\", rdMolDescriptors.CalcMolFormula(Chem.MolFromSmiles(smiles))):\n        want[el] = want.get(el, 0) + int(n or 1)\n    assert molecular_formula(smiles) == want\n",
   "picture": "problems/molecules/read_smiles.svg"
  },
@@ -120,6 +171,62 @@
    "GetNeighbors"
   ],
   "stub": "from rdkit import Chem\n\n\ndef bond_counts(smiles: str) -> dict[str, int]:\n    \"\"\"Count the bonds between written atoms by type: keys among \"single\", \"double\", \"triple\", \"aromatic\".\n\n    bond_counts(\"CC=O\") == {\"single\": 1, \"double\": 1}\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef degrees(smiles: str) -> list[int]:\n    \"\"\"For each written atom, in order, the number of written atoms bonded to it.\n\n    degrees(\"CC=O\") == [1, 2, 1]\n    \"\"\"\n    raise NotImplementedError\n",
+  "solution": "from rdkit import Chem\n\n\ndef _read(smiles: str) -> Chem.Mol:\n    mol = Chem.MolFromSmiles(smiles)\n    if mol is None:\n        raise ValueError(f\"not a valid SMILES string: {smiles!r}\")\n    return mol\n\n\ndef bond_counts(smiles: str) -> dict[str, int]:\n    \"\"\"Count the bonds between written atoms by type: keys among \"single\", \"double\", \"triple\", \"aromatic\".\n\n    bond_counts(\"CC=O\") == {\"single\": 1, \"double\": 1}\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    mol = _read(smiles)\n    counts: dict[str, int] = {}\n    for bond in mol.GetBonds():\n        kind = str(bond.GetBondType()).lower()\n        counts[kind] = counts.get(kind, 0) + 1\n    return counts\n\n\ndef degrees(smiles: str) -> list[int]:\n    \"\"\"For each written atom, in order, the number of written atoms bonded to it.\n\n    degrees(\"CC=O\") == [1, 2, 1]\n    \"\"\"\n    mol = _read(smiles)\n    degree = [0] * mol.GetNumAtoms()\n    for bond in mol.GetBonds():\n        degree[bond.GetBeginAtomIdx()] += 1\n        degree[bond.GetEndAtomIdx()] += 1\n    return degree\n",
+  "main": "\"\"\"Run: the molecule as a graph, each atom labelled with the degree your function computes.\"\"\"\n\nimport render as r\nfrom answer import bond_counts, degrees\nfrom rdkit import Chem\n\n\ndef run(p: dict) -> list:\n    mol = Chem.MolFromSmiles(p[\"smiles\"])\n    deg = degrees(p[\"smiles\"])\n    counts = bond_counts(p[\"smiles\"])\n    adjacency = [\n        [1 if mol.GetBondBetweenAtoms(i, j) else 0 for j in range(mol.GetNumAtoms())] for i in range(mol.GetNumAtoms())\n    ]\n    out = [\n        r.svg(\n            mol,\n            (\"Each atom's index and degree (index:degree)\", \"每個原子的編號與度（編號:度）\"),\n            notes={i: f\"{i}:{d}\" for i, d in enumerate(deg)},\n        ),\n        r.mol3d(mol, (\"In 3D: the same graph, now with hydrogens and a shape\", \"3D：同一張圖，加上氫與形狀\")),\n        r.bars(list(counts), list(counts.values()), (\"Bonds of each kind\", \"各種鍵的數目\")),\n        r.table(\n            [(\"Atom\", \"原子\"), (\"Element\", \"元素\"), (\"Degree\", \"度\")],\n            [[i, a.GetSymbol(), deg[i]] for i, a in enumerate(mol.GetAtoms())],\n            (\"Degrees\", \"度\"),\n        ),\n    ]\n    if mol.GetNumAtoms() <= 16:\n        out.append(\n            r.table(\n                [\"\"] + [str(j) for j in range(mol.GetNumAtoms())],\n                [[str(i), *row] for i, row in enumerate(adjacency)],\n                (\"Adjacency matrix A (1 = bonded)\", \"鄰接矩陣 A（1 = 相連）\"),\n            )\n        )\n    return out\n",
+  "params": [
+   {
+    "id": "smiles",
+    "type": "smiles",
+    "label": [
+     "SMILES",
+     "SMILES"
+    ],
+    "default": "CC(=O)O",
+    "presets": [
+     [
+      "caffeine",
+      "咖啡因",
+      "Cn1cnc2c1c(=O)n(C)c(=O)n2C"
+     ],
+     [
+      "aspirin",
+      "阿斯匹靈",
+      "CC(=O)Oc1ccccc1C(=O)O"
+     ],
+     [
+      "ibuprofen",
+      "布洛芬",
+      "CC(C)Cc1ccc(cc1)C(C)C(=O)O"
+     ],
+     [
+      "ethanol",
+      "乙醇",
+      "CCO"
+     ],
+     [
+      "benzene",
+      "苯",
+      "c1ccccc1"
+     ],
+     [
+      "paracetamol",
+      "乙醯胺酚",
+      "CC(=O)Nc1ccc(O)cc1"
+     ],
+     [
+      "nicotine",
+      "尼古丁",
+      "CN1CCCC1c1cccnc1"
+     ],
+     [
+      "acetic acid",
+      "乙酸",
+      "CC(=O)O"
+     ]
+    ]
+   }
+  ],
+  "results": "results/atoms_bonds.json",
   "test": "\"\"\"The contract for atoms_bonds. Read-only: your answer.py must make these pass.\"\"\"\n\nimport pytest\nfrom rdkit import RDLogger\n\nfrom answer import bond_counts, degrees\n\nRDLogger.DisableLog(\"rdApp.*\")\n\n\ndef test_acetaldehyde():\n    assert bond_counts(\"CC=O\") == {\"single\": 1, \"double\": 1}\n    assert degrees(\"CC=O\") == [1, 2, 1]\n\n\ndef test_hydrogen_cyanide_triple_bond():\n    assert bond_counts(\"C#N\") == {\"triple\": 1}\n    assert degrees(\"C#N\") == [1, 1]\n\n\ndef test_benzene_bonds_are_aromatic():\n    assert bond_counts(\"c1ccccc1\") == {\"aromatic\": 6}\n    assert degrees(\"c1ccccc1\") == [2] * 6\n\n\ndef test_acetic_acid_branch():\n    assert bond_counts(\"CC(=O)O\") == {\"single\": 2, \"double\": 1}\n    assert degrees(\"CC(=O)O\") == [1, 3, 1, 1]\n\n\ndef test_single_atom_has_no_bonds():\n    assert bond_counts(\"C\") == {}\n    assert degrees(\"C\") == [0]\n\n\ndef test_handshake_sum_of_degrees_is_twice_the_bonds():\n    for smi in [\"CC(C)Cc1ccc(cc1)C(C)C(=O)O\", \"Cn1cnc2c1c(=O)n(C)c(=O)n2C\", \"C1CC2CCC1C2\"]:\n        assert sum(degrees(smi)) == 2 * sum(bond_counts(smi).values())\n\n\ndef test_invalid_smiles_raises():\n    with pytest.raises(ValueError):\n        bond_counts(\"C(C\")\n",
   "picture": "problems/molecules/atoms_bonds.svg"
  },
@@ -176,6 +283,57 @@
    "HeavyAtomMolWt"
   ],
   "stub": "from rdkit import Chem\n\n\ndef molecular_weight(smiles: str) -> float:\n    \"\"\"The average molecular weight in g/mol, hydrogens included.\n\n    molecular_weight(\"O\") ≈ 18.015\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    raise NotImplementedError\n",
+  "solution": "from rdkit import Chem\n\n\ndef molecular_weight(smiles: str) -> float:\n    \"\"\"The average molecular weight in g/mol, hydrogens included.\n\n    molecular_weight(\"O\") ≈ 18.015\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    mol = Chem.MolFromSmiles(smiles)\n    if mol is None:\n        raise ValueError(f\"not a valid SMILES string: {smiles!r}\")\n    table = Chem.GetPeriodicTable()\n    h_mass = table.GetAtomicWeight(\"H\")\n    total = 0.0\n    for atom in mol.GetAtoms():\n        total += table.GetAtomicWeight(atom.GetSymbol())\n        total += atom.GetTotalNumHs() * h_mass\n    return total\n",
+  "main": "\"\"\"Run: your molecular_weight, and how much each element contributes to it.\"\"\"\n\nimport render as r\nfrom answer import molecular_weight\nfrom rdkit import Chem\n\n\ndef run(p: dict) -> list:\n    mol = Chem.MolFromSmiles(p[\"smiles\"])\n    table = Chem.GetPeriodicTable()\n    share: dict[str, float] = {}\n    for atom in mol.GetAtoms():\n        share[atom.GetSymbol()] = share.get(atom.GetSymbol(), 0.0) + table.GetAtomicWeight(atom.GetSymbol())\n        if atom.GetTotalNumHs():\n            share[\"H\"] = share.get(\"H\", 0.0) + atom.GetTotalNumHs() * table.GetAtomicWeight(\"H\")\n    return [\n        r.metric((\"Molecular weight\", \"分子量\"), f\"{molecular_weight(p['smiles']):.3f}\", \"g/mol\"),\n        r.svg(mol, (\"The molecule\", \"分子結構\")),\n        r.mol3d(mol, (\"In 3D, every atom whose mass is counted\", \"3D：每個被計入質量的原子\")),\n        r.bars(\n            list(share),\n            [round(v, 3) for v in share.values()],\n            (\"Mass from each element\", \"各元素貢獻的質量\"),\n            unit=\"g/mol\",\n        ),\n    ]\n",
+  "params": [
+   {
+    "id": "smiles",
+    "type": "smiles",
+    "label": [
+     "SMILES",
+     "SMILES"
+    ],
+    "default": "CC(=O)Oc1ccccc1C(=O)O",
+    "presets": [
+     [
+      "caffeine",
+      "咖啡因",
+      "Cn1cnc2c1c(=O)n(C)c(=O)n2C"
+     ],
+     [
+      "aspirin",
+      "阿斯匹靈",
+      "CC(=O)Oc1ccccc1C(=O)O"
+     ],
+     [
+      "ibuprofen",
+      "布洛芬",
+      "CC(C)Cc1ccc(cc1)C(C)C(=O)O"
+     ],
+     [
+      "ethanol",
+      "乙醇",
+      "CCO"
+     ],
+     [
+      "benzene",
+      "苯",
+      "c1ccccc1"
+     ],
+     [
+      "paracetamol",
+      "乙醯胺酚",
+      "CC(=O)Nc1ccc(O)cc1"
+     ],
+     [
+      "nicotine",
+      "尼古丁",
+      "CN1CCCC1c1cccnc1"
+     ]
+    ]
+   }
+  ],
+  "results": "results/molecular_weight.json",
   "test": "\"\"\"The contract for molecular_weight. Read-only: your answer.py must make these pass.\"\"\"\n\nimport pytest\nfrom rdkit import Chem, RDLogger\nfrom rdkit.Chem import Descriptors\n\nfrom answer import molecular_weight\n\nRDLogger.DisableLog(\"rdApp.*\")\n\n\ndef test_water():\n    assert molecular_weight(\"O\") == pytest.approx(18.015, abs=1e-3)\n\n\ndef test_ethanol():\n    assert molecular_weight(\"CCO\") == pytest.approx(46.069, abs=1e-3)\n\n\n@pytest.mark.parametrize(\n    \"smiles\",\n    [\n        \"c1ccccc1\",\n        \"CC(=O)Oc1ccccc1C(=O)O\",  # aspirin\n        \"Cn1cnc2c1c(=O)n(C)c(=O)n2C\",  # caffeine\n        \"[NH4+]\",\n        \"OC(=O)C(F)(F)F\",  # trifluoroacetic acid\n        \"CC(C)Cc1ccc(cc1)C(C)C(=O)O\",  # ibuprofen\n        \"[Na+].[Cl-]\",\n    ],\n)\ndef test_agrees_with_rdkit(smiles):\n    assert molecular_weight(smiles) == pytest.approx(Descriptors.MolWt(Chem.MolFromSmiles(smiles)), abs=1e-6)\n\n\ndef test_invalid_smiles_raises():\n    with pytest.raises(ValueError):\n        molecular_weight(\"not a molecule\")\n",
   "picture": "problems/molecules/molecular_weight.svg"
  },
@@ -219,6 +377,52 @@
   "imports": [],
   "forbidden": [],
   "stub": "# Valence electrons of the main-group elements the problem uses (the column of the periodic table).\nVALENCE = {\"H\": 1, \"B\": 3, \"C\": 4, \"N\": 5, \"O\": 6, \"F\": 7, \"P\": 5, \"S\": 6, \"Cl\": 7, \"Br\": 7, \"I\": 7}\n\n\ndef formal_charge(element: str, lone_pair_electrons: int, bonding_electrons: int) -> int:\n    \"\"\"Formal charge = valence electrons - lone-pair electrons - half the bonding electrons.\n\n    formal_charge(\"N\", 0, 8) == 1   # nitrogen in NH4+\n    Raise ValueError if bonding_electrons is odd.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef total_charge(atoms: list[tuple[str, int, int]]) -> int:\n    \"\"\"The charge of a whole Lewis structure: atoms is a list of (element, lone-pair electrons, bonding electrons).\n\n    total_charge([(\"O\", 6, 2), (\"H\", 0, 2)]) == -1   # hydroxide OH-\n    \"\"\"\n    raise NotImplementedError\n",
+  "solution": "# Valence electrons of the main-group elements the problem uses (the column of the periodic table).\nVALENCE = {\"H\": 1, \"B\": 3, \"C\": 4, \"N\": 5, \"O\": 6, \"F\": 7, \"P\": 5, \"S\": 6, \"Cl\": 7, \"Br\": 7, \"I\": 7}\n\n\ndef formal_charge(element: str, lone_pair_electrons: int, bonding_electrons: int) -> int:\n    \"\"\"Formal charge = valence electrons - lone-pair electrons - half the bonding electrons.\n\n    formal_charge(\"N\", 0, 8) == 1   # nitrogen in NH4+\n    Raise ValueError if bonding_electrons is odd.\n    \"\"\"\n    if bonding_electrons % 2:\n        raise ValueError(\"bonding electrons come in pairs\")\n    return VALENCE[element] - lone_pair_electrons - bonding_electrons // 2\n\n\ndef total_charge(atoms: list[tuple[str, int, int]]) -> int:\n    \"\"\"The charge of a whole Lewis structure: atoms is a list of (element, lone-pair electrons, bonding electrons).\n\n    total_charge([(\"O\", 6, 2), (\"H\", 0, 2)]) == -1   # hydroxide OH-\n    \"\"\"\n    return sum(formal_charge(el, lone, bonding) for el, lone, bonding in atoms)\n",
+  "main": "\"\"\"Run: the Lewis bookkeeping of a molecule, atom by atom, with your formal_charge and total_charge.\"\"\"\n\nimport render as r\nfrom answer import formal_charge, total_charge\nfrom rdkit import Chem\n\n# Each molecule: its SMILES (charges written in) and its Lewis structure, one (element, lone-pair e⁻, bonding e⁻)\n# per atom in the SMILES order, hydrogens last.\nMOLECULES = {\n    \"ammonium\": (\"[NH4+]\", [(\"N\", 0, 8)] + [(\"H\", 0, 2)] * 4),\n    \"hydroxide\": (\"[OH-]\", [(\"O\", 6, 2), (\"H\", 0, 2)]),\n    \"water\": (\"O\", [(\"O\", 4, 4), (\"H\", 0, 2), (\"H\", 0, 2)]),\n    \"carbon_monoxide\": (\"[C-]#[O+]\", [(\"C\", 2, 6), (\"O\", 2, 6)]),\n    \"nitromethane\": (\"C[N+](=O)[O-]\", [(\"C\", 0, 8), (\"N\", 0, 8), (\"O\", 4, 4), (\"O\", 6, 2)] + [(\"H\", 0, 2)] * 3),\n    \"nitrate\": (\"[O-][N+](=O)[O-]\", [(\"O\", 6, 2), (\"N\", 0, 8), (\"O\", 4, 4), (\"O\", 6, 2)]),\n}\n\n\ndef run(p: dict) -> list:\n    smiles, atoms = MOLECULES[p[\"molecule\"]]\n    rows = [[el, lone, bonding, f\"{formal_charge(el, lone, bonding):+d}\"] for el, lone, bonding in atoms]\n    total = total_charge(atoms)\n    mol = Chem.MolFromSmiles(smiles)\n    return [\n        r.metric((\"Charge of the whole molecule\", \"整個分子的電荷\"), f\"{total:+d}\"),\n        r.svg(mol, (\"As RDKit draws it, charges written in the SMILES\", \"RDKit 畫出的結構，電荷寫在 SMILES 中\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n        r.table(\n            [(\"Atom\", \"原子\"), (\"Lone-pair e⁻\", \"孤對電子\"), (\"Bonding e⁻\", \"鍵結電子\"), (\"Formal charge\", \"形式電荷\")],\n            rows,\n            (\"FC = valence e⁻ − lone-pair e⁻ − ½ bonding e⁻\", \"FC = 價電子 − 孤對電子 − ½ 鍵結電子\"),\n        ),\n    ]\n",
+  "params": [
+   {
+    "id": "molecule",
+    "type": "select",
+    "label": [
+     "Molecule",
+     "分子"
+    ],
+    "default": "nitromethane",
+    "options": [
+     [
+      "ammonium",
+      "銨離子 NH₄⁺",
+      "ammonium"
+     ],
+     [
+      "hydroxide",
+      "氫氧根 OH⁻",
+      "hydroxide"
+     ],
+     [
+      "water",
+      "水 H₂O",
+      "water"
+     ],
+     [
+      "carbon monoxide",
+      "一氧化碳 CO",
+      "carbon_monoxide"
+     ],
+     [
+      "nitromethane",
+      "硝基甲烷",
+      "nitromethane"
+     ],
+     [
+      "nitrate",
+      "硝酸根 NO₃⁻",
+      "nitrate"
+     ]
+    ]
+   }
+  ],
+  "results": "results/formal_charge.json",
   "test": "\"\"\"The contract for formal_charge. Read-only: your answer.py must make these pass.\"\"\"\n\nimport pytest\nfrom rdkit import Chem\n\nfrom answer import formal_charge, total_charge\n\n\ndef test_ammonium_nitrogen():\n    assert formal_charge(\"N\", 0, 8) == 1\n\n\ndef test_water_oxygen_is_neutral():\n    assert formal_charge(\"O\", 4, 4) == 0\n\n\ndef test_carbon_monoxide():\n    # :C≡O: — each atom has one lone pair and a triple bond (6 bonding electrons)\n    assert formal_charge(\"C\", 2, 6) == -1\n    assert formal_charge(\"O\", 2, 6) == 1\n\n\ndef test_hydroxide():\n    assert total_charge([(\"O\", 6, 2), (\"H\", 0, 2)]) == -1\n\n\ndef test_nitromethane_is_neutral_overall():\n    # CH3-NO2: N has four bonds (one double), one O is double-bonded, the other single-bonded with 3 lone pairs\n    atoms = [(\"C\", 0, 8), (\"H\", 0, 2), (\"H\", 0, 2), (\"H\", 0, 2), (\"N\", 0, 8), (\"O\", 4, 4), (\"O\", 6, 2)]\n    assert [formal_charge(*a) for a in atoms][4:] == [1, 0, -1]\n    assert total_charge(atoms) == 0\n\n\ndef test_agrees_with_rdkit_charges():\n    # RDKit reads the charges written in SMILES; the Lewis bookkeeping must give the same numbers\n    mol = Chem.MolFromSmiles(\"C[N+](=O)[O-]\")\n    assert [a.GetFormalCharge() for a in mol.GetAtoms()] == [0, 1, 0, -1]\n    assert [formal_charge(\"C\", 0, 8), formal_charge(\"N\", 0, 8), formal_charge(\"O\", 4, 4), formal_charge(\"O\", 6, 2)] == [\n        0,\n        1,\n        0,\n        -1,\n    ]\n\n\ndef test_odd_bonding_electrons_rejected():\n    with pytest.raises(ValueError):\n        formal_charge(\"C\", 0, 7)\n",
   "picture": "problems/molecules/formal_charge.svg"
  },
@@ -281,6 +485,77 @@
    "Lipinski"
   ],
   "stub": "from rdkit import Chem\n\n\ndef ring_info(smiles: str) -> dict:\n    \"\"\"{\"ring_sizes\": sizes of the smallest set of smallest rings, ascending, \"aromatic_rings\": how many are aromatic}\n\n    ring_info(\"c1ccc2ccccc2c1\") == {\"ring_sizes\": [6, 6], \"aromatic_rings\": 2}   # naphthalene\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    raise NotImplementedError\n",
+  "solution": "from rdkit import Chem\n\n\ndef ring_info(smiles: str) -> dict:\n    \"\"\"{\"ring_sizes\": sizes of the smallest set of smallest rings, ascending, \"aromatic_rings\": how many are aromatic}\n\n    ring_info(\"c1ccc2ccccc2c1\") == {\"ring_sizes\": [6, 6], \"aromatic_rings\": 2}   # naphthalene\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    mol = Chem.MolFromSmiles(smiles)\n    if mol is None:\n        raise ValueError(f\"not a valid SMILES string: {smiles!r}\")\n    rings = mol.GetRingInfo().BondRings()\n    sizes = sorted(len(ring) for ring in rings)\n    aromatic = sum(all(mol.GetBondWithIdx(i).GetIsAromatic() for i in ring) for ring in rings)\n    return {\"ring_sizes\": sizes, \"aromatic_rings\": aromatic}\n",
+  "main": "\"\"\"Run: every ring of the molecule, aromatic ones in orange, others in blue, and your ring_info.\"\"\"\n\nimport render as r\nfrom answer import ring_info\nfrom rdkit import Chem\n\n\ndef run(p: dict) -> list:\n    mol = Chem.MolFromSmiles(p[\"smiles\"])\n    info = ring_info(p[\"smiles\"])\n    atoms, bonds, rows = {}, {}, []\n    for ring in mol.GetRingInfo().BondRings():\n        aromatic = all(mol.GetBondWithIdx(i).GetIsAromatic() for i in ring)\n        colour = r.ORANGE if aromatic else r.BLUE\n        for i in ring:\n            b = mol.GetBondWithIdx(i)\n            bonds[i] = colour\n            atoms[b.GetBeginAtomIdx()] = colour\n            atoms[b.GetEndAtomIdx()] = colour\n        rows.append([len(ring), \"yes · 是\" if aromatic else \"no · 否\"])\n    return [\n        r.metric((\"Aromatic rings\", \"芳香環\"), info[\"aromatic_rings\"]),\n        r.metric((\"Ring sizes\", \"環的大小\"), \", \".join(map(str, info[\"ring_sizes\"])) or \"–\"),\n        r.svg(\n            mol,\n            (\"Aromatic rings in orange, other rings in blue\", \"芳香環為橘色，其他環為藍色\"),\n            highlight=atoms,\n            bond_highlight=bonds,\n        ),\n        r.mol3d(mol, (\"In 3D: aromatic rings lie flat\", \"3D：芳香環是平的\")),\n        r.table(\n            [(\"Ring size\", \"環的大小\"), (\"Aromatic\", \"芳香\")],\n            rows,\n            (\"The smallest set of smallest rings\", \"最小環集合\"),\n        ),\n    ]\n",
+  "params": [
+   {
+    "id": "smiles",
+    "type": "smiles",
+    "label": [
+     "SMILES",
+     "SMILES"
+    ],
+    "default": "c1ccc2[nH]ccc2c1",
+    "presets": [
+     [
+      "caffeine",
+      "咖啡因",
+      "Cn1cnc2c1c(=O)n(C)c(=O)n2C"
+     ],
+     [
+      "aspirin",
+      "阿斯匹靈",
+      "CC(=O)Oc1ccccc1C(=O)O"
+     ],
+     [
+      "ibuprofen",
+      "布洛芬",
+      "CC(C)Cc1ccc(cc1)C(C)C(=O)O"
+     ],
+     [
+      "ethanol",
+      "乙醇",
+      "CCO"
+     ],
+     [
+      "benzene",
+      "苯",
+      "c1ccccc1"
+     ],
+     [
+      "paracetamol",
+      "乙醯胺酚",
+      "CC(=O)Nc1ccc(O)cc1"
+     ],
+     [
+      "nicotine",
+      "尼古丁",
+      "CN1CCCC1c1cccnc1"
+     ],
+     [
+      "indole",
+      "吲哚",
+      "c1ccc2[nH]ccc2c1"
+     ],
+     [
+      "naphthalene",
+      "萘",
+      "c1ccc2ccccc2c1"
+     ],
+     [
+      "cyclohexane",
+      "環己烷",
+      "C1CCCCC1"
+     ],
+     [
+      "cyclooctatetraene",
+      "環辛四烯",
+      "C1=CC=CC=CC=C1"
+     ]
+    ]
+   }
+  ],
+  "results": "results/rings.json",
   "test": "\"\"\"The contract for rings. Read-only: your answer.py must make these pass.\"\"\"\n\nimport pytest\nfrom rdkit import RDLogger\n\nfrom answer import ring_info\n\nRDLogger.DisableLog(\"rdApp.*\")\n\n\n@pytest.mark.parametrize(\n    \"name, smiles, sizes, aromatic\",\n    [\n        (\"ethanol (no ring)\", \"CCO\", [], 0),\n        (\"benzene\", \"c1ccccc1\", [6], 1),\n        (\"benzene written with alternating bonds\", \"C1=CC=CC=C1\", [6], 1),\n        (\"cyclohexane\", \"C1CCCCC1\", [6], 0),\n        (\"naphthalene\", \"c1ccc2ccccc2c1\", [6, 6], 2),\n        (\"indole\", \"c1ccc2[nH]ccc2c1\", [5, 6], 2),\n        (\"cyclooctatetraene (8 π electrons: not aromatic)\", \"C1=CC=CC=CC=C1\", [8], 0),\n        (\"cyclopropane\", \"C1CC1\", [3], 0),\n        (\"aspirin\", \"CC(=O)Oc1ccccc1C(=O)O\", [6], 1),\n        (\"ibuprofen\", \"CC(C)Cc1ccc(cc1)C(C)C(=O)O\", [6], 1),\n    ],\n)\ndef test_rings(name, smiles, sizes, aromatic):\n    assert ring_info(smiles) == {\"ring_sizes\": sizes, \"aromatic_rings\": aromatic}, name\n\n\ndef test_invalid_smiles_raises():\n    with pytest.raises(ValueError):\n        ring_info(\"c1cccc1x\")\n",
   "picture": "problems/molecules/rings.svg"
  },
@@ -349,6 +624,67 @@
    "CalcNumLipinskiHBA"
   ],
   "stub": "from rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\n# The four limits of the rule of five, in the order the answer lists broken limits.\nLIMITS = {\"MW\": 500, \"logP\": 5, \"HBD\": 5, \"HBA\": 10}\n\n\ndef lipinski_violations(smiles: str) -> list[str]:\n    \"\"\"The names of the limits the molecule breaks (value strictly above the limit), in the order of LIMITS.\n\n    Use Descriptors.MolWt, Crippen.MolLogP, Lipinski.NumHDonors and Lipinski.NumHAcceptors.\n    lipinski_violations(\"CC(=O)Oc1ccccc1C(=O)O\") == []   # aspirin\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef passes_rule_of_five(smiles: str) -> bool:\n    \"\"\"True when the molecule breaks at most one limit.\"\"\"\n    raise NotImplementedError\n",
+  "solution": "from rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\n# The four limits of the rule of five, in the order the answer lists broken limits.\nLIMITS = {\"MW\": 500, \"logP\": 5, \"HBD\": 5, \"HBA\": 10}\n\n\ndef lipinski_violations(smiles: str) -> list[str]:\n    \"\"\"The names of the limits the molecule breaks (value strictly above the limit), in the order of LIMITS.\n\n    Use Descriptors.MolWt, Crippen.MolLogP, Lipinski.NumHDonors and Lipinski.NumHAcceptors.\n    lipinski_violations(\"CC(=O)Oc1ccccc1C(=O)O\") == []   # aspirin\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    mol = Chem.MolFromSmiles(smiles)\n    if mol is None:\n        raise ValueError(f\"not a valid SMILES string: {smiles!r}\")\n    values = {\n        \"MW\": Descriptors.MolWt(mol),\n        \"logP\": Crippen.MolLogP(mol),\n        \"HBD\": Lipinski.NumHDonors(mol),\n        \"HBA\": Lipinski.NumHAcceptors(mol),\n    }\n    return [name for name, limit in LIMITS.items() if values[name] > limit]\n\n\ndef passes_rule_of_five(smiles: str) -> bool:\n    \"\"\"True when the molecule breaks at most one limit.\"\"\"\n    return len(lipinski_violations(smiles)) <= 1\n",
+  "main": "\"\"\"Run: the four numbers of the rule of five against their limits, and your verdict.\"\"\"\n\nimport render as r\nfrom answer import LIMITS, lipinski_violations, passes_rule_of_five\nfrom rdkit import Chem\nfrom rdkit.Chem import Crippen, Descriptors, Lipinski\n\n\ndef run(p: dict) -> list:\n    mol = Chem.MolFromSmiles(p[\"smiles\"])\n    values = {\n        \"MW\": Descriptors.MolWt(mol),\n        \"logP\": Crippen.MolLogP(mol),\n        \"HBD\": Lipinski.NumHDonors(mol),\n        \"HBA\": Lipinski.NumHAcceptors(mol),\n    }\n    broken = lipinski_violations(p[\"smiles\"])\n    ok = passes_rule_of_five(p[\"smiles\"])\n    # each bar as a share of its limit, so the four fit one scale; the label keeps the real value\n    return [\n        r.metric((\"Rule of five\", \"五規則\"), \"passes · 通過\" if ok else \"fails · 未通過\", good=ok),\n        r.metric((\"Limits broken\", \"超出的上限\"), \", \".join(broken) or \"–\"),\n        r.bars(\n            [f\"{k} = {v:.2f}\" if isinstance(v, float) else f\"{k} = {v}\" for k, v in values.items()],\n            [values[k] / LIMITS[k] for k in values],\n            (\"Each value as a share of its limit (red line = the limit)\", \"每個數值相對於上限的比例（紅線 = 上限）\"),\n            limits=[1.0] * 4,\n            colours=[\"#dc2626\" if k in broken else \"#c2410c\" for k in values],\n        ),\n        r.svg(mol, (\"The molecule\", \"分子結構\")),\n        r.mol3d(mol, (\"In 3D\", \"3D 結構\")),\n    ]\n",
+  "params": [
+   {
+    "id": "smiles",
+    "type": "smiles",
+    "label": [
+     "SMILES",
+     "SMILES"
+    ],
+    "default": "CC(=O)Oc1ccccc1C(=O)O",
+    "presets": [
+     [
+      "caffeine",
+      "咖啡因",
+      "Cn1cnc2c1c(=O)n(C)c(=O)n2C"
+     ],
+     [
+      "aspirin",
+      "阿斯匹靈",
+      "CC(=O)Oc1ccccc1C(=O)O"
+     ],
+     [
+      "ibuprofen",
+      "布洛芬",
+      "CC(C)Cc1ccc(cc1)C(C)C(=O)O"
+     ],
+     [
+      "ethanol",
+      "乙醇",
+      "CCO"
+     ],
+     [
+      "benzene",
+      "苯",
+      "c1ccccc1"
+     ],
+     [
+      "paracetamol",
+      "乙醯胺酚",
+      "CC(=O)Nc1ccc(O)cc1"
+     ],
+     [
+      "nicotine",
+      "尼古丁",
+      "CN1CCCC1c1cccnc1"
+     ],
+     [
+      "triacontane",
+      "三十烷",
+      "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+     ],
+     [
+      "hexaserine",
+      "六絲胺酸肽",
+      "N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)O"
+     ]
+    ]
+   }
+  ],
+  "results": "results/lipinski.json",
   "test": "\"\"\"The contract for lipinski. Read-only: your answer.py must make these pass.\"\"\"\n\nimport pytest\nfrom rdkit import RDLogger\n\nfrom answer import lipinski_violations, passes_rule_of_five\n\nRDLogger.DisableLog(\"rdApp.*\")\n\nASPIRIN = \"CC(=O)Oc1ccccc1C(=O)O\"\nCAFFEINE = \"Cn1cnc2c1c(=O)n(C)c(=O)n2C\"\n# a long alkane: light enough, but very oily (logP far above 5)\nTRIACONTANE = \"C\" * 30\n# a hexapeptide of serines: many N-H and O-H donors and many acceptors\nSER6 = \"N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)O\"\n\n\ndef test_aspirin_breaks_nothing():\n    assert lipinski_violations(ASPIRIN) == []\n    assert passes_rule_of_five(ASPIRIN)\n\n\ndef test_caffeine_breaks_nothing():\n    assert lipinski_violations(CAFFEINE) == []\n\n\ndef test_one_broken_limit_still_passes():\n    assert lipinski_violations(TRIACONTANE) == [\"logP\"]\n    assert passes_rule_of_five(TRIACONTANE)\n\n\ndef test_peptide_breaks_several_in_order():\n    v = lipinski_violations(SER6)\n    assert v == [\"MW\", \"HBD\", \"HBA\"]\n    assert not passes_rule_of_five(SER6)\n\n\ndef test_invalid_smiles_raises():\n    with pytest.raises(ValueError):\n        lipinski_violations(\"C(\")\n",
   "picture": "problems/molecules/lipinski.svg"
  },
@@ -412,6 +748,69 @@
    "FingerprintSimilarity"
   ],
   "stub": "from rdkit import Chem\nfrom rdkit.Chem import rdFingerprintGenerator\n\n\ndef morgan_bits(smiles: str, radius: int = 2, n_bits: int = 2048) -> set[int]:\n    \"\"\"The positions switched on in the molecule's Morgan fingerprint (rdFingerprintGenerator.GetMorganGenerator).\n\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef tanimoto(a: set[int], b: set[int]) -> float:\n    \"\"\"|a ∩ b| / |a ∪ b|, and 0.0 when both sets are empty.\"\"\"\n    raise NotImplementedError\n\n\ndef most_similar(query: str, library: list[str]) -> str:\n    \"\"\"The SMILES in library whose Morgan fingerprint is most similar (Tanimoto) to the query's.\"\"\"\n    raise NotImplementedError\n",
+  "solution": "from rdkit import Chem\nfrom rdkit.Chem import rdFingerprintGenerator\n\n\ndef morgan_bits(smiles: str, radius: int = 2, n_bits: int = 2048) -> set[int]:\n    \"\"\"The positions switched on in the molecule's Morgan fingerprint (rdFingerprintGenerator.GetMorganGenerator).\n\n    Raise ValueError if the string is not valid SMILES.\n    \"\"\"\n    mol = Chem.MolFromSmiles(smiles)\n    if mol is None:\n        raise ValueError(f\"not a valid SMILES string: {smiles!r}\")\n    gen = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits)\n    return set(gen.GetFingerprint(mol).GetOnBits())\n\n\ndef tanimoto(a: set[int], b: set[int]) -> float:\n    \"\"\"|a ∩ b| / |a ∪ b|, and 0.0 when both sets are empty.\"\"\"\n    union = a | b\n    return len(a & b) / len(union) if union else 0.0\n\n\ndef most_similar(query: str, library: list[str]) -> str:\n    \"\"\"The SMILES in library whose Morgan fingerprint is most similar (Tanimoto) to the query's.\"\"\"\n    q = morgan_bits(query)\n    return max(library, key=lambda smi: tanimoto(q, morgan_bits(smi)))\n",
+  "main": "\"\"\"Run: rank a small library of drugs by your Tanimoto similarity to a query molecule.\"\"\"\n\nimport render as r\nfrom answer import morgan_bits, most_similar, tanimoto\nfrom rdkit import Chem\n\nLIBRARY = {\n    \"aspirin\": \"CC(=O)Oc1ccccc1C(=O)O\",\n    \"salicylic acid\": \"OC(=O)c1ccccc1O\",\n    \"ibuprofen\": \"CC(C)Cc1ccc(cc1)C(C)C(=O)O\",\n    \"naproxen\": \"COc1ccc2cc(ccc2c1)C(C)C(=O)O\",\n    \"paracetamol\": \"CC(=O)Nc1ccc(O)cc1\",\n    \"caffeine\": \"Cn1cnc2c1c(=O)n(C)c(=O)n2C\",\n    \"theophylline\": \"Cn1c2nc[nH]c2c(=O)n(C)c1=O\",\n    \"theobromine\": \"Cn1cnc2c1c(=O)[nH]c(=O)n2C\",\n    \"nicotine\": \"CN1CCCC1c1cccnc1\",\n}\n\n\ndef run(p: dict) -> list:\n    query = p[\"query\"]\n    q = morgan_bits(query, radius=int(p[\"radius\"]))\n    library = {name: smi for name, smi in LIBRARY.items() if Chem.CanonSmiles(smi) != Chem.CanonSmiles(query)}\n    scores = sorted(\n        ((tanimoto(q, morgan_bits(smi, radius=int(p[\"radius\"]))), name) for name, smi in library.items()), reverse=True\n    )\n    best = (\n        next(name for name, smi in library.items() if smi == most_similar(query, list(library.values())))\n        if int(p[\"radius\"]) == 2\n        else scores[0][1]\n    )\n    top = scores[:6]\n    return [\n        r.metric((\"Most similar\", \"最相似\"), best),\n        r.mol3d(Chem.MolFromSmiles(query), (\"The query molecule in 3D\", \"查詢分子的 3D 結構\")),\n        r.bars(\n            [name for _, name in scores],\n            [round(s, 3) for s, _ in scores],\n            (\n                f\"Tanimoto similarity to the query (radius {p['radius']})\",\n                f\"與查詢分子的 Tanimoto 相似度（半徑 {p['radius']}）\",\n            ),\n        ),\n        r.grid(\n            [Chem.MolFromSmiles(query)] + [Chem.MolFromSmiles(library[n]) for _, n in top[:5]],\n            [\"query\"] + [f\"{n}  {s:.2f}\" for s, n in top[:5]],\n            (\"The query and its nearest neighbours\", \"查詢分子與最相近的分子\"),\n        ),\n    ]\n",
+  "params": [
+   {
+    "id": "query",
+    "type": "smiles",
+    "label": [
+     "Query molecule",
+     "查詢分子"
+    ],
+    "default": "Cn1cnc2c1c(=O)n(C)c(=O)n2C",
+    "presets": [
+     [
+      "caffeine",
+      "咖啡因",
+      "Cn1cnc2c1c(=O)n(C)c(=O)n2C"
+     ],
+     [
+      "aspirin",
+      "阿斯匹靈",
+      "CC(=O)Oc1ccccc1C(=O)O"
+     ],
+     [
+      "ibuprofen",
+      "布洛芬",
+      "CC(C)Cc1ccc(cc1)C(C)C(=O)O"
+     ],
+     [
+      "ethanol",
+      "乙醇",
+      "CCO"
+     ],
+     [
+      "benzene",
+      "苯",
+      "c1ccccc1"
+     ],
+     [
+      "paracetamol",
+      "乙醯胺酚",
+      "CC(=O)Nc1ccc(O)cc1"
+     ],
+     [
+      "nicotine",
+      "尼古丁",
+      "CN1CCCC1c1cccnc1"
+     ]
+    ]
+   },
+   {
+    "id": "radius",
+    "type": "int",
+    "label": [
+     "Fingerprint radius",
+     "指紋半徑"
+    ],
+    "default": 2,
+    "min": 0,
+    "max": 4,
+    "step": 1
+   }
+  ],
+  "results": "results/similarity.json",
   "test": "\"\"\"The contract for similarity. Read-only: your answer.py must make these pass.\"\"\"\n\nimport pytest\nfrom rdkit import Chem, DataStructs, RDLogger\nfrom rdkit.Chem import rdFingerprintGenerator\n\nfrom answer import morgan_bits, most_similar, tanimoto\n\nRDLogger.DisableLog(\"rdApp.*\")\n\nASPIRIN = \"CC(=O)Oc1ccccc1C(=O)O\"\nSALICYLIC_ACID = \"OC(=O)c1ccccc1O\"\nCAFFEINE = \"Cn1cnc2c1c(=O)n(C)c(=O)n2C\"\nTHEOPHYLLINE = \"Cn1c2nc[nH]c2c(=O)n(C)c1=O\"\nIBUPROFEN = \"CC(C)Cc1ccc(cc1)C(C)C(=O)O\"\n\n\ndef test_tanimoto_by_hand():\n    assert tanimoto({1, 2, 3}, {2, 3, 4}) == pytest.approx(2 / 4)\n    assert tanimoto({1}, {1}) == 1.0\n    assert tanimoto({1}, {2}) == 0.0\n    assert tanimoto(set(), set()) == 0.0\n\n\ndef test_fingerprint_matches_rdkit():\n    mol = Chem.MolFromSmiles(CAFFEINE)\n    fp = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048).GetFingerprint(mol)\n    assert morgan_bits(CAFFEINE) == set(fp.GetOnBits())\n\n\ndef test_radius_and_size_are_used():\n    # radius 0 sees single atoms only, so it finds fewer distinct neighbourhoods than radius 2\n    assert len(morgan_bits(CAFFEINE, radius=0)) < len(morgan_bits(CAFFEINE, radius=2))\n    assert max(morgan_bits(IBUPROFEN, n_bits=64)) < 64\n\n\n@pytest.mark.parametrize(\"a, b\", [(ASPIRIN, SALICYLIC_ACID), (CAFFEINE, THEOPHYLLINE), (ASPIRIN, IBUPROFEN)])\ndef test_tanimoto_agrees_with_rdkit(a, b):\n    gen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)\n    want = DataStructs.TanimotoSimilarity(\n        gen.GetFingerprint(Chem.MolFromSmiles(a)), gen.GetFingerprint(Chem.MolFromSmiles(b))\n    )\n    assert tanimoto(morgan_bits(a), morgan_bits(b)) == pytest.approx(want)\n\n\ndef test_most_similar_finds_the_relative():\n    library = [IBUPROFEN, THEOPHYLLINE, SALICYLIC_ACID]\n    assert most_similar(CAFFEINE, library) == THEOPHYLLINE\n    assert most_similar(ASPIRIN, library) == SALICYLIC_ACID\n",
   "picture": "problems/molecules/similarity.svg"
  },
@@ -463,6 +862,32 @@
    "Bio"
   ],
   "stub": "from itertools import product\n\nPAIR = {\"A\": \"T\", \"T\": \"A\", \"G\": \"C\", \"C\": \"G\"}\n\n# The standard genetic code: the 64 codons in TCAG order, and the amino acid each one names (* = stop).\n_BASES = \"TCAG\"\n_AMINO = \"FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\"\nCODON_TABLE = {\"\".join(c): aa for c, aa in zip(product(_BASES, repeat=3), _AMINO)}\n\n\ndef reverse_complement(dna: str) -> str:\n    \"\"\"The partner strand, read in its own 5'→3' direction.\n\n    reverse_complement(\"ATGC\") == \"GCAT\"\n    \"\"\"\n    raise NotImplementedError\n\n\ndef translate(dna: str) -> str:\n    \"\"\"Translate from the first base, three bases per amino acid, up to (not including) the first stop codon.\n\n    translate(\"ATGGCCTAA\") == \"MA\"\n    Raise ValueError if the string has letters other than A, C, G, T.\n    \"\"\"\n    raise NotImplementedError\n",
+  "solution": "from itertools import product\n\nPAIR = {\"A\": \"T\", \"T\": \"A\", \"G\": \"C\", \"C\": \"G\"}\n\n# The standard genetic code: the 64 codons in TCAG order, and the amino acid each one names (* = stop).\n_BASES = \"TCAG\"\n_AMINO = \"FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG\"\nCODON_TABLE = {\"\".join(c): aa for c, aa in zip(product(_BASES, repeat=3), _AMINO)}\n\n\ndef reverse_complement(dna: str) -> str:\n    \"\"\"The partner strand, read in its own 5'→3' direction.\n\n    reverse_complement(\"ATGC\") == \"GCAT\"\n    \"\"\"\n    return \"\".join(PAIR[base] for base in reversed(dna))\n\n\ndef translate(dna: str) -> str:\n    \"\"\"Translate from the first base, three bases per amino acid, up to (not including) the first stop codon.\n\n    translate(\"ATGGCCTAA\") == \"MA\"\n    Raise ValueError if the string has letters other than A, C, G, T.\n    \"\"\"\n    if set(dna) - set(\"ACGT\"):\n        raise ValueError(\"DNA has only A, C, G and T\")\n    protein = []\n    for i in range(0, len(dna) - 2, 3):\n        aa = CODON_TABLE[dna[i : i + 3]]\n        if aa == \"*\":\n            break\n        protein.append(aa)\n    return \"\".join(protein)\n",
+  "main": "\"\"\"Run: translate a DNA sequence codon by codon with your translate, draw the peptide it codes for, and show the\npartner strand.\"\"\"\n\nimport render as r\nfrom answer import CODON_TABLE, reverse_complement, translate\nfrom rdkit import Chem\n\n\ndef run(p: dict) -> list:\n    dna = \"\".join(p[\"dna\"].split()).upper()\n    protein = translate(dna)\n    codons = [dna[i : i + 3] for i in range(0, len(dna) - 2, 3)]\n    rows = []\n    for k, c in enumerate(codons[: len(protein) + 1]):\n        aa = CODON_TABLE[c]\n        rows.append([k + 1, c, \"stop\" if aa == \"*\" else aa])\n    out = [\n        r.metric((\"Protein\", \"蛋白質\"), protein or \"–\"),\n        r.metric((\"Length\", \"長度\"), len(protein), \"aa\"),\n    ]\n    if protein:\n        # the first residues as a molecule: amino acids joined by peptide bonds\n        head = Chem.MolFromSequence(protein[:4])\n        out.append(\n            r.svg(\n                head,\n                (\n                    f\"The first amino acids, {protein[:4]}, joined by peptide bonds\",\n                    f\"開頭的胺基酸 {protein[:4]}，以胜肽鍵相連\",\n                ),\n            )\n        )\n        out.append(\n            r.mol3d(\n                Chem.MolFromSequence(protein[:8]),\n                (\n                    f\"The first {min(8, len(protein))} amino acids in 3D: one possible shape of the chain, not the folded protein\",\n                    f\"前 {min(8, len(protein))} 個胺基酸的 3D：鏈的一種可能形狀，不是摺疊後的蛋白質\",\n                ),\n            )\n        )\n    out += [\n        r.table(\n            [(\"Codon #\", \"密碼子\"), (\"DNA\", \"DNA\"), (\"Amino acid\", \"胺基酸\")],\n            rows,\n            (\"Read three letters at a time\", \"每次讀三個字母\"),\n        ),\n        r.text(reverse_complement(dna), (\"Partner strand (reverse complement)\", \"配對股（反向互補）\"), mono=True),\n    ]\n    return out\n",
+  "params": [
+   {
+    "id": "dna",
+    "type": "text",
+    "label": [
+     "DNA",
+     "DNA"
+    ],
+    "default": "ATGGCCCTGTGGATGCGCCTCCTGCCCCTGCTGGCGCTGCTGGCCCTCTGGGGACCTGACCCAGCCGCAGCC",
+    "presets": [
+     [
+      "insulin (start)",
+      "胰島素（開頭）",
+      "ATGGCCCTGTGGATGCGCCTCCTGCCCCTGCTGGCGCTGCTGGCCCTCTGGGGACCTGACCCAGCCGCAGCC"
+     ],
+     [
+      "short with a stop",
+      "含終止的短序列",
+      "ATGGCCTAAGGG"
+     ]
+    ]
+   }
+  ],
+  "results": "results/translate.json",
   "test": "\"\"\"The contract for translate. Read-only: your answer.py must make these pass.\"\"\"\n\nimport random\nimport warnings\n\nimport pytest\nfrom Bio import BiopythonWarning\nfrom Bio.Seq import Seq\n\nfrom answer import reverse_complement, translate\n\n# Human insulin's coding sequence starts like this (the signal peptide MALWMRLLPLLALLALWGPDPAAA...)\nINSULIN_START = \"ATGGCCCTGTGGATGCGCCTCCTGCCCCTGCTGGCGCTGCTGGCCCTCTGGGGACCTGACCCAGCCGCAGCC\"\n\n\ndef test_small_examples():\n    assert reverse_complement(\"ATGC\") == \"GCAT\"\n    assert translate(\"ATGGCCTAA\") == \"MA\"\n\n\ndef test_insulin_signal_peptide():\n    assert translate(INSULIN_START) == \"MALWMRLLPLLALLALWGPDPAAA\"\n\n\ndef test_trailing_bases_are_ignored():\n    assert translate(\"ATGGC\") == \"M\"\n\n\ndef test_reverse_complement_twice_is_the_original():\n    assert reverse_complement(reverse_complement(INSULIN_START)) == INSULIN_START\n\n\ndef test_not_dna_raises():\n    with pytest.raises(ValueError):\n        translate(\"ATGXYZ\")\n    with pytest.raises(ValueError):\n        translate(\"AUGGCC\")  # U is RNA\n\n\n@pytest.mark.parametrize(\"seed\", range(5))\ndef test_agrees_with_biopython(seed):\n    rng = random.Random(seed)\n    dna = \"\".join(rng.choice(\"ACGT\") for _ in range(3 * rng.randint(5, 60) + rng.randint(0, 2)))\n    with warnings.catch_warnings():\n        warnings.simplefilter(\"ignore\", BiopythonWarning)  # \"partial codon\" when the length is not a multiple of 3\n        assert translate(dna) == str(Seq(dna).translate(to_stop=True))\n    assert reverse_complement(dna) == str(Seq(dna).reverse_complement())\n",
   "picture": "problems/biomolecules/translate.svg"
  },
@@ -522,6 +947,53 @@
    "PairwiseAligner"
   ],
   "stub": "def percent_identity(a: str, b: str) -> float:\n    \"\"\"Percent identity of two aligned sequences of equal length (\"-\" is a gap):\n    100 × identical columns / columns where neither sequence has a gap (0.0 if there are none).\n\n    percent_identity(\"MK-LV\", \"MKALI\") == 75.0\n    Raise ValueError if the lengths differ.\n    \"\"\"\n    raise NotImplementedError\n\n\ndef needleman_wunsch(a: str, b: str, match: int = 1, mismatch: int = -1, gap: int = -2) -> int:\n    \"\"\"The score of the best global alignment of a and b (linear gap penalty).\"\"\"\n    raise NotImplementedError\n",
+  "solution": "def percent_identity(a: str, b: str) -> float:\n    \"\"\"Percent identity of two aligned sequences of equal length (\"-\" is a gap):\n    100 × identical columns / columns where neither sequence has a gap (0.0 if there are none).\n\n    percent_identity(\"MK-LV\", \"MKALI\") == 75.0\n    Raise ValueError if the lengths differ.\n    \"\"\"\n    if len(a) != len(b):\n        raise ValueError(\"aligned sequences must have the same length\")\n    both = [(x, y) for x, y in zip(a, b) if x != \"-\" and y != \"-\"]\n    return 100.0 * sum(x == y for x, y in both) / len(both) if both else 0.0\n\n\ndef needleman_wunsch(a: str, b: str, match: int = 1, mismatch: int = -1, gap: int = -2) -> int:\n    \"\"\"The score of the best global alignment of a and b (linear gap penalty).\"\"\"\n    n, m = len(a), len(b)\n    F = [[0] * (m + 1) for _ in range(n + 1)]\n    for i in range(1, n + 1):\n        F[i][0] = i * gap\n    for j in range(1, m + 1):\n        F[0][j] = j * gap\n    for i in range(1, n + 1):\n        for j in range(1, m + 1):\n            diag = F[i - 1][j - 1] + (match if a[i - 1] == b[j - 1] else mismatch)\n            F[i][j] = max(diag, F[i - 1][j] + gap, F[i][j - 1] + gap)\n    return F[n][m]\n",
+  "main": "\"\"\"Run: align two proteins, score them with your needleman_wunsch, measure the identity of the alignment, and see\nwhere the differences are: on the 3D structure for human vs horse haemoglobin α, as a dot plot otherwise.\"\"\"\n\nfrom pathlib import Path\n\nimport render as r\nfrom answer import needleman_wunsch, percent_identity\nfrom Bio import Align\n\nHUMAN_HBA = \"VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHGKKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVSTVLTSKYR\"\nMODEL = (Path(__file__).parent / \"data\" / \"AF-P69905-F1-model_v6.pdb\").read_text()\n\n\ndef dot_plot(a: str, b: str, size: int = 360) -> str:\n    \"\"\"An SVG dot plot: a dot where letter i of a equals letter j of b; matching stretches show as diagonals.\"\"\"\n    n, m = len(a), len(b)\n    s = size / max(n, m)\n    dots = \"\".join(\n        f\"<rect x='{j * s:.2f}' y='{i * s:.2f}' width='{max(s, 1):.2f}' height='{max(s, 1):.2f}' fill='#c2410c'/>\"\n        for i, x in enumerate(a)\n        for j, y in enumerate(b)\n        if x == y\n    )\n    w, h = m * s, n * s\n    return (\n        f\"<svg xmlns='http://www.w3.org/2000/svg' viewBox='-30 -20 {w + 40:.0f} {h + 30:.0f}'>\"\n        f\"<rect width='{w:.2f}' height='{h:.2f}' fill='#fff' stroke='#d1d5db'/>{dots}\"\n        f\"<text x='{w / 2:.0f}' y='-6' font-size='11' text-anchor='middle' fill='#6b7280'>B →</text>\"\n        f\"<text x='-8' y='{h / 2:.0f}' font-size='11' text-anchor='end' fill='#6b7280'>A ↓</text></svg>\"\n    )\n\n\ndef run(p: dict) -> list:\n    a, b = \"\".join(p[\"a\"].split()).upper(), \"\".join(p[\"b\"].split()).upper()\n    score = needleman_wunsch(a, b, match=1, mismatch=-1, gap=-2)\n    # the alignment itself (the path through the table), from Biopython with the same scores, to show it\n    aligner = Align.PairwiseAligner(mode=\"global\", match_score=1, mismatch_score=-1)\n    aligner.open_gap_score = aligner.extend_gap_score = -2\n    best = aligner.align(a, b)[0]\n    top, bottom = best[0], best[1]\n    marks = \"\".join(\"|\" if x == y and x != \"-\" else \" \" for x, y in zip(top, bottom))\n    lines = []\n    for i in range(0, len(top), 60):\n        lines += [top[i : i + 60], marks[i : i + 60], bottom[i : i + 60], \"\"]\n    out = [\n        r.metric((\"Needleman–Wunsch score\", \"Needleman–Wunsch 分數\"), score),\n        r.metric((\"Identity\", \"相同度\"), f\"{percent_identity(top, bottom):.1f}\", \"%\"),\n    ]\n    if a == HUMAN_HBA:\n        # positions of A that differ from B, as residue numbers of the model (it starts with Met 1)\n        differ, k = [], 0\n        for x, y in zip(top, bottom):\n            if x != \"-\":\n                k += 1\n                if x != y:\n                    differ.append(k + 1)\n        out.append(\n            r.pdb3d(\n                [{\"pdb\": MODEL, \"colour\": \"#d1d5db\"}],\n                (\n                    \"Human haemoglobin α (AlphaFold model): the residues that differ in B, in orange\",\n                    \"人類血紅蛋白 α（AlphaFold 模型）：與 B 不同的殘基為橘色\",\n                ),\n                highlight=[{\"resi\": differ, \"colour\": \"#c2410c\"}],\n            )\n        )\n    else:\n        out.append(\n            {\n                \"kind\": \"svg\",\n                \"title\": [\"Dot plot: a dot wherever the letters agree\", \"點圖：字母相同處畫一個點\"],\n                \"svg\": dot_plot(a, b),\n            }\n        )\n    out.append(\n        r.text(\"\\n\".join(lines), (\"The best global alignment (| = identical)\", \"最佳全域比對（| = 相同）\"), mono=True)\n    )\n    return out\n",
+  "params": [
+   {
+    "id": "a",
+    "type": "text",
+    "label": [
+     "Sequence A",
+     "序列 A"
+    ],
+    "default": "VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHGKKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVSTVLTSKYR",
+    "presets": [
+     [
+      "human haemoglobin α",
+      "人類血紅蛋白 α",
+      "VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHGKKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVSTVLTSKYR"
+     ],
+     [
+      "GATTACA",
+      "GATTACA",
+      "GATTACA"
+     ]
+    ]
+   },
+   {
+    "id": "b",
+    "type": "text",
+    "label": [
+     "Sequence B",
+     "序列 B"
+    ],
+    "default": "VLSAADKTNVKAAWSKVGGHAGEYGAEALERMFLGFPTTKTYFPHFDLSHGSAQVKAHGKKVGDALTLAVGHLDDLPGALSNLSDLHAHKLRVDPVNFKLLSHCLLSTLAVHLPNDFTPAVHASLDKFLSSVSTVLTSKYR",
+    "presets": [
+     [
+      "horse haemoglobin α",
+      "馬血紅蛋白 α",
+      "VLSAADKTNVKAAWSKVGGHAGEYGAEALERMFLGFPTTKTYFPHFDLSHGSAQVKAHGKKVGDALTLAVGHLDDLPGALSNLSDLHAHKLRVDPVNFKLLSHCLLSTLAVHLPNDFTPAVHASLDKFLSSVSTVLTSKYR"
+     ],
+     [
+      "GCATGCU",
+      "GCATGCU",
+      "GCATGCU"
+     ]
+    ]
+   }
+  ],
+  "results": "results/sequence_identity.json",
   "test": "\"\"\"The contract for sequence_identity. Read-only: your answer.py must make these pass.\"\"\"\n\nimport random\n\nimport pytest\nfrom Bio import Align\n\nfrom answer import needleman_wunsch, percent_identity\n\n# Human and horse haemoglobin alpha chains (UniProt P69905 and P01958, without the initial methionine)\nHUMAN_HBA = \"VLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLSHGSAQVKGHGKKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAHLPAEFTPAVHASLDKFLASVSTVLTSKYR\"\nHORSE_HBA = \"VLSAADKTNVKAAWSKVGGHAGEYGAEALERMFLGFPTTKTYFPHFDLSHGSAQVKAHGKKVGDALTLAVGHLDDLPGALSNLSDLHAHKLRVDPVNFKLLSHCLLSTLAVHLPNDFTPAVHASLDKFLSSVSTVLTSKYR\"\n\n\ndef test_small_example():\n    assert percent_identity(\"MK-LV\", \"MKALI\") == 75.0\n\n\ndef test_identical_and_gaps_only():\n    assert percent_identity(\"ACDE\", \"ACDE\") == 100.0\n    assert percent_identity(\"--\", \"AC\") == 0.0\n\n\ndef test_unequal_lengths_raise():\n    with pytest.raises(ValueError):\n        percent_identity(\"ABC\", \"AB\")\n\n\ndef test_human_vs_horse_haemoglobin_alpha():\n    # same length, no gaps needed: 17 differences in 141 residues\n    assert len(HUMAN_HBA) == len(HORSE_HBA) == 141\n    assert percent_identity(HUMAN_HBA, HORSE_HBA) == pytest.approx(100 * 124 / 141)\n\n\ndef _biopython_score(a, b, match=1, mismatch=-1, gap=-2):\n    aligner = Align.PairwiseAligner(mode=\"global\", match_score=match, mismatch_score=mismatch)\n    aligner.open_gap_score = aligner.extend_gap_score = gap\n    return aligner.score(a, b)\n\n\ndef test_needleman_wunsch_small():\n    assert needleman_wunsch(\"GATTACA\", \"GCATGCU\") == _biopython_score(\"GATTACA\", \"GCATGCU\")\n    assert needleman_wunsch(\"\", \"ABC\") == -6\n    assert needleman_wunsch(\"ABC\", \"ABC\") == 3\n\n\n@pytest.mark.parametrize(\"seed\", range(6))\ndef test_needleman_wunsch_agrees_with_biopython(seed):\n    rng = random.Random(seed)\n    a = \"\".join(rng.choice(\"ACDEFGHIKLMNPQRSTVWY\") for _ in range(rng.randint(5, 40)))\n    b = \"\".join(rng.choice(\"ACDEFGHIKLMNPQRSTVWY\") for _ in range(rng.randint(5, 40)))\n    scores = dict(match=rng.randint(1, 3), mismatch=-rng.randint(0, 2), gap=-rng.randint(1, 3))\n    assert needleman_wunsch(a, b, **scores) == _biopython_score(a, b, **scores)\n",
   "picture": "problems/biomolecules/sequence_identity.svg"
  },
@@ -594,6 +1066,35 @@
    "PDBParser"
   ],
   "stub": "import numpy as np\n\n# One atom: (chain, residue number, residue name, atom name, x, y, z)\nAtom = tuple[str, int, str, str, float, float, float]\n\n\ndef read_atoms(pdb_text: str) -> list[Atom]:\n    \"\"\"The ATOM and HETATM records of a PDB file, in file order.\n\n    The first atom of 1CRN is (\"A\", 1, \"THR\", \"N\", 17.047, 14.099, 3.625).\n    \"\"\"\n    raise NotImplementedError\n\n\ndef neighbours(pdb_text: str, chain: str, resnum: int, cutoff: float = 4.0) -> list[tuple[str, int]]:\n    \"\"\"The other residues, as (chain, residue number) sorted, with any atom within cutoff Å of any atom of the\n    given residue.\"\"\"\n    raise NotImplementedError\n",
+  "solution": "import numpy as np\n\n# One atom: (chain, residue number, residue name, atom name, x, y, z)\nAtom = tuple[str, int, str, str, float, float, float]\n\n\ndef read_atoms(pdb_text: str) -> list[Atom]:\n    \"\"\"The ATOM and HETATM records of a PDB file, in file order.\n\n    The first atom of 1CRN is (\"A\", 1, \"THR\", \"N\", 17.047, 14.099, 3.625).\n    \"\"\"\n    atoms = []\n    for line in pdb_text.splitlines():\n        if not line.startswith((\"ATOM  \", \"HETATM\")):\n            continue\n        atoms.append(\n            (\n                line[21],\n                int(line[22:26]),\n                line[17:20].strip(),\n                line[12:16].strip(),\n                float(line[30:38]),\n                float(line[38:46]),\n                float(line[46:54]),\n            )\n        )\n    return atoms\n\n\ndef neighbours(pdb_text: str, chain: str, resnum: int, cutoff: float = 4.0) -> list[tuple[str, int]]:\n    \"\"\"The other residues, as (chain, residue number) sorted, with any atom within cutoff Å of any atom of the\n    given residue.\"\"\"\n    atoms = read_atoms(pdb_text)\n    xyz = np.array([a[4:] for a in atoms])\n    keys = [(a[0], a[1]) for a in atoms]\n    mine = np.array([k == (chain, resnum) for k in keys])\n    d = np.linalg.norm(xyz[mine][:, None, :] - xyz[None, :, :], axis=-1)\n    close = (d <= cutoff).any(axis=0)\n    return sorted({k for k, c in zip(keys, close) if c and k != (chain, resnum)})\n",
+  "main": "\"\"\"Run: crambin in 3D, the chosen residue in orange and its neighbours (from your neighbours) in blue.\"\"\"\n\nfrom pathlib import Path\n\nimport render as r\nfrom answer import neighbours, read_atoms\n\nPDB = (Path(__file__).parent / \"data\" / \"1crn.pdb\").read_text()\n\n\ndef run(p: dict) -> list:\n    resnum, cutoff = int(p[\"residue\"]), float(p[\"cutoff\"])\n    names = {(c, n): name for c, n, name, *_ in read_atoms(PDB)}\n    near = neighbours(PDB, \"A\", resnum, cutoff)\n    return [\n        r.metric(\n            (\n                f\"Residues within {cutoff:g} Å of {names[('A', resnum)]}{resnum}\",\n                f\"距 {names[('A', resnum)]}{resnum} {cutoff:g} Å 以內的殘基\",\n            ),\n            len(near),\n        ),\n        r.pdb3d(\n            [{\"pdb\": PDB, \"colour\": \"#9ca3af\"}],\n            (\n                \"Crambin (PDB 1CRN): the residue in orange, its neighbours in blue\",\n                \"Crambin（PDB 1CRN）：所選殘基為橘色，鄰居為藍色\",\n            ),\n            highlight=[{\"resi\": [resnum], \"colour\": \"#c2410c\"}, {\"resi\": [n for _, n in near], \"colour\": \"#2563eb\"}],\n        ),\n        r.table(\n            [(\"Chain\", \"鏈\"), (\"Residue\", \"殘基\"), (\"Name\", \"名稱\")],\n            [[c, n, names[(c, n)]] for c, n in near],\n            (\"Neighbours\", \"鄰居\"),\n        ),\n    ]\n",
+  "params": [
+   {
+    "id": "residue",
+    "type": "int",
+    "label": [
+     "Residue",
+     "殘基"
+    ],
+    "default": 16,
+    "min": 1,
+    "max": 46,
+    "step": 1
+   },
+   {
+    "id": "cutoff",
+    "type": "float",
+    "label": [
+     "Cutoff (Å)",
+     "截止距離（Å）"
+    ],
+    "default": 4.0,
+    "min": 2.0,
+    "max": 8.0,
+    "step": 0.5
+   }
+  ],
+  "results": "results/pdb_neighbours.json",
   "test": "\"\"\"The contract for pdb_neighbours. Read-only: your answer.py must make these pass.\"\"\"\n\nfrom pathlib import Path\n\nimport pytest\nfrom Bio.PDB import NeighborSearch, PDBParser\n\nfrom answer import neighbours, read_atoms\n\nPDB = Path(__file__).parent / \"data\" / \"1crn.pdb\"\nTEXT = PDB.read_text()\nSTRUCTURE = PDBParser(QUIET=True).get_structure(\"1crn\", PDB)\n\n\ndef test_first_and_count():\n    atoms = read_atoms(TEXT)\n    assert len(atoms) == 327\n    assert atoms[0] == (\"A\", 1, \"THR\", \"N\", 17.047, 14.099, 3.625)\n    assert atoms[-1][:4] == (\"A\", 46, \"ASN\", \"OXT\")\n\n\ndef test_coordinates_match_biopython():\n    bio = [\n        (a.get_parent().get_parent().id, a.get_parent().id[1], a.get_id(), *map(float, a.coord))\n        for a in STRUCTURE.get_atoms()\n    ]\n    mine = read_atoms(TEXT)\n    assert [(c, r, n) for c, r, _, n, *_ in mine] == [(c, r, n) for c, r, n, *_ in bio]\n    for m, b in zip(mine, bio):\n        assert m[4:] == pytest.approx(tuple(b[3:]), abs=1e-3)\n\n\ndef _biopython_neighbours(resnum, cutoff):\n    atoms = list(STRUCTURE.get_atoms())\n    search = NeighborSearch(atoms)\n    res = STRUCTURE[0][\"A\"][resnum]\n    found = set()\n    for atom in res:\n        for other in search.search(atom.coord, cutoff):\n            r = other.get_parent()\n            found.add((r.get_parent().id, r.id[1]))\n    found.discard((\"A\", resnum))\n    return sorted(found)\n\n\n@pytest.mark.parametrize(\"resnum, cutoff\", [(3, 4.0), (16, 4.0), (26, 3.5), (40, 5.0), (1, 4.0)])\ndef test_neighbours_agree_with_biopython(resnum, cutoff):\n    assert neighbours(TEXT, \"A\", resnum, cutoff) == _biopython_neighbours(resnum, cutoff)\n\n\ndef test_disulphide_partner_is_a_neighbour():\n    # crambin's cysteines pair up: Cys3-Cys40, Cys4-Cys32, Cys16-Cys26\n    assert (\"A\", 40) in neighbours(TEXT, \"A\", 3)\n    assert (\"A\", 26) in neighbours(TEXT, \"A\", 16)\n",
   "picture": "problems/biomolecules/pdb_neighbours.svg"
  },
@@ -655,6 +1156,20 @@
    "Bio"
   ],
   "stub": "import numpy as np\n\n\ndef afdb_model_url(uniprot: str, version: int = 6) -> str:\n    \"\"\"The download address of the AlphaFold DB model (PDB format) for a UniProt accession.\n\n    afdb_model_url(\"P01542\") == \"https://alphafold.ebi.ac.uk/files/AF-P01542-F1-model_v6.pdb\"\n    \"\"\"\n    raise NotImplementedError\n\n\ndef plddt_per_residue(pdb_text: str) -> list[float]:\n    \"\"\"The pLDDT of each residue, in order: the B-factor column (61-66) of its CA atom.\"\"\"\n    raise NotImplementedError\n\n\ndef confidence_bands(plddt: list[float]) -> dict[str, int]:\n    \"\"\"How many residues fall in each band: \"very_high\" (> 90), \"confident\" (> 70), \"low\" (> 50), \"very_low\".\n    All four keys are always present.\"\"\"\n    raise NotImplementedError\n",
+  "solution": "def afdb_model_url(uniprot: str, version: int = 6) -> str:\n    \"\"\"The download address of the AlphaFold DB model (PDB format) for a UniProt accession.\n\n    afdb_model_url(\"P01542\") == \"https://alphafold.ebi.ac.uk/files/AF-P01542-F1-model_v6.pdb\"\n    \"\"\"\n    return f\"https://alphafold.ebi.ac.uk/files/AF-{uniprot}-F1-model_v{version}.pdb\"\n\n\ndef plddt_per_residue(pdb_text: str) -> list[float]:\n    \"\"\"The pLDDT of each residue, in order: the B-factor column (61-66) of its CA atom.\"\"\"\n    plddt = []\n    for line in pdb_text.splitlines():\n        if line.startswith(\"ATOM  \") and line[12:16].strip() == \"CA\":\n            plddt.append(float(line[60:66]))\n    return plddt\n\n\ndef confidence_bands(plddt: list[float]) -> dict[str, int]:\n    \"\"\"How many residues fall in each band: \"very_high\" (> 90), \"confident\" (> 70), \"low\" (> 50), \"very_low\".\n    All four keys are always present.\"\"\"\n    counts = {\"very_high\": 0, \"confident\": 0, \"low\": 0, \"very_low\": 0}\n    for p in plddt:\n        band = \"very_high\" if p > 90 else \"confident\" if p > 70 else \"low\" if p > 50 else \"very_low\"\n        counts[band] += 1\n    return counts\n",
+  "main": "\"\"\"Run: the AlphaFold model of crambin coloured by the pLDDT your function reads, and the four confidence bands.\"\"\"\n\nfrom pathlib import Path\n\nimport render as r\nfrom answer import afdb_model_url, confidence_bands, plddt_per_residue\n\nMODEL = (Path(__file__).parent / \"data\" / \"AF-P01542-F1-model_v6.pdb\").read_text()\nBAND = [(90, \"#0053d6\"), (70, \"#65cbf3\"), (50, \"#ffdb13\"), (-1, \"#ff7d45\")]\n\n\ndef run(p: dict) -> list:\n    plddt = plddt_per_residue(MODEL)\n    bands = confidence_bands(plddt)\n    colour = [next(c for lo, c in BAND if v > lo) for v in plddt]\n    return [\n        r.metric((\"Mean pLDDT\", \"平均 pLDDT\"), f\"{sum(plddt) / len(plddt):.1f}\"),\n        r.pdb3d([{\"pdb\": MODEL, \"colour\": \"plddt\"}], (\"Coloured by pLDDT\", \"依 pLDDT 上色\")),\n        r.bars(\n            [str(i + 1) for i in range(len(plddt))],\n            plddt,\n            (\"pLDDT of each residue\", \"每個殘基的 pLDDT\"),\n            colours=colour,\n            vertical=True,\n        ),\n        r.table(\n            [(\"Band\", \"等級\"), (\"Residues\", \"殘基數\")],\n            [\n                [\"very high (> 90)\", bands[\"very_high\"]],\n                [\"confident (> 70)\", bands[\"confident\"]],\n                [\"low (> 50)\", bands[\"low\"]],\n                [\"very low\", bands[\"very_low\"]],\n            ],\n            (\"Confidence bands\", \"信心等級\"),\n        ),\n        r.link(afdb_model_url(p[\"uniprot\"]), (\"Where this kind of file comes from\", \"這類檔案的下載網址\")),\n    ]\n",
+  "params": [
+   {
+    "id": "uniprot",
+    "type": "text",
+    "label": [
+     "UniProt accession",
+     "UniProt 編號"
+    ],
+    "default": "P01542"
+   }
+  ],
+  "results": "results/alphafold_plddt.json",
   "test": "\"\"\"The contract for alphafold_plddt. Read-only: your answer.py must make these pass.\"\"\"\n\nfrom pathlib import Path\n\nimport numpy as np\nimport pytest\nfrom Bio.PDB import PDBParser\n\nfrom answer import afdb_model_url, confidence_bands, plddt_per_residue\n\nMODEL = Path(__file__).parent / \"data\" / \"AF-P01542-F1-model_v6.pdb\"\nTEXT = MODEL.read_text()\n\n\ndef test_url():\n    assert afdb_model_url(\"P01542\") == \"https://alphafold.ebi.ac.uk/files/AF-P01542-F1-model_v6.pdb\"\n    assert afdb_model_url(\"P69905\", version=4) == \"https://alphafold.ebi.ac.uk/files/AF-P69905-F1-model_v4.pdb\"\n\n\ndef test_one_value_per_residue():\n    p = plddt_per_residue(TEXT)\n    assert len(p) == 46\n    assert p[:3] == [89.94, 91.94, 95.38]\n\n\ndef test_agrees_with_biopython_b_factors():\n    s = PDBParser(QUIET=True).get_structure(\"af\", MODEL)\n    assert plddt_per_residue(TEXT) == pytest.approx([r[\"CA\"].get_bfactor() for r in s.get_residues()])\n\n\ndef test_mean_is_the_database_global_score():\n    # AlphaFold DB reports a global (mean) pLDDT of 93.5 for this model\n    assert float(np.mean(plddt_per_residue(TEXT))) == pytest.approx(93.5, abs=0.05)\n\n\ndef test_bands_by_hand():\n    assert confidence_bands([95, 90, 70.5, 70, 50, 10]) == {\"very_high\": 1, \"confident\": 2, \"low\": 1, \"very_low\": 2}\n    assert confidence_bands([]) == {\"very_high\": 0, \"confident\": 0, \"low\": 0, \"very_low\": 0}\n\n\ndef test_bands_cover_the_model():\n    bands = confidence_bands(plddt_per_residue(TEXT))\n    assert sum(bands.values()) == 46\n    assert bands[\"very_high\"] > bands[\"confident\"]  # a small, well-folded protein: mostly very high\n",
   "picture": "problems/pro/alphafold_plddt.svg"
  },
@@ -730,6 +1245,23 @@
    "Superimposer"
   ],
   "stub": "import numpy as np\n\n\ndef kabsch_rmsd(P: np.ndarray, Q: np.ndarray) -> float:\n    \"\"\"The RMSD between two (N, 3) arrays of matching points after the best rotation and translation of P onto Q.\n\n    Raise ValueError if the shapes differ or are not (N, 3).\n    \"\"\"\n    raise NotImplementedError\n\n\ndef ca_rmsd(model_pdb: str, experiment_pdb: str) -> float:\n    \"\"\"The Kabsch RMSD of the alpha carbons (CA) of chain A, paired by residue number, over the residues present\n    in both files.\"\"\"\n    raise NotImplementedError\n",
+  "solution": "import numpy as np\n\n\ndef kabsch_rmsd(P: np.ndarray, Q: np.ndarray) -> float:\n    \"\"\"The RMSD between two (N, 3) arrays of matching points after the best rotation and translation of P onto Q.\n\n    Raise ValueError if the shapes differ or are not (N, 3).\n    \"\"\"\n    P = np.asarray(P, dtype=float)\n    Q = np.asarray(Q, dtype=float)\n    if P.shape != Q.shape or P.ndim != 2 or P.shape[1] != 3:\n        raise ValueError(\"P and Q must both be (N, 3)\")\n    P = P - P.mean(axis=0)\n    Q = Q - Q.mean(axis=0)\n    U, S, Vt = np.linalg.svd(P.T @ Q)\n    d = np.sign(np.linalg.det(U @ Vt))\n    R = U @ np.diag([1.0, 1.0, d]) @ Vt\n    return float(np.sqrt(((P @ R - Q) ** 2).sum(axis=1).mean()))\n\n\ndef _ca(pdb_text: str) -> dict[int, tuple[float, float, float]]:\n    ca = {}\n    for line in pdb_text.splitlines():\n        if line.startswith(\"ATOM  \") and line[12:16].strip() == \"CA\" and line[21] == \"A\":\n            ca[int(line[22:26])] = (float(line[30:38]), float(line[38:46]), float(line[46:54]))\n    return ca\n\n\ndef ca_rmsd(model_pdb: str, experiment_pdb: str) -> float:\n    \"\"\"The Kabsch RMSD of the alpha carbons (CA) of chain A, paired by residue number, over the residues present\n    in both files.\"\"\"\n    model, experiment = _ca(model_pdb), _ca(experiment_pdb)\n    common = sorted(set(model) & set(experiment))\n    return kabsch_rmsd(np.array([model[i] for i in common]), np.array([experiment[i] for i in common]))\n",
+  "main": "\"\"\"Run: superpose AlphaFold's crambin on the crystal structure, your ca_rmsd, and the deviation residue by residue.\"\"\"\n\nfrom pathlib import Path\n\nimport numpy as np\nimport render as r\nfrom answer import ca_rmsd\n\nDATA = Path(__file__).parent / \"data\"\nMODEL = (DATA / \"AF-P01542-F1-model_v6.pdb\").read_text()\nCRYSTAL = (DATA / \"1crn.pdb\").read_text()\n\n\ndef _ca(text: str) -> dict[int, np.ndarray]:\n    return {\n        int(ln[22:26]): np.array([float(ln[30:38]), float(ln[38:46]), float(ln[46:54])])\n        for ln in text.splitlines()\n        if ln.startswith(\"ATOM  \") and ln[12:16].strip() == \"CA\"\n    }\n\n\ndef run(p: dict) -> list:\n    rmsd = ca_rmsd(MODEL, CRYSTAL)\n    m, x = _ca(MODEL), _ca(CRYSTAL)\n    common = sorted(set(m) & set(x))\n    P, Q = np.array([m[i] for i in common]), np.array([x[i] for i in common])\n    pc, qc = P.mean(0), Q.mean(0)\n    U, _, Vt = np.linalg.svd((P - pc).T @ (Q - qc))\n    R = U @ np.diag([1, 1, np.sign(np.linalg.det(U @ Vt))]) @ Vt\n    moved = []\n    for ln in MODEL.splitlines():  # move every atom of the model by the same fit, to draw the two together\n        if ln.startswith((\"ATOM  \", \"HETATM\")):\n            xyz = (np.array([float(ln[30:38]), float(ln[38:46]), float(ln[46:54])]) - pc) @ R + qc\n            ln = f\"{ln[:30]}{xyz[0]:8.3f}{xyz[1]:8.3f}{xyz[2]:8.3f}{ln[54:]}\"\n        moved.append(ln)\n    dev = np.linalg.norm((P - pc) @ R - (Q - qc), axis=1)\n    worst = float(p[\"highlight\"])\n    return [\n        r.metric((\"CA RMSD, model vs crystal\", \"α 碳 RMSD，模型對晶體\"), f\"{rmsd:.2f}\", \"Å\", good=rmsd < 1.0),\n        r.pdb3d(\n            [{\"pdb\": CRYSTAL, \"colour\": \"#9ca3af\"}, {\"pdb\": \"\\n\".join(moved), \"colour\": \"plddt\"}],\n            (\n                \"Crystal (grey) and the AlphaFold model (by pLDDT), superposed; residues off by more than the threshold in red\",\n                \"晶體（灰）與 AlphaFold 模型（依 pLDDT）疊合；偏差超過門檻的殘基為紅色\",\n            ),\n            highlight=[{\"resi\": [i for i, d in zip(common, dev) if d > worst], \"colour\": \"#dc2626\"}],\n        ),\n        r.bars(\n            [str(i) for i in common],\n            [round(float(d), 3) for d in dev],\n            (\"Distance of each CA after superposition\", \"疊合後每個 α 碳的距離\"),\n            colours=[\"#dc2626\" if d > worst else \"#c2410c\" for d in dev],\n            unit=\"Å\",\n            vertical=True,\n        ),\n    ]\n",
+  "params": [
+   {
+    "id": "highlight",
+    "type": "float",
+    "label": [
+     "Mark residues off by more than (Å)",
+     "標出偏差超過（Å）的殘基"
+    ],
+    "default": 1.0,
+    "min": 0.2,
+    "max": 2.0,
+    "step": 0.1
+   }
+  ],
+  "results": "results/rmsd.json",
   "test": "\"\"\"The contract for rmsd. Read-only: your answer.py must make these pass.\"\"\"\n\nfrom pathlib import Path\n\nimport numpy as np\nimport pytest\nfrom Bio.PDB import PDBParser\nfrom Bio.SVDSuperimposer import SVDSuperimposer\n\nfrom answer import ca_rmsd, kabsch_rmsd\n\nDATA = Path(__file__).parent / \"data\"\nMODEL = (DATA / \"AF-P01542-F1-model_v6.pdb\").read_text()\nCRYSTAL = (DATA / \"1crn.pdb\").read_text()\n\n\ndef _rotation(rng):\n    q = rng.normal(size=4)\n    a, b, c, d = q / np.linalg.norm(q)\n    return np.array(\n        [\n            [a * a + b * b - c * c - d * d, 2 * (b * c - a * d), 2 * (b * d + a * c)],\n            [2 * (b * c + a * d), a * a - b * b + c * c - d * d, 2 * (c * d - a * b)],\n            [2 * (b * d - a * c), 2 * (c * d + a * b), a * a - b * b - c * c + d * d],\n        ]\n    )\n\n\ndef test_same_points_moved_and_turned_have_zero_rmsd():\n    rng = np.random.default_rng(0)\n    P = rng.normal(size=(20, 3)) * 5\n    Q = P @ _rotation(rng).T + np.array([3.0, -7.0, 12.0])\n    assert kabsch_rmsd(P, Q) == pytest.approx(0.0, abs=1e-9)\n\n\ndef test_a_mirror_image_is_not_the_same():\n    # a chiral set of points and its mirror image cannot be superposed by a rotation\n    P = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1], [1, 1, 1.5]], dtype=float)\n    assert kabsch_rmsd(P, P * np.array([1, 1, -1])) > 0.1\n\n\n@pytest.mark.parametrize(\"seed\", range(4))\ndef test_agrees_with_biopython(seed):\n    rng = np.random.default_rng(seed)\n    P = rng.normal(size=(15, 3)) * 4\n    Q = P @ _rotation(rng).T + rng.normal(size=(15, 3))\n    sup = SVDSuperimposer()\n    sup.set(Q, P)\n    sup.run()\n    assert kabsch_rmsd(P, Q) == pytest.approx(sup.get_rms(), abs=1e-9)\n\n\ndef test_shapes_checked():\n    with pytest.raises(ValueError):\n        kabsch_rmsd(np.zeros((4, 3)), np.zeros((5, 3)))\n    with pytest.raises(ValueError):\n        kabsch_rmsd(np.zeros((4, 2)), np.zeros((4, 2)))\n\n\ndef test_alphafold_vs_crystal():\n    parser = PDBParser(QUIET=True)\n    m = parser.get_structure(\"m\", DATA / \"AF-P01542-F1-model_v6.pdb\")[0][\"A\"]\n    x = parser.get_structure(\"x\", DATA / \"1crn.pdb\")[0][\"A\"]\n    common = sorted({r.id[1] for r in m} & {r.id[1] for r in x})\n    sup = SVDSuperimposer()\n    sup.set(np.array([x[i][\"CA\"].coord for i in common], float), np.array([m[i][\"CA\"].coord for i in common], float))\n    sup.run()\n    got = ca_rmsd(MODEL, CRYSTAL)\n    assert got == pytest.approx(sup.get_rms(), abs=1e-3)\n    assert got < 1.0  # crambin is predicted to well under an ångström\n",
   "picture": "problems/pro/rmsd.svg"
  }

@@ -13,6 +13,21 @@ uses:
   - {library: RDKit, api: Descriptors.MolWt, url: "https://www.rdkit.org/docs/source/rdkit.Chem.Descriptors.html"}
   - {library: RDKit, api: Crippen.MolLogP, url: "https://www.rdkit.org/docs/source/rdkit.Chem.Crippen.html"}
   - {library: RDKit, api: Lipinski.NumHDonors, url: "https://www.rdkit.org/docs/source/rdkit.Chem.Lipinski.html"}
+params:
+  - id: smiles
+    type: smiles
+    label: [SMILES, SMILES]
+    default: "CC(=O)Oc1ccccc1C(=O)O"
+    presets:
+      - [caffeine, 咖啡因, "Cn1cnc2c1c(=O)n(C)c(=O)n2C"]
+      - [aspirin, 阿斯匹靈, "CC(=O)Oc1ccccc1C(=O)O"]
+      - [ibuprofen, 布洛芬, "CC(C)Cc1ccc(cc1)C(C)C(=O)O"]
+      - [ethanol, 乙醇, "CCO"]
+      - [benzene, 苯, "c1ccccc1"]
+      - [paracetamol, 乙醯胺酚, "CC(=O)Nc1ccc(O)cc1"]
+      - [nicotine, 尼古丁, "CN1CCCC1c1cccnc1"]
+      - [triacontane, 三十烷, "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"]
+      - [hexaserine, 六絲胺酸肽, "N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)O"]
 mirror:
   - text: Four numbers describe the molecule; RDKit computes each one.
     code: |-

@@ -8,6 +8,7 @@ timeout (catalyzer.runner).
 from __future__ import annotations
 
 import os
+from typing import Literal
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -26,6 +27,9 @@ LOCAL_ORIGIN = r"http://(localhost|127\.0\.0\.1)(:\d+)?"
 class RunRequest(BaseModel):
     problem: str = Field(max_length=200)
     code: str = Field(max_length=200_000)
+    # run: main.py with the parameters (results to draw); test: the problem's tests
+    mode: Literal["run", "test"] = "test"
+    params: dict[str, str | int | float] = Field(default_factory=dict, max_length=20)
 
 
 def create_app() -> FastAPI:
@@ -56,6 +60,8 @@ def create_app() -> FastAPI:
             problem = load(req.problem)
         except KeyError:
             raise HTTPException(404, f"no problem {req.problem!r}") from None
+        if req.mode == "run":
+            return runner.run_main(problem, req.code, req.params).to_json()
         return runner.run(problem, req.code).to_json()
 
     return app

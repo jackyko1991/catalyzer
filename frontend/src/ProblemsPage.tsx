@@ -1,22 +1,26 @@
 /**
- * Problems: the workbench, laid out as Tensorizer's (and Formalizer's) problem page.
+ * Problems: a library of runnable molecular problems, laid out as Tensorizer's problem page.
  *
- * Wide screens: three columns filling the window, each scrolling on its own:
- *   library (search, the three tracks folding open to their problems by level, the Tensorizer models)
- *   | the problem (title, badges, summary, picture, links; then Steps / The lock / Notes)
- *   | the code (answer.py and the read-only test.py) over the results and the terminal.
- * Phones and tablets: a problem picker, then tabs Problem · Steps · Code · Results.
+ * Wide screens, filling the window, each column full height and scrolling on its own (the owner's rule: no sparse
+ * parameters column; the results get a whole column, because molecules need space):
+ *   library (folds away to a thin rail; search with "/", tracks folding open to their problems)
+ *   | the problem (title, badges, summary, picture, the open libraries it uses, the same idea on a sister site)
+ *   | the code (parameters, Run and Test in one toolbar; answer.py opening with working code, main.py and test.py
+ *     read-only; the terminal folded under it)
+ *   | the feedback, in tabs: all results, the 2D structures, 3D, charts and tables, the tests.
+ * Phones and tablets: a problem picker, then tabs Problem · Code · Results.
  *
- * A problem is read in Feynman order: one paragraph, its picture, the steps in words; the code of each step only on
- * request (natural language ↔ code); then the reader's own answer, checked on their computer by the local runner.
+ * Before anyone runs anything, the results are those of the default parameters, computed when the site was built.
+ * Run and Test go to the local runner (`pixi run runner`): the code runs on the reader's own computer.
  */
 import { python } from "@codemirror/lang-python";
 import { EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { CodeBlock, go, ProblemPicture, RichText, routeHash, useLang } from "@learnkit/web";
+import { CodeBlock, go, ProblemPicture, RelatedProblems, RichText, routeHash, useLang } from "@learnkit/web";
 import CodeMirror from "@uiw/react-codemirror";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { findProblem, LEVEL, type Problem, PROBLEMS, problemName, TENSORIZER_LINKS, tensorizerFor, tensorizerUrl, TRACKS } from "./problems";
+import { findProblem, LEVEL, type Param, type Problem, PROBLEMS, problemName, TRACKS } from "./problems";
+import ResultsView, { type ResultItem } from "./ResultsView";
 import { loadDraft, RUNNER, runAnswer, type RunResult, runnerAlive, saveDraft } from "./runner";
 
 const PY = python();
@@ -27,7 +31,7 @@ const LAST = "catalyzer.problem";
 const LEVEL_DOT: Record<Problem["level"], string> = { beginner: "bg-green-500", intermediate: "bg-amber-500", pro: "bg-red-500" };
 const LEVEL_TEXT: Record<Problem["level"], string> = { beginner: "text-green-700", intermediate: "text-amber-700", pro: "text-red-700" };
 
-type PhoneTab = "problem" | "steps" | "code" | "results";
+type PhoneTab = "problem" | "code" | "results";
 
 export default function ProblemsPage({ name }: { name: string | null }) {
   const { pick } = useLang();
@@ -51,10 +55,24 @@ export default function ProblemsPage({ name }: { name: string | null }) {
   }, [name, current]);
 
   const [tab, setTab] = useState<PhoneTab>("problem");
-  const show = (t: PhoneTab) => (tab === t ? "" : "hidden xl:flex");
+  const [libraryOpen, setLibraryOpen] = useState(() => {
+    try {
+      return localStorage.getItem("catalyzer.library") !== "closed";
+    } catch {
+      return true;
+    }
+  });
+  const toggleLibrary = () =>
+    setLibraryOpen((o) => {
+      try {
+        localStorage.setItem("catalyzer.library", o ? "closed" : "open");
+      } catch {
+        /* private window */
+      }
+      return !o;
+    });
   const tabs: { id: PhoneTab; label: [string, string] }[] = [
     { id: "problem", label: ["Problem", "題目"] },
-    { id: "steps", label: ["Steps", "步驟"] },
     { id: "code", label: ["Code", "程式碼"] },
     { id: "results", label: ["Results", "結果"] },
   ];
@@ -62,7 +80,7 @@ export default function ProblemsPage({ name }: { name: string | null }) {
   return (
     <div className="flex flex-col bg-white xl:h-full xl:min-h-0 xl:flex-row" data-testid="problem-view">
       {/* phones and tablets: pick a problem, then a tab */}
-      <div className="space-y-2 border-b border-gray-200 p-3 xl:hidden">
+      <div className="border-b border-gray-200 p-3 xl:hidden">
         <select
           value={current}
           onChange={(e) => go("problems", e.target.value)}
@@ -96,35 +114,38 @@ export default function ProblemsPage({ name }: { name: string | null }) {
         ))}
       </div>
 
-      {/* 1. the library (wide screens only; phones use the picker) */}
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-gray-200 bg-white xl:flex xl:min-h-0" data-testid="library">
-        <Library selected={current} />
-      </aside>
+      {libraryOpen ? (
+        <aside className="hidden w-56 shrink-0 flex-col border-r border-gray-200 bg-white xl:flex xl:min-h-0" data-testid="library">
+          <Library selected={current} onClose={toggleLibrary} />
+        </aside>
+      ) : (
+        <button
+          onClick={toggleLibrary}
+          className="hidden w-8 shrink-0 flex-col items-center gap-2 border-r border-gray-200 bg-gray-50 py-3 text-xs text-gray-500 hover:text-(--lk-accent) xl:flex"
+          title={pick(["Show the problem list", "顯示題目清單"])}
+          data-testid="library-open"
+        >
+          »<span className="[writing-mode:vertical-rl]">{pick(["Problems", "題目"])}</span>
+        </button>
+      )}
 
-      {/* 2. the problem */}
-      <section className="flex min-w-0 flex-col border-r border-gray-200 xl:min-h-0 xl:w-[34%] xl:shrink-0 xl:overflow-y-auto">
-        <div className={`${show("problem")} flex-col`}>
-          <ProblemHeader problem={problem} />
-        </div>
-        <div className={`${show("steps")} flex-col xl:flex-1`}>
-          <ProblemTabs key={problem.id} problem={problem} />
-        </div>
+      <section className={`${tab === "problem" ? "flex" : "hidden xl:flex"} min-w-0 flex-col border-r border-gray-200 xl:min-h-0 xl:w-[22%] xl:shrink-0 xl:overflow-y-auto`}>
+        <ProblemHeader problem={problem} />
       </section>
 
-      {/* 3. the code, the results and the terminal */}
-      <Workbench key={problem.id} problem={problem} phoneTab={tab} onRan={() => setTab((t) => (t === "code" ? "results" : t))} />
+      <Workbench key={problem.id} problem={problem} phoneTab={tab} onRun={() => setTab((t) => (t === "code" ? "results" : t))} />
     </div>
   );
 }
 
-// ── 1. library ─────────────────────────────────────────────────────────────────────────────────────────────────────
+// ── the library ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 const fold = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 
-function Library({ selected }: { selected: string }) {
+function Library({ selected, onClose }: { selected: string; onClose: () => void }) {
   const { pick } = useLang();
   const track = findProblem(selected)?.category;
-  const [open, setOpen] = useState<Set<string>>(() => new Set(track ? [track] : [TRACKS[0].id]));
+  const [open, setOpen] = useState<Set<string>>(() => new Set(TRACKS.map((t) => t.id)));
   useEffect(() => {
     if (track) setOpen((s) => (s.has(track) ? s : new Set(s).add(track)));
   }, [track]);
@@ -156,9 +177,10 @@ function Library({ selected }: { selected: string }) {
         <button
           onClick={() => go("problems", problemName(p))}
           aria-current={here ? "page" : undefined}
-          className={`w-full rounded-md px-2 py-1.5 text-left text-sm leading-snug ${here ? "bg-orange-50 font-medium text-(--lk-accent)" : "text-gray-700 hover:bg-gray-50"}`}
+          className={`flex w-full items-start gap-2 rounded-md px-2 py-1.5 text-left text-sm leading-snug ${here ? "bg-orange-50 font-medium text-(--lk-accent)" : "text-gray-700 hover:bg-gray-50"}`}
           data-testid={`library-item-${problemName(p)}`}
         >
+          <span className={`mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full ${LEVEL_DOT[p.level]}`} />
           <RichText text={pick(p.title)} />
         </button>
       </li>
@@ -167,8 +189,8 @@ function Library({ selected }: { selected: string }) {
 
   return (
     <>
-      <div className="shrink-0 border-b border-gray-100 p-3">
-        <div className="relative">
+      <div className="flex shrink-0 items-center gap-1.5 border-b border-gray-100 p-2">
+        <div className="relative flex-1">
           <input
             ref={box}
             type="search"
@@ -180,6 +202,9 @@ function Library({ selected }: { selected: string }) {
           />
           <kbd className="pointer-events-none absolute top-1.5 right-2 rounded border border-gray-200 px-1 text-xs text-gray-400">/</kbd>
         </div>
+        <button onClick={onClose} className="rounded px-1.5 py-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700" title={pick(["Hide the problem list", "隱藏題目清單"])} data-testid="library-close">
+          «
+        </button>
       </div>
       <nav className="min-h-0 flex-1 overflow-y-auto p-2" aria-label={pick(["Problems", "題目"])}>
         {hits ? (
@@ -200,236 +225,226 @@ function Library({ selected }: { selected: string }) {
                     {list.length} {isOpen ? "▾" : "›"}
                   </span>
                 </button>
-                {isOpen &&
-                  (["beginner", "intermediate", "pro"] as const).map((lv) => {
-                    const inLevel = list.filter((p) => p.level === lv);
-                    if (!inLevel.length) return null;
-                    return (
-                      <div key={lv} className="ml-2 border-l border-gray-100 pl-2">
-                        <p className={`mt-1 flex items-center gap-1.5 px-2 text-xs font-semibold tracking-wide uppercase ${LEVEL_TEXT[lv]}`}>
-                          <span className={`h-1.5 w-1.5 rounded-full ${LEVEL_DOT[lv]}`} />
-                          {pick(LEVEL[lv])}
-                        </p>
-                        <ul className="space-y-0.5">{inLevel.map(item)}</ul>
-                      </div>
-                    );
-                  })}
+                {isOpen && <ul className="space-y-0.5">{list.map(item)}</ul>}
               </div>
             );
           })
         )}
-        <div className="mt-4 border-t border-gray-100 px-2 pt-3" data-testid="tensorizer-links">
-          <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">{pick(["Build the model in Tensorizer", "在 Tensorizer 中建構模型"])}</p>
-          <ul className="mt-1.5 space-y-2">
-            {TENSORIZER_LINKS.map((l) => (
-              <li key={l.id}>
-                <a href={tensorizerUrl(l.id)} target="_blank" rel="noreferrer" className="text-sm text-gray-700 hover:text-(--lk-accent)">
-                  {pick(l.title)} ↗
-                </a>
-                <span className="mt-0.5 flex flex-wrap gap-1">
-                  {l.problems.map((n) => (
-                    <button
-                      key={n}
-                      onClick={() => go("problems", n)}
-                      className={`rounded px-1.5 text-xs ring-1 ${n === selected ? "bg-orange-50 text-orange-800 ring-orange-200" : "text-gray-500 ring-gray-200 hover:text-(--lk-accent)"}`}
-                    >
-                      {pick(findProblem(n)!.title)}
-                    </button>
-                  ))}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
       </nav>
     </>
   );
 }
 
-// ── 2. the problem ─────────────────────────────────────────────────────────────────────────────────────────────────
+// ── the problem ────────────────────────────────────────────────────────────────────────────────────────────────────
 
 function ProblemHeader({ problem }: { problem: Problem }) {
   const { pick } = useLang();
   const track = TRACKS.find((t) => t.id === problem.category)!;
-  const related = tensorizerFor(problemName(problem));
   return (
-    <div className="border-b border-gray-200 px-5 py-4" data-testid="problem-header">
-      <h1 className="text-xl font-semibold tracking-tight text-gray-900">
-        <RichText text={pick(problem.title)} />
-      </h1>
-      <div className="mt-1.5 flex flex-wrap items-center gap-2">
-        <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-medium text-(--lk-accent)">{pick(track.title)}</span>
-        <span className={`flex items-center gap-1.5 rounded-full border border-gray-200 px-2.5 py-0.5 text-xs font-medium ${LEVEL_TEXT[problem.level]}`}>
-          <span className={`h-1.5 w-1.5 rounded-full ${LEVEL_DOT[problem.level]}`} />
-          {pick(LEVEL[problem.level])}
-        </span>
+    <div className="space-y-3 px-5 py-4" data-testid="problem-header">
+      <div>
+        <h1 className="text-xl font-semibold tracking-tight text-gray-900">
+          <RichText text={pick(problem.title)} />
+        </h1>
+        <div className="mt-1.5 flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-medium text-(--lk-accent)">{pick(track.title)}</span>
+          <span className={`flex items-center gap-1.5 rounded-full border border-gray-200 px-2.5 py-0.5 text-xs font-medium ${LEVEL_TEXT[problem.level]}`}>
+            <span className={`h-1.5 w-1.5 rounded-full ${LEVEL_DOT[problem.level]}`} />
+            {pick(LEVEL[problem.level])}
+          </span>
+        </div>
       </div>
-      <p className="mt-2 text-sm leading-relaxed text-gray-600">
+      <p className="text-sm leading-relaxed text-gray-600">
         <RichText text={pick(problem.summary)} />
       </p>
-      <div className="mt-3">
-        <ProblemPicture src={asset(problem.picture)} alt={pick(problem.title)} />
-      </div>
+      <ProblemPicture src={asset(problem.picture)} alt={pick(problem.title)} />
       {problem.uses.length > 0 && (
-        <ul className="mt-2 space-y-0.5 text-center text-sm">
+        <ul className="flex flex-wrap gap-1.5" data-testid="uses">
           {problem.uses.map((u) => (
             <li key={u.api}>
-              <a href={u.url} target="_blank" rel="noreferrer" className="text-(--lk-accent) hover:underline">
-                {u.library}: <code>{u.api}</code> ↗
+              <a href={u.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-white px-2.5 py-0.5 text-xs text-gray-700 hover:border-(--lk-accent) hover:text-(--lk-accent)">
+                <span className="text-gray-400">{u.library}</span>
+                <code>{u.api}</code> ↗
               </a>
             </li>
           ))}
         </ul>
       )}
-      {related.length > 0 && (
-        <div className="mt-3 rounded-lg border border-blue-100 bg-blue-50/50 p-3" data-testid="problem-tensorizer">
-          <p className="text-xs font-semibold tracking-wide text-blue-800 uppercase">{pick(["Build the model in Tensorizer", "在 Tensorizer 中建構模型"])}</p>
-          <ul className="mt-1 space-y-1">
-            {related.map((l) => (
-              <li key={l.id} className="text-sm">
-                <a href={tensorizerUrl(l.id)} target="_blank" rel="noreferrer" className="font-medium text-blue-800 hover:underline">
-                  {pick(l.title)} ↗
-                </a>
-                <span className="block text-gray-600">{pick(l.why)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ProblemTabs({ problem }: { problem: Problem }) {
-  const { pick } = useLang();
-  const [tab, setTab] = useState<"steps" | "lock" | "notes">("steps");
-  const [showCode, setShowCode] = useState(false);
-  const tabs = [
-    { id: "steps" as const, label: ["Steps", "步驟"] as [string, string] },
-    { id: "lock" as const, label: ["The lock", "鎖定規則"] as [string, string] },
-    ...(problem.notes ? [{ id: "notes" as const, label: ["Good to know", "延伸知識"] as [string, string] }] : []),
-  ];
-  return (
-    <div className="flex-1 space-y-3 bg-gray-50/60 p-5">
-      <div role="tablist" className="flex gap-1">
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            role="tab"
-            aria-selected={tab === t.id}
-            onClick={() => setTab(t.id)}
-            className={`rounded-md px-3 py-1 text-sm ${tab === t.id ? "bg-white font-medium text-gray-900 shadow-sm ring-1 ring-gray-200" : "text-gray-500 hover:text-gray-800"}`}
-          >
-            {pick(t.label)}
-          </button>
-        ))}
-      </div>
-      {tab === "steps" && (
-        <div data-testid="mirror">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs text-gray-500">
-              {pick(["Write each step yourself before you look: words and code say the same thing.", "看答案之前先自己寫：文字與程式碼說的是同一件事。"])}
-            </p>
-            <button
-              onClick={() => setShowCode((v) => !v)}
-              className="rounded-md border border-gray-300 bg-white px-2.5 py-1 text-xs text-gray-700 hover:border-(--lk-accent) hover:text-(--lk-accent)"
-              data-testid="mirror-toggle"
-            >
-              {showCode ? pick(["Hide the code", "隱藏程式碼"]) : pick(["Show the code", "顯示程式碼"])}
-            </button>
-          </div>
-          <ol className="mt-3 space-y-2">
-            {problem.mirror.map((step, i) => (
-              <li key={i} className="rounded-lg border border-gray-200 bg-white p-3">
-                <div className="flex gap-2.5">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-semibold text-orange-800">{i + 1}</span>
-                  <p className="text-sm text-gray-700">
-                    <RichText text={pick(step.text)} />
-                  </p>
-                </div>
-                {showCode && (
-                  <div className="mt-2 overflow-x-auto text-xs">
-                    <CodeBlock code={step.code} language={PY} />
-                  </div>
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
-      {tab === "lock" && (
-        <ul className="space-y-2 text-sm text-gray-700" data-testid="lock">
-          <li>{pick(["Function names, parameters and type hints stay exactly as given: the tests call them so.", "函式名稱、參數與型別提示必須保持原樣：測試就是這樣呼叫它們的。"])}</li>
-          <li>
-            {pick(["Imports allowed:", "允許匯入："])}{" "}
-            {problem.imports.length ? problem.imports.map((m) => <code key={m} className="mr-1 rounded bg-gray-100 px-1">{m}</code>) : pick(["standard maths only", "僅限標準數學模組"])}
-          </li>
-          {problem.forbidden.length > 0 && (
-            <li>
-              {pick(["Not allowed (they would do the work for you):", "不允許（它們會替你完成題目）："])}{" "}
-              {problem.forbidden.map((m) => (
-                <code key={m} className="mr-1 rounded bg-red-50 px-1 text-red-800">
-                  {m}
-                </code>
-              ))}
-            </li>
-          )}
-          <li className="text-gray-500">{pick(["No files, network or other programs: eval, open, os and the like are refused before anything runs.", "不能使用檔案、網路或其他程式：eval、open、os 之類的東西在執行之前就會被拒絕。"])}</li>
-        </ul>
-      )}
-      {tab === "notes" && problem.notes && (
-        <p className="text-sm leading-relaxed text-gray-700" data-testid="notes">
+      {problem.notes && (
+        <p className="rounded-lg bg-gray-50 p-3 text-sm leading-relaxed text-gray-700" data-testid="notes">
           <RichText text={pick(problem.notes)} />
         </p>
       )}
+      <RelatedProblems site="catalyzer" id={problemName(problem)} />
     </div>
   );
 }
 
-// ── 3. the code ────────────────────────────────────────────────────────────────────────────────────────────────────
+// ── parameters ─────────────────────────────────────────────────────────────────────────────────────────────────────
 
-type Phase = { kind: "idle" } | { kind: "running" } | { kind: "done"; result: RunResult } | { kind: "offline" } | { kind: "failed"; message: string };
+type Values = Record<string, string | number>;
 
-function Workbench({ problem, phoneTab, onRan }: { problem: Problem; phoneTab: PhoneTab; onRan: () => void }) {
+function ParamField({ p, value, onChange }: { p: Param; value: string | number; onChange: (v: string | number) => void }) {
   const { pick } = useLang();
-  const [file, setFile] = useState<"answer" | "test">("answer");
-  const [code, setCode] = useState(() => loadDraft(problem.id) ?? problem.stub);
-  const [phase, setPhase] = useState<Phase>({ kind: "idle" });
+  const box = "rounded-md border border-gray-300 bg-white px-2 py-1 text-sm focus:border-(--lk-accent) focus:outline-none";
+  return (
+    <label className={`flex min-w-0 items-center gap-1.5 ${p.type === "smiles" || p.type === "text" ? "flex-1 basis-80" : ""}`} data-testid={`param-${p.id}`}>
+      <span className="shrink-0 text-xs font-medium text-gray-600">{pick(p.label)}</span>
+      {p.type === "select" ? (
+        <select value={String(value)} onChange={(e) => onChange(e.target.value)} className={box}>
+          {p.options!.map(([en, zh, v]) => (
+            <option key={v} value={v}>
+              {pick([en, zh])}
+            </option>
+          ))}
+        </select>
+      ) : p.type === "int" || p.type === "float" ? (
+        <>
+          <input type="range" min={p.min} max={p.max} step={p.step} value={Number(value)} onChange={(e) => onChange(p.type === "int" ? parseInt(e.target.value) : parseFloat(e.target.value))} className="w-24 accent-(--lk-accent)" />
+          <span className="w-8 font-mono text-xs text-gray-700">{value}</span>
+        </>
+      ) : (
+        <>
+          {p.presets && (
+            <select value={p.presets.find((x) => x[2] === value)?.[2] ?? ""} onChange={(e) => e.target.value && onChange(e.target.value)} className={`max-w-[9rem] shrink-0 ${box}`} aria-label={pick(["Examples", "範例"])}>
+              <option value="">{pick(["Your own…", "自訂…"])}</option>
+              {p.presets.map(([en, zh, v]) => (
+                <option key={v} value={v}>
+                  {pick([en, zh])}
+                </option>
+              ))}
+            </select>
+          )}
+          <input value={String(value)} onChange={(e) => onChange(e.target.value)} spellCheck={false} className={`min-w-0 flex-1 font-mono text-xs ${box}`} />
+        </>
+      )}
+    </label>
+  );
+}
+
+// ── the code, the parameters and the results ──────────────────────────────────────────────────────────────────────
+
+/** the feedback column's tabs: everything, or one kind of result, or the tests */
+type Pane = "all" | "2d" | "3d" | "data" | "tests";
+
+function Workbench({ problem, phoneTab, onRun }: { problem: Problem; phoneTab: PhoneTab; onRun: () => void }) {
+  const { pick } = useLang();
+  const defaults = useMemo(() => Object.fromEntries(problem.params.map((p) => [p.id, p.default])) as Values, [problem]);
+  // Tensorizer's order: the tests (written first), what a run does, then the functions themselves
+  const [file, setFile] = useState<"answer" | "main" | "test">("test");
+  const [wrap, setWrap] = useState(() => {
+    try {
+      return localStorage.getItem("catalyzer.wrap") !== "off";
+    } catch {
+      return true;
+    }
+  });
+  const toggleWrap = () =>
+    setWrap((w) => {
+      try {
+        localStorage.setItem("catalyzer.wrap", w ? "off" : "on");
+      } catch {
+        /* private window */
+      }
+      return !w;
+    });
+  const [code, setCode] = useState(() => loadDraft(problem.id) ?? problem.solution);
+  const [values, setValues] = useState<Values>(defaults);
   const [alive, setAlive] = useState<boolean | null>(null);
-  const [pane, setPane] = useState<"results" | "terminal">("results");
+  const [busy, setBusy] = useState<"run" | "test" | null>(null);
+  const [pane, setPane] = useState<Pane>("all");
+  const [shown, setShown] = useState<{ items: ResultItem[]; live: boolean } | null>(null);
+  const [run, setRun] = useState<RunResult | null>(null);
+  const [tests, setTests] = useState<RunResult | null>(null);
+  const [needRunner, setNeedRunner] = useState(false);
+
   useEffect(() => {
     const ctl = new AbortController();
     runnerAlive(ctl.signal).then((ok) => !ctl.signal.aborted && setAlive(ok));
+    fetch(asset(problem.results), { signal: ctl.signal })
+      .then((r) => r.json())
+      .then((items) => setShown((s) => s ?? { items, live: false }))
+      .catch(() => {});
     return () => ctl.abort();
-  }, []);
-  const edited = code !== problem.stub;
-  const download = useMemo(() => `data:text/x-python;charset=utf-8,${encodeURIComponent(code)}`, [code]);
+  }, [problem]);
 
-  const run = async () => {
-    setPhase({ kind: "running" });
-    try {
-      const result = await runAnswer(problem.id, code);
-      setPhase({ kind: "done", result });
-      setAlive(true);
-      setPane("results");
-    } catch (e) {
-      const offline = !(await runnerAlive());
-      setAlive(!offline);
-      setPhase(offline ? { kind: "offline" } : { kind: "failed", message: String(e) });
-    }
-    onRan();
+  const edited = code !== problem.solution;
+  const download = useMemo(() => `data:text/x-python;charset=utf-8,${encodeURIComponent(code)}`, [code]);
+  const setCodeAndSave = (v: string) => {
+    setCode(v);
+    saveDraft(problem.id, v === problem.solution ? null : v);
   };
 
-  const codeVisible = phoneTab === "code" ? "" : "hidden xl:flex";
-  const resultsVisible = phoneTab === "results" ? "" : "hidden xl:flex";
+  const go_ = async (mode: "run" | "test") => {
+    setBusy(mode);
+    setNeedRunner(false);
+    try {
+      const r = await runAnswer(problem.id, code, mode, values);
+      setAlive(true);
+      if (mode === "run") {
+        setRun(r);
+        if (r.status === "done") setShown({ items: r.results, live: true });
+        setPane("all");
+      } else {
+        setTests(r);
+        setPane("tests");
+      }
+      onRun();
+    } catch {
+      const ok = await runnerAlive();
+      setAlive(ok);
+      setNeedRunner(!ok);
+      setPane("all");
+      onRun();
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const codeVisible = phoneTab === "code" ? "flex" : "hidden xl:flex";
+  const resultsVisible = phoneTab === "results" ? "flex" : "hidden xl:flex";
+  const editorText = file === "answer" ? code : file === "main" ? problem.main : problem.test;
+  const [terminalOpen, setTerminalOpen] = useState(false);
+  // the feedback tabs offered: only the kinds this problem's results have
+  const items = shown?.items ?? [];
+  const kindsOf: Record<Exclude<Pane, "all" | "tests">, ResultItem["kind"][]> = { "2d": ["svg"], "3d": ["mol3d", "pdb3d"], data: ["table", "bars", "text", "link"] };
+  const panes: { id: Pane; label: [string, string] }[] = [
+    { id: "all", label: ["Results", "結果"] },
+    ...(items.some((x) => x.kind === "svg") ? [{ id: "2d" as const, label: ["Structure", "結構"] as [string, string] }] : []),
+    ...(items.some((x) => x.kind === "mol3d" || x.kind === "pdb3d") ? [{ id: "3d" as const, label: ["3D", "3D"] as [string, string] }] : []),
+    ...(items.some((x) => kindsOf.data.includes(x.kind)) ? [{ id: "data" as const, label: ["Tables", "表格"] as [string, string] }] : []),
+    { id: "tests", label: ["Tests", "測試"] },
+  ];
+  const visible = pane === "all" || pane === "tests" ? items : items.filter((x) => x.kind === "metric" || kindsOf[pane].includes(x.kind));
+
   return (
-    <section className="flex min-w-0 flex-1 flex-col xl:min-h-0" data-testid="workbench">
-      <div className={`${codeVisible} min-h-0 flex-col xl:flex-1`}>
-        <div className="flex shrink-0 items-end gap-1 overflow-x-auto border-b border-gray-200 bg-gray-50 px-2 pt-2" role="tablist">
+    <>
+      {/* the code: parameters and Run in one toolbar, the files, the terminal folded below */}
+      <section className={`${codeVisible} min-w-0 flex-1 flex-col border-r border-gray-200 xl:min-h-0`} data-testid="workbench">
+        <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-gray-200 bg-gray-50/80 px-3 py-2" data-testid="parameters">
+          <button onClick={() => go_("run")} disabled={busy !== null} className="shrink-0 rounded-md bg-(--lk-accent) px-4 py-1.5 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50" data-testid="run">
+            ▶ {busy === "run" ? pick(["Running…", "執行中…"]) : pick(["Run", "執行"])}
+          </button>
+          {problem.params.map((p) => (
+            <ParamField key={p.id} p={p} value={values[p.id]} onChange={(v) => setValues((s) => ({ ...s, [p.id]: v }))} />
+          ))}
+          <button onClick={() => go_("test")} disabled={busy !== null} className="shrink-0 rounded-md border border-(--lk-accent) bg-white px-3 py-1 text-sm font-medium text-(--lk-accent) hover:bg-orange-50 disabled:opacity-50" data-testid="test">
+            ✓ {busy === "test" ? pick(["Testing…", "測試中…"]) : pick(["Tests", "測試"])}
+          </button>
+          <button onClick={() => setValues(defaults)} className="shrink-0 text-xs text-gray-500 hover:text-(--lk-accent)">
+            {pick(["Defaults", "預設值"])}
+          </button>
+          <span className="flex shrink-0 items-center gap-1.5 text-xs text-gray-500" data-testid="runner-status" title={alive ? pick(["runner connected", "執行器已連線"]) : pick(["no runner on this computer", "這台電腦上沒有執行器"])}>
+            <span className={`h-2 w-2 rounded-full ${alive ? "bg-green-500" : alive === false ? "bg-gray-300" : "bg-amber-300"}`} />
+            {alive ? pick(["runner", "執行器"]) : alive === false ? pick(["no runner", "無執行器"]) : "…"}
+          </span>
+        </div>
+        <div className="flex shrink-0 items-end gap-1 overflow-x-auto border-b border-gray-200 bg-gray-50 px-2 pt-1.5" role="tablist">
           {(
             [
-              ["answer", "answer.py"],
-              ["test", "test.py"],
+              ["test", "0. test.py"],
+              ["main", "1. main.py"],
+              ["answer", "2. answer.py"],
             ] as const
           ).map(([id, label]) => (
             <button
@@ -437,106 +452,111 @@ function Workbench({ problem, phoneTab, onRan }: { problem: Problem; phoneTab: P
               role="tab"
               aria-selected={file === id}
               onClick={() => setFile(id)}
-              className={`rounded-t-md border border-b-0 px-3 py-1.5 font-mono text-sm ${file === id ? "border-gray-200 bg-white text-gray-900" : "border-transparent text-gray-500 hover:text-gray-800"}`}
+              className={`rounded-t-md border border-b-0 px-3 py-1 font-mono text-sm ${file === id ? "border-gray-200 bg-white text-gray-900" : "border-transparent text-gray-500 hover:text-gray-800"}`}
               data-testid={`file-${id}`}
             >
               {label}
               {id === "answer" && edited && <span className="ml-1 text-(--lk-accent)">●</span>}
             </button>
           ))}
-        </div>
-        <div className="flex h-8 shrink-0 items-center justify-between gap-3 border-b border-gray-100 px-3 text-xs text-gray-500">
-          <span className="truncate">
-            {file === "answer"
-              ? pick(["your answer: fill in the function bodies (kept in this browser only)", "你的答案：填寫函式內容（只保存在這個瀏覽器中）"])
-              : pick(["the contract, written first (read-only)", "先寫好的規格（唯讀）"])}
-          </span>
-          <span className="flex shrink-0 items-center gap-1.5" data-testid="runner-status">
-            <span className={`h-2 w-2 rounded-full ${alive ? "bg-green-500" : alive === false ? "bg-gray-300" : "bg-amber-300"}`} />
-            {alive ? pick(["runner connected", "執行器已連線"]) : alive === false ? pick(["no runner on this computer", "這台電腦上沒有執行器"]) : "…"}
-          </span>
-        </div>
-        <div className="h-[60vh] min-h-0 overflow-hidden text-sm xl:h-auto xl:flex-1">
-          {file === "answer" ? (
-            <CodeMirror
-              value={code}
-              height="100%"
-              className="h-full"
-              extensions={[PY]}
-              onChange={(v) => {
-                setCode(v);
-                saveDraft(problem.id, v === problem.stub ? null : v);
-              }}
-              basicSetup={{ foldGutter: false }}
-              aria-label={pick(["Python answer", "Python 答案"])}
-            />
-          ) : (
-            <CodeMirror value={problem.test} height="100%" className="h-full" extensions={[PY, ...READ_ONLY]} basicSetup={{ foldGutter: false }} />
-          )}
-        </div>
-        <div className="flex shrink-0 flex-wrap items-center gap-2 border-t border-gray-200 bg-gray-50 px-3 py-2">
-          <button
-            onClick={run}
-            disabled={phase.kind === "running"}
-            className="rounded-md bg-(--lk-accent) px-4 py-1.5 text-sm font-medium text-white hover:opacity-90 disabled:opacity-50"
-            data-testid="run"
-          >
-            ▶ {phase.kind === "running" ? pick(["Checking…", "檢查中…"]) : pick(["Check on my computer", "在我的電腦上檢查"])}
-          </button>
-          <a href={download} download="answer.py" className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:border-(--lk-accent)">
-            {pick(["Download answer.py", "下載 answer.py"])}
-          </a>
-          {edited && (
-            <button
-              onClick={() => {
-                setCode(problem.stub);
-                saveDraft(problem.id, null);
-                setPhase({ kind: "idle" });
-              }}
-              className="px-2 py-1.5 text-sm text-gray-500 hover:text-red-700"
-            >
-              {pick(["Start again", "重新開始"])}
+          <span className="mb-1 ml-auto flex shrink-0 gap-3 pl-2 text-xs text-gray-500">
+            <button onClick={toggleWrap} aria-pressed={wrap} className={wrap ? "text-(--lk-accent)" : "hover:text-(--lk-accent)"} title={pick(["Wrap long lines", "長行自動換行"])} data-testid="wrap">
+              ↩ {pick(["Wrap", "換行"])}
             </button>
+          {file === "answer" && (
+            <>
+              {edited && (
+                <button onClick={() => setCodeAndSave(problem.solution)} className="hover:text-(--lk-accent)" data-testid="restore">
+                  {pick(["Restore", "還原"])}
+                </button>
+              )}
+              <button onClick={() => setCodeAndSave(problem.stub)} className="hover:text-(--lk-accent)" data-testid="blank">
+                {pick(["Start from blank", "從空白開始"])}
+              </button>
+              <a href={download} download="answer.py" className="hover:text-(--lk-accent)">
+                {pick(["Download", "下載"])}
+              </a>
+            </>
+          )}
+          </span>
+        </div>
+        <div className="h-[55vh] min-h-0 overflow-hidden text-sm xl:h-auto xl:flex-1">
+          <CodeMirror
+            key={file}
+            value={editorText}
+            height="100%"
+            className="h-full"
+            extensions={[PY, ...(wrap ? [EditorView.lineWrapping] : []), ...(file === "answer" ? [] : READ_ONLY)]}
+            onChange={file === "answer" ? setCodeAndSave : undefined}
+            basicSetup={{ foldGutter: false }}
+            aria-label={file === "answer" ? pick(["Python code", "Python 程式碼"]) : `${file}.py`}
+          />
+        </div>
+        <div className="shrink-0 border-t border-gray-200 bg-gray-50">
+          <button onClick={() => setTerminalOpen((o) => !o)} className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs font-semibold tracking-wide text-gray-500 uppercase hover:text-gray-800" data-testid="terminal-toggle">
+            {terminalOpen ? "▾" : "▸"} {pick(["Terminal", "終端機"])}
+          </button>
+          {terminalOpen && (
+            <pre className="max-h-48 overflow-auto border-t border-gray-200 bg-white px-3 py-2 font-mono text-xs whitespace-pre-wrap text-gray-800" data-testid="terminal">
+              {run?.output || tests?.output || pick(["Run or test to see the program's output here.", "執行或測試後，程式的輸出會顯示在這裡。"])}
+            </pre>
           )}
         </div>
-      </div>
+      </section>
 
-      <div className={`${resultsVisible} min-h-0 flex-col border-t border-gray-200 xl:h-[38%] xl:shrink-0`}>
-        <div className="flex h-9 shrink-0 items-center gap-1 border-b border-gray-200 bg-gray-50 px-2" role="tablist">
-          {(
-            [
-              ["results", ["Results", "結果"]],
-              ["terminal", ["Terminal", "終端機"]],
-            ] as const
-          ).map(([id, label]) => (
+      {/* the feedback, full height, in tabs */}
+      <section className={`${resultsVisible} min-w-0 flex-col xl:min-h-0 xl:w-[36%] xl:shrink-0`} data-testid="results-column">
+        <div className="flex h-9 shrink-0 items-center gap-1 overflow-x-auto border-b border-gray-200 bg-gray-50 px-2" role="tablist">
+          {panes.map(({ id, label }) => (
             <button
               key={id}
               role="tab"
               aria-selected={pane === id}
               onClick={() => setPane(id)}
-              className={`rounded px-2.5 py-1 text-xs font-semibold tracking-wide uppercase ${pane === id ? "bg-white text-gray-900 ring-1 ring-gray-200" : "text-gray-500 hover:text-gray-800"}`}
+              className={`shrink-0 rounded px-2.5 py-1 text-xs font-semibold tracking-wide uppercase ${pane === id ? "bg-white text-gray-900 ring-1 ring-gray-200" : "text-gray-500 hover:text-gray-800"}`}
+              data-testid={`pane-${id}`}
             >
               {pick(label)}
+              {id === "tests" && tests && (
+                <span className={`ml-1 ${tests.status === "passed" ? "text-green-700" : "text-red-700"}`}>
+                  {tests.tests.filter((t) => t.passed).length}/{tests.tests.length || "–"}
+                </span>
+              )}
             </button>
           ))}
-        </div>
-        <div className="min-h-[12rem] flex-1 overflow-y-auto p-3">
-          {pane === "terminal" ? (
-            <pre className="font-mono text-xs whitespace-pre-wrap text-gray-800" data-testid="terminal">
-              {phase.kind === "done" ? phase.result.output || pick(["(no output)", "（沒有輸出）"]) : pick(["Run the checks to see pytest's output here.", "執行檢查後，pytest 的輸出會顯示在這裡。"])}
-            </pre>
-          ) : phase.kind === "done" ? (
-            <Results result={phase.result} />
-          ) : phase.kind === "failed" ? (
-            <p className="text-sm text-red-700">{phase.message}</p>
-          ) : phase.kind === "offline" || alive === false ? (
-            <RunnerHelp problem={problem} />
-          ) : (
-            <p className="text-sm text-gray-500">{pick(["Write your answer, then press Check: each test comes back as a chip here.", "寫好答案後按「檢查」：每個測試都會在這裡顯示成一個標籤。"])}</p>
+          {pane !== "tests" && shown && (
+            <span className="ml-auto shrink-0 truncate pl-2 text-xs text-gray-500" data-testid="results-source">
+              {shown.live ? pick(["your run", "你的執行結果"]) : pick(["defaults, precomputed", "預設參數，已預先算好"])}
+            </span>
           )}
         </div>
-      </div>
-    </section>
+        <div className="min-h-[24rem] flex-1 overflow-y-auto bg-gray-50/60 p-3">
+          {needRunner && <RunnerHelp problem={problem} />}
+          {pane !== "tests" && (
+            <>
+              {run && run.status !== "done" && <RunProblem result={run} />}
+              {shown ? <ResultsView items={visible} /> : <p className="text-sm text-gray-500">…</p>}
+            </>
+          )}
+          {pane === "tests" && (tests ? <Tests result={tests} /> : <p className="text-sm text-gray-500">{pick(["Press “Tests”: each test comes back as a chip here.", "按「測試」：每個測試都會在這裡顯示成一個標籤。"])}</p>)}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function RunProblem({ result }: { result: RunResult }) {
+  const { pick } = useLang();
+  return (
+    <div className="mb-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800" data-testid="run-problem">
+      <p className="font-medium">{result.status === "rejected" ? pick(["The code breaks a rule, so it did not run:", "程式碼違反規則，所以沒有執行："]) : pick(["The run stopped with an error:", "執行時發生錯誤而停止："])}</p>
+      <ul className="mt-1 list-disc pl-5 font-mono text-xs">
+        {result.problems.map((p) => (
+          <li key={p}>{p}</li>
+        ))}
+      </ul>
+      <p className="mt-1 text-xs text-red-700">{pick(["The results below are from before; the terminal under the code has the full message.", "下方是先前的結果；程式碼下方的終端機有完整訊息。"])}</p>
+    </div>
   );
 }
 
@@ -544,13 +564,13 @@ function RunnerHelp({ problem }: { problem: Problem }) {
   const { pick } = useLang();
   const cmd = `git clone --recurse-submodules https://github.com/jackyko1991/catalyzer\ncd catalyzer\npixi run runner`;
   return (
-    <div className="space-y-2 text-sm text-gray-700" data-testid="runner-help">
-      <p className="font-medium text-gray-900">{pick(["Run the checks on your computer", "在你的電腦上執行檢查"])}</p>
+    <div className="mb-3 space-y-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-gray-700" data-testid="runner-help">
+      <p className="font-medium text-gray-900">{pick(["Run it on your computer", "在你的電腦上執行"])}</p>
       <p>
         <RichText
           text={pick([
-            `Your code runs on your own computer, never on a server. Install [pixi](https://pixi.sh), start the runner (it listens on ${RUNNER} only), then press Check again:`,
-            `你的程式碼在你自己的電腦上執行，絕不會在伺服器上執行。安裝 [pixi](https://pixi.sh)，啟動執行器（它只在 ${RUNNER} 上接聽），再按一次「檢查」：`,
+            `Your code runs on your own computer, never on a server. Install [pixi](https://pixi.sh), start the runner (it listens on ${RUNNER} only), then press Run again:`,
+            `你的程式碼在你自己的電腦上執行，絕不會在伺服器上執行。安裝 [pixi](https://pixi.sh)，啟動執行器（它只在 ${RUNNER} 上接聽），再按一次「執行」：`,
           ])}
         />
       </p>
@@ -558,13 +578,13 @@ function RunnerHelp({ problem }: { problem: Problem }) {
         <CodeBlock code={cmd} />
       </div>
       <p className="text-gray-500">
-        <RichText text={pick([`Or without the site: \`pixi run check ${problem.id} answer.py\`.`, `或者不經過網站：\`pixi run check ${problem.id} answer.py\`。`])} />
+        <RichText text={pick([`Or test a file without the site: \`pixi run check ${problem.id} answer.py\`.`, `或者不經過網站測試檔案：\`pixi run check ${problem.id} answer.py\`。`])} />
       </p>
     </div>
   );
 }
 
-function Results({ result }: { result: RunResult }) {
+function Tests({ result }: { result: RunResult }) {
   const { pick } = useLang();
   const passed = result.tests.filter((t) => t.passed).length;
   const head =
@@ -573,7 +593,7 @@ function Results({ result }: { result: RunResult }) {
       : result.status === "failed"
         ? pick([`${passed} of ${result.tests.length} tests pass.`, `${result.tests.length} 個測試中通過 ${passed} 個。`])
         : result.status === "rejected"
-          ? pick(["The answer breaks the lock, so the tests did not run:", "答案違反了鎖定規則，所以測試沒有執行："])
+          ? pick(["The code breaks a rule, so the tests did not run:", "程式碼違反規則，所以測試沒有執行："])
           : pick(["The tests could not finish:", "測試無法完成："]);
   return (
     <div data-testid="results">
@@ -606,7 +626,7 @@ function Results({ result }: { result: RunResult }) {
       {result.tests.some((t) => !t.passed && t.message) && (
         <details className="mt-3 text-sm">
           <summary className="cursor-pointer text-gray-600">{pick(["What went wrong", "哪裡出錯了"])}</summary>
-          <pre className="mt-2 max-h-60 overflow-auto rounded bg-gray-50 p-3 text-xs whitespace-pre-wrap text-gray-800">
+          <pre className="mt-2 max-h-60 overflow-auto rounded bg-white p-3 text-xs whitespace-pre-wrap text-gray-800">
             {result.tests
               .filter((t) => !t.passed)
               .map((t) => `${t.name}\n${t.message}`)

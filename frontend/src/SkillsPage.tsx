@@ -1,13 +1,13 @@
 /**
- * Coding Skills: short guides to the tools, each in Feynman order (one sentence, a picture, then the details). The
+ * Coding Skills: short guides to the tools, each opening with what the tool is for. The
  * code shown is real: frontend/src/skills/*.py run in tests/test_skills.py and print exactly the output shown.
  */
 import { python } from "@codemirror/lang-python";
-import { CodeBlock, Graph3D, type G3Link, type G3Node, go, P, Page, RichText, Section, type L, useLang } from "@learnkit/web";
+import { CodeBlock, Graph3D, INTERLINKS, problemUrl, seriesText, type G3Link, type G3Node, go, P, Page, RichText, Section, type L, useLang } from "@learnkit/web";
 import { useEffect, useMemo, useState } from "react";
 import { KINDS, type LibKind, LIBS, problemsUsing } from "./libraries";
 import MoleculeViewer, { PLDDT_BANDS } from "./MoleculeViewer";
-import { type Problem, problemName, PROBLEMS, TENSORIZER_LINKS, tensorizerUrl } from "./problems";
+import { type Problem, problemName, PROBLEMS } from "./problems";
 import biopythonCode from "./skills/biopython_basics.py?raw";
 import biopythonOut from "./skills/biopython_basics.out?raw";
 import rdkitCode from "./skills/rdkit_basics.py?raw";
@@ -397,7 +397,7 @@ function LibraryMap() {
 // ── PyTorch on molecules ───────────────────────────────────────────────────────────────────────────────────────────
 
 function PyTorchPage({ scrollRoot, focus }: { scrollRoot: string; focus: string | null }) {
-  const { pick } = useLang();
+  const { lang } = useLang();
   const sections = [
     { id: "idea", title: ["Two sites, one workflow", "兩個網站，一套流程"] as L },
     { id: "build", title: ["Build it in Tensorizer", "在 Tensorizer 中建構"] as L },
@@ -418,16 +418,26 @@ function PyTorchPage({ scrollRoot, focus }: { scrollRoot: string; focus: string 
         <P t={["In Tensorizer you see inside: a molecule's graph becomes an adjacency tensor, a protein's contacts a distance map, and a few einsums do the work. Here you stand outside: you read a model's output (pLDDT, coordinates) and test it against experiment, as a professional must.", "在 Tensorizer 中，你看見模型內部：分子的圖變成鄰接張量，蛋白質的接觸變成距離圖，幾個 einsum 就完成工作。在這裡，你站在外面：讀取模型的輸出（pLDDT、座標），並拿它和實驗比對，就像專業人士必須做的那樣。"]} />
       </Section>
       <Section page="pytorch" id="build" n={2} title={sections[1].title}>
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {TENSORIZER_LINKS.map((l) => (
-            <li key={l.id} className="rounded-lg border border-gray-200 bg-white p-3">
-              <a href={tensorizerUrl(l.id)} target="_blank" rel="noreferrer" className="block">
-                <span className="font-medium text-gray-900 hover:text-(--lk-accent)">{pick(l.title)} ↗</span>
-                <span className="mt-0.5 block text-sm text-gray-600">{pick(l.why)}</span>
-              </a>
-              <ProblemLinks problems={l.problems.map((n) => PROBLEMS.find((p) => problemName(p) === n)!)} />
-            </li>
-          ))}
+        <P t={["Each pair is the same idea met twice: the molecules here, the model or computation behind them in Tensorizer. Each problem page shows its pair too.", "每一對都是同一個想法出現兩次：這裡是分子，Tensorizer 中是背後的模型或計算。每道題目的頁面也會顯示它的配對。"]} />
+        <ul className="mt-3 space-y-3" data-testid="pairs">
+          {INTERLINKS.filter((l) => l.a.site === "catalyzer" || l.b.site === "catalyzer").map((l) => {
+            const [here, there] = l.a.site === "catalyzer" ? [l.a, l.b] : [l.b, l.a];
+            const p = PROBLEMS.find((x) => problemName(x) === here.id)!;
+            return (
+              <li key={`${here.id}-${there.id}`} className="rounded-lg border border-gray-200 bg-white p-3 text-sm">
+                <div className="flex flex-wrap items-center gap-2">
+                  <ProblemLinks problems={[p]} />
+                  <span className="text-gray-400">↔</span>
+                  <a href={problemUrl(there, lang)} target="_blank" rel="noreferrer" className="font-medium text-blue-800 hover:underline">
+                    Tensorizer: <RichText text={seriesText(there.title, lang)} /> ↗
+                  </a>
+                </div>
+                <p className="mt-1.5 text-gray-600">
+                  <RichText text={seriesText(l.why, lang)} />
+                </p>
+              </li>
+            );
+          })}
         </ul>
       </Section>
     </Page>
